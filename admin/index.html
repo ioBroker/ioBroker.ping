@@ -1,0 +1,173 @@
+<html>
+
+<!-- these 4 files always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../../lib/css/jqGrid/ui.jqgrid-4.5.4.css"/>
+<link rel="stylesheet" type="text/css" href="../../lib/css/jquery.multiselect-1.13.css"/>
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
+<script type="text/javascript" src="../../lib/js/jqGrid/jquery.jqGrid-4.5.4.min.js"></script>
+<script type="text/javascript" src="../../lib/js/jqGrid/i18n/grid.locale-en.js"></script>
+
+
+<!-- optional: use jqGrid
+<link rel="stylesheet" type="text/css" href="../../lib/css/jqGrid/ui.jqgrid-4.5.4.css"/>
+<script type="text/javascript" src="../../lib/js/jqGrid/jquery.jqGrid-4.5.4.min.js"></script>
+<script type="text/javascript" src="../../lib/js/jqGrid/i18n/grid.locale-en.js"></script>
+-->
+
+<!-- optional: use multiselect
+<link rel="stylesheet" type="text/css" href="../../lib/css/jquery.multiselect-1.13.css"/>
+<script type="text/javascript" src="../../lib/js/jquery.multiselect-1.13.min.js"></script>
+-->
+
+<!-- these two file always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<script type="text/javascript" src="../../js/translate.js"></script>
+<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+<style>
+    .table_header {
+        background-color: blue;
+        color: white;
+    }
+    .ip {
+        width: 150px;
+        text-align: right;
+    }
+</style>
+<!-- you have to define 2 functions in the global scope: -->
+<script type="text/javascript">
+    var rooms =       [];
+    var devices =     [];
+    var processed =   1000;
+    var isStarted =   null;
+
+    function setValue(id, value) {
+        // example: select elements with id=key and class=value and insert value
+        if ($('#' + id + '.value').attr('type') == 'checkbox') {
+            $('#' + id + '.value').prop('checked', value).change(function() {
+                changed = true;
+                $('#save').button("enable");
+            });
+        } else {
+            $('#' + id + '.value').val(value).change(function() {
+                changed = true;
+                $('#save').button("enable");
+            }).keyup(function() {
+                // Chack that only numbers entered
+                if ($(this).hasClass('number')) {
+                    var val = $(this).val();
+                    if (val) {
+                        var newVal = '';
+                        for (var i = 0; i < val.length; i++) {
+                            if (val[i] >= '0' && val[i] <= '9') {
+                                newVal += val[i];
+                            }
+                        }
+
+                        if (val != newVal) $(this).val(newVal);
+                    }
+                }
+
+                changed = true;
+                $('#save').button("enable");
+            });
+        }
+    }
+
+    // the function loadSettings has to exist ...
+    function load(settings) {
+        if (!settings) return;
+
+        changed = false;
+        $('#save').button("disable");
+
+        devices = settings.devices || [];
+
+        for (var key in settings) {
+            setValue(key, settings[key]);
+        }
+        getIsAdapterAlive(function (isAlive) {
+            getEnums("rooms", function (err, list) {
+                rooms = list;
+                var $grid = _editTable('devices', ['name', 'ip', 'room'], devices, rooms, 400, function (action, obj) {
+                    devices = getTableResult('devices', ['name', 'ip', 'room']);
+                });
+                if (isAlive) {
+                    $grid.jqGrid('navButtonAdd', '#pager-devices', {
+                        caption: '',
+                        buttonicon: 'ui-icon-refresh',
+                        onClickButton: function () {
+                            sendTo(null, 'browse', null, function(list) {
+                                for (var j = 0; j < list.length; j++) {
+                                    var isFound = false;
+                                    for (var i = 0; i < devices.length; i++) {
+                                        if (devices[i].ip == list[j].ip) {
+                                            isFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isFound) {
+                                        changed = true;
+                                        $('#save').button("enable");
+                                        addToTable('devices', {ip: list[j].ip, room: enumName2Id(rooms, list[j].roomName)});
+                                    }
+                                }
+                            });
+                        },
+                        position: 'first',
+                        id: 'add-object',
+                        title: _('update adapter information'),
+                        cursor: 'pointer'
+                    });
+                }
+            });
+        });
+    }
+
+    // ... and the function save has to exist.
+    // you have to make sure the callback is called with the settings object as first param!
+    function save(callback) {
+        // example: select elements with class=value and build settings object
+        var obj = {};
+        $('.value').each(function () {
+            var $this = $(this);
+            if ($this.attr('type') == 'checkbox') {
+                obj[$this.attr('id')] = $this.prop('checked');
+            } else {
+                obj[$this.attr('id')] = $this.val();
+            }
+        });
+
+        // Get edited table
+        obj.devices = getTableResult('devices', ['name', 'ip', 'room']);
+
+        changed = false;
+        $('#save').button("disable");
+
+        callback(obj, {localLink: obj.webserverEnabled ? 'http://%ip%:' + obj.webserverPort : ''});
+    }
+</script>
+
+<!-- you have to put your config page in a div with id adapter-container -->
+<div id="adapter-container">
+
+    <table><tr>
+        <td><img src="sonos.png"></td>
+        <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">SONOS adapter settings</h3></td>
+    </tr></table>
+
+    <h4 class="translate">SONOS Server settings</h4>
+    <table>
+        <tr><td class="translate">Web server:</td><td><input  class="value" id="webserverEnabled" type="checkbox"/></td></tr>
+        <tr><td class="translate">Port:</td><td><input  class="value number" id="webserverPort" size="5" maxlength="5"/></td></tr>
+        <tr><td class="translate">Update of elapsed time(ms):</td><td><input  class="value number" id="elapsedInterval" size="5" maxlength="5"/></td></tr>
+    </table>
+
+    <br>
+    <h4 class="translate">SONOS devices</h4>
+    <table id="devices"></table><div id="pager-devices"></div>
+</div>
+</html>

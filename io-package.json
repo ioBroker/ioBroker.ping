@@ -1,0 +1,31 @@
+{
+    "common": {
+        "name":                     "ping",
+        "version":                  "0.0.1",
+        "title":                    "PING Adapter",
+        "desc":                     {
+            "en": "This adapter cyclic polls configured IPs.",
+            "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
+            "ru": "Драйвер опрашивает заданные IP адреса постоянно при помощи утилиты PING"
+        },
+        "authors": [
+            "bluefox <bluefox@ccu.io>"
+        ],
+        "license":                  "MIT",
+        "platform":                 "Javascript/Node.js",
+        "mode":                     "daemon",
+        "availableModes":           ["daemon", "schedule"],
+        "schedule":                 "*/1 * * * *",
+        "loglevel":                 "info",
+        "icon":                     "ping.png",
+        "keywords":                 ["poll", "ping", "ip"],
+        "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png"
+    },
+    "native": {
+        "devices":       [],
+        "interval":      60000
+    },
+    "objects": [
+
+    ]
+}
