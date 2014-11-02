@@ -12,7 +12,8 @@ var adapter = require(__dirname + '/../../lib/adapter.js')('ping');
 var ping =    require('ping');
 
 
-var timer =   null;
+var timer =     null;
+var stopTimer = null;
 
 adapter.on('message', function (obj) {
     if (obj) processMessage(obj);
@@ -65,21 +66,43 @@ function processMessages() {
         }
     });
 }
+// Terminate adapter after 30 seconds idle
+function stop() {
+    if (stopTimer) clearTimeout(stopTimer);
+
+    // Stop only if schedule mode
+    if (adapter.common && adapter.common.mode == 'schedule') {
+        stopTimer = setTimeout(function () {
+            stopTimer = null;
+            if (timer) clearInterval(timer);
+            adapter.stop();
+        }, 30000);
+    }
+}
 
 var host  = ''; // Name of the PC, where the ping runs
 var hosts = []; // List of all addresses to ping
 
 function pingAll() {
+    if (stopTimer) clearTimeout(stopTimer);
+
+    var count = hosts.length;
     hosts.forEach(function (_host) {
         if (ping.sys && ping.sys.promise_probe) {
             ping.sys.promise_probe(_host)
                 .then(function (res) {
+                    adapter.log.debug('Ping ' + res.host + ' ' + res.alive);
                     adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
+                    count--;
+                    if (!count) stop();
                 });
         } else if (ping.promise) {
             ping.promise.probe(_host)
                 .then(function (res) {
+                    adapter.log.debug('Ping ' + res.host + ' ' + res.alive);
                     adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
+                    count--;
+                    if (!count) stop();
                 });
         }
         adapter.log.debug('Ping ' + _host);
@@ -144,7 +167,7 @@ function syncConfig() {
                                 adapter.extendObject(_states[j]._id, {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip)}});
                             }
                             if (adapter.config.devices[u].room) {
-                                adapter.addChannelToEnum('room', adapter.config.devices[u].room, 'root', id);
+                                adapter.addStateToEnum('room', adapter.config.devices[u].room, '', host, id);
                             } else {
                                 adapter.deleteStateFromEnum('room', '', host, id);
                             }
@@ -186,8 +209,6 @@ function main() {
     syncConfig();
 
     pingAll();
-    if (adapter.common.mode != 'schedule') {
-        timer = setInterval(pingAll, adapter.config.interval)
-    }
+    timer = setInterval(pingAll, adapter.config.interval);
 }
 
