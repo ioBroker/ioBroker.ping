@@ -39,10 +39,7 @@
 </style>
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
-    var rooms =       [];
-    var devices =     [];
-    var processed =   1000;
-    var isStarted =   null;
+    var devices = [];
 
     function setValue(id, value) {
         // example: select elements with id=key and class=value and insert value
@@ -89,42 +86,8 @@
         for (var key in settings) {
             setValue(key, settings[key]);
         }
-        getIsAdapterAlive(function (isAlive) {
-            getEnums("rooms", function (err, list) {
-                rooms = list;
-                var $grid = _editTable('devices', ['name', 'ip', 'room'], devices, rooms, 400, function (action, obj) {
-                    devices = getTableResult('devices', ['name', 'ip', 'room']);
-                });
-                if (isAlive) {
-                    $grid.jqGrid('navButtonAdd', '#pager-devices', {
-                        caption: '',
-                        buttonicon: 'ui-icon-refresh',
-                        onClickButton: function () {
-                            sendTo(null, 'browse', null, function(list) {
-                                for (var j = 0; j < list.length; j++) {
-                                    var isFound = false;
-                                    for (var i = 0; i < devices.length; i++) {
-                                        if (devices[i].ip == list[j].ip) {
-                                            isFound = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!isFound) {
-                                        changed = true;
-                                        $('#save').button("enable");
-                                        addToTable('devices', {ip: list[j].ip, room: enumName2Id(rooms, list[j].roomName)});
-                                    }
-                                }
-                            });
-                        },
-                        position: 'first',
-                        id: 'add-object',
-                        title: _('update adapter information'),
-                        cursor: 'pointer'
-                    });
-                }
-            });
-        });
+
+        editTable('devices', ['name', 'ip', 'room'], devices, 350);
     }
 
     // ... and the function save has to exist.
@@ -155,19 +118,17 @@
 <div id="adapter-container">
 
     <table><tr>
-        <td><img src="sonos.png"></td>
-        <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">SONOS adapter settings</h3></td>
+        <td><img src="ping.png" width="64" height="64"></td>
+        <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">PING adapter settings</h3></td>
     </tr></table>
 
-    <h4 class="translate">SONOS Server settings</h4>
+    <h4 class="translate">Ping settings</h4>
     <table>
-        <tr><td class="translate">Web server:</td><td><input  class="value" id="webserverEnabled" type="checkbox"/></td></tr>
-        <tr><td class="translate">Port:</td><td><input  class="value number" id="webserverPort" size="5" maxlength="5"/></td></tr>
-        <tr><td class="translate">Update of elapsed time(ms):</td><td><input  class="value number" id="elapsedInterval" size="5" maxlength="5"/></td></tr>
+        <tr><td class="translate">Interval[ms]:</td><td><input class="value number" id="interval" type="input" size="6"/></td></tr>
     </table>
 
     <br>
-    <h4 class="translate">SONOS devices</h4>
+    <h4 class="translate">Ping addresses</h4>
     <table id="devices"></table><div id="pager-devices"></div>
 </div>
 </html>

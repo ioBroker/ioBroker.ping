@@ -4,7 +4,6 @@
       "url" : "https://github.com/ioBroker/ioBroker.ping"
   },
   "dependencies": {
-    "ping": "~0.1.8"
   },
   "devDependencies": {
       "grunt": "~0.4.4",

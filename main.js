@@ -41,9 +41,17 @@ function processMessage(obj) {
         case 'ping': {
             // Try to connect to mqtt broker
             if (obj.callback && obj.message) {
-                ping.promise.probe(obj.message).then(function (res) {
-                    adapter.sendTo(obj.from, obj.command, res, obj.callback);
-                });
+                if (ping.sys && ping.sys.promise_probe) {
+                    ping.sys.promise_probe(obj.message)
+                        .then(function (res) {
+                            adapter.sendTo(obj.from, obj.command, res, obj.callback);
+                        });
+                } else if (ping.promise) {
+                    ping.promise.probe(obj.message)
+                        .then(function (res) {
+                            adapter.sendTo(obj.from, obj.command, res, obj.callback);
+                        });
+                }
             }
         }
     }
@@ -58,12 +66,23 @@ function processMessages() {
     });
 }
 
-var host  = '';
-var hosts = [];
+var host  = ''; // Name of the PC, where the ping runs
+var hosts = []; // List of all addresses to ping
 
 function pingAll() {
-    ping.promise.probe(obj.message).then(function (res) {
-        adapter.sendTo(obj.from, obj.command, res, obj.callback);
+    hosts.forEach(function (_host) {
+        if (ping.sys && ping.sys.promise_probe) {
+            ping.sys.promise_probe(_host)
+                .then(function (res) {
+                    adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
+                });
+        } else if (ping.promise) {
+            ping.promise.probe(_host)
+                .then(function (res) {
+                    adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
+                });
+        }
+        adapter.log.debug('Ping ' + _host);
     });
 }
 
@@ -71,7 +90,7 @@ function createState(name, ip, room, callback) {
     var id = ip.replace(/[.\s]+/g, '_');
 
     if (room) {
-        adapter.addStateFromEnum('room', room, '', host, id);
+        adapter.addStateToEnum('room', room, '', host, id);
     }
 
     adapter.createState('', host, id, {
@@ -101,7 +120,7 @@ function addState(name, ip, room, callback) {
 }
 
 function syncConfig() {
-    adapter.getStatesOf('', adapter.host, function (err, _states) {
+    adapter.getStatesOf('', host, function (err, _states) {
         var configToDelete = [];
         var configToAdd    = [];
         var k;
@@ -111,27 +130,29 @@ function syncConfig() {
             }
         }
 
-        for (var j = 0; j < _states.length; j++) {
-            var ip = _states[j].native.ip;
-            var id = replace(/[.\s]+/g, '_');
-            var pos = configToAdd.indexOf(ip);
-            if (pos != -1) {
-                configToAdd.splice(pos, 1);
-                // Check name and room
-                for (var u = 0; u < adapter.config.devices.length; u++) {
-                    if (adapter.config.devices[u].ip == ip) {
-                        if (_states[j].common.name != (adapter.config.devices[u].name || adapter.config.devices[u].ip)) {
-                            adapter.extendObject(_states[j]._id, {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip)}});
-                        }
-                        if (adapter.config.devices[u].room) {
-                            adapter.addChannelToEnum('room', adapter.config.devices[u].room, 'root', id);
-                        } else {
-                            adapter.deleteStateFromEnum('room', '', host, id);
+        if (_states){
+            for (var j = 0; j < _states.length; j++) {
+                var ip = _states[j].native.ip;
+                var id = ip.replace(/[.\s]+/g, '_');
+                var pos = configToAdd.indexOf(ip);
+                if (pos != -1) {
+                    configToAdd.splice(pos, 1);
+                    // Check name and room
+                    for (var u = 0; u < adapter.config.devices.length; u++) {
+                        if (adapter.config.devices[u].ip == ip) {
+                            if (_states[j].common.name != (adapter.config.devices[u].name || adapter.config.devices[u].ip)) {
+                                adapter.extendObject(_states[j]._id, {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip)}});
+                            }
+                            if (adapter.config.devices[u].room) {
+                                adapter.addChannelToEnum('room', adapter.config.devices[u].room, 'root', id);
+                            } else {
+                                adapter.deleteStateFromEnum('room', '', host, id);
+                            }
                         }
                     }
+                } else {
+                    configToDelete.push(ip);
                 }
-            } else {
-                configToDelete.push(ip);
             }
         }
 
