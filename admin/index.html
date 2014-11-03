@@ -40,6 +40,12 @@
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
     var devices = [];
+    systemDictionary = {
+        "PING adapter settings": {"en": "PING adapter settings", "de": "PING Adapter-Einstellungen", "ru": "Настройки драйвера PING"},
+        "Ping settings":         {"en": "Ping settings",         "de": "PING Einstellungen",         "ru": "Настройки PING"},
+        "Ping addresses":        {"en": "IP addresses to ping",  "de": "IP Adresse für Monitoring",  "ru": "Список IP адресов для мониторинга"},
+        "Interval[ms]:":         {"en": "Ping interval[ms]",     "de": "Ping Intervall[ms]",         "ru": "Интервал опроса[мс]:"}
+    };
 
     function setValue(id, value) {
         // example: select elements with id=key and class=value and insert value
@@ -110,7 +116,7 @@
         changed = false;
         $('#save').button("disable");
 
-        callback(obj, {localLink: obj.webserverEnabled ? 'http://%ip%:' + obj.webserverPort : ''});
+        callback(obj);
     }
 </script>
 
@@ -126,8 +132,6 @@
     <table>
         <tr><td class="translate">Interval[ms]:</td><td><input class="value number" id="interval" type="input" size="6"/></td></tr>
     </table>
-
-    <br>
     <h4 class="translate">Ping addresses</h4>
     <table id="devices"></table><div id="pager-devices"></div>
 </div>
