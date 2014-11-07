@@ -7,7 +7,10 @@ ioBroker PING Adapter
 This adapter uses the ping library from https://github.com/danielzzz/node-ping
 
 ## Changelog
-### 0.0.3 (2014-11-01)
+### 0.0.4 (2014-11-07)
+* (bluefox) fix ping node
+
+### 0.0.3 (2014-11-03)
 * (bluefox) fix ping node (do not forget to remove package from git when the npm get the update)
 
 ### 0.0.1 (2014-11-02)
