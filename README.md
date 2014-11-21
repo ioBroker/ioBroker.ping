@@ -7,6 +7,9 @@ ioBroker PING Adapter
 This adapter uses the ping library from https://github.com/danielzzz/node-ping
 
 ## Changelog
+### 0.0.5 (2014-11-21)
+* (bluefox) make possible to have shorter ping intervals (down to 5 seconds)
+
 ### 0.0.4 (2014-11-07)
 * (bluefox) fix ping node
 

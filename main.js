@@ -147,16 +147,17 @@ function syncConfig() {
         var configToDelete = [];
         var configToAdd    = [];
         var k;
+        var id;
         if (adapter.config.devices) {
             for (k = 0; k < adapter.config.devices.length; k++) {
                 configToAdd.push(adapter.config.devices[k].ip);
             }
         }
 
-        if (_states){
+        if (_states) {
             for (var j = 0; j < _states.length; j++) {
                 var ip = _states[j].native.ip;
-                var id = ip.replace(/[.\s]+/g, '_');
+                id = ip.replace(/[.\s]+/g, '_');
                 var pos = configToAdd.indexOf(ip);
                 if (pos != -1) {
                     configToAdd.splice(pos, 1);
@@ -188,7 +189,7 @@ function syncConfig() {
         }
         if (configToDelete.length) {
             for (var e = 0; e < configToDelete.length; e++) {
-                var id = configToDelete[e].ip.replace(/[.\s]+/g, '_');
+                id = configToDelete[e].ip.replace(/[.\s]+/g, '_');
                 adapter.deleteStateFromEnum('room', '',  host, id);
                 adapter.deleteState('', host, id);
             }
@@ -202,8 +203,8 @@ function main() {
     for (var i = 0; i < adapter.config.devices.length; i++) {
         hosts.push(adapter.config.devices[i].ip);
     }
-    if (adapter.config.interval < adapter.config.devices.length * 5000) {
-        adapter.config.interval = adapter.config.devices.length * 5000;
+    if (adapter.config.interval < 5000) {
+        adapter.config.interval = 5000;
     }
 
     syncConfig();
