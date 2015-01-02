@@ -7,8 +7,11 @@
  *      MIT License
  *
  */
-
-var adapter = require(__dirname + '/../../lib/adapter.js')('ping');
+/* jshint -W097 */// jshint strict:false
+/*jslint node: true */
+"use strict";
+var utils =   require(__dirname + '/lib/utils'); // Get common adapter utils
+var adapter = utils.adapter('ping');
 var ping =    require('ping');
 
 
