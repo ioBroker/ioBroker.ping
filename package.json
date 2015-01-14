@@ -1,7 +1,7 @@
 {
   "name": "iobroker.ping",
   "description": "This adapter cyclic polls configured IPs.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "bluefox <bluefox@ccu.io>",
   "contributors": [
     "bluefox <bluefox@ccu.io>"
