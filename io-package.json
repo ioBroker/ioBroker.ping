@@ -1,7 +1,7 @@
 {
     "common": {
         "name":                     "ping",
-        "version":                  "0.1.2",
+        "version":                  "0.1.3",
         "title":                    "PING Adapter",
         "desc":                     {
             "en": "This adapter cyclic polls configured IPs.",

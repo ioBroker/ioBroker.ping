@@ -192,7 +192,7 @@ function syncConfig() {
         }
         if (configToDelete.length) {
             for (var e = 0; e < configToDelete.length; e++) {
-                id = configToDelete[e].ip.replace(/[.\s]+/g, '_');
+                id = configToDelete[e].replace(/[.\s]+/g, '_');
                 adapter.deleteStateFromEnum('room', '',  host, id);
                 adapter.deleteState('', host, id);
             }
