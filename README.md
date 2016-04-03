@@ -1,12 +1,21 @@
 ![Logo](admin/ping.png)
 ioBroker PING Adapter
 ==============
+[![NPM version](http://img.shields.io/npm/v/iobroker.ping.svg)](https://www.npmjs.com/package/iobroker.ping)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.ping.svg)](https://www.npmjs.com/package/iobroker.ping)
+[![Tests](https://travis-ci.org/ioBroker/ioBroker.ping.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.ping)
+
+[![NPM](https://nodei.co/npm/iobroker.ping.png?downloads=true)](https://nodei.co/npm/iobroker.ping/)
 
 # Pings configured IP addresses.
 
 This adapter uses the ping library from https://github.com/danielzzz/node-ping
 
 ## Changelog
+### 1.0.0 (2016-04-03)
+* (bluefox) support of freebsd and all windows languages
+* (bluefox) add tests
+
 ### 0.1.3 (2015-01-26)
 * (bluefox) fix error if configuration changed
 
@@ -41,7 +50,7 @@ This adapter uses the ping library from https://github.com/danielzzz/node-ping
 
 The MIT License (MIT)
 
-Copyright (c) 2014, bluefox
+Copyright (c) 2014-2016, bluefox <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014 bluefox<bluefox@ccu.io>
+ *      (c) 2014-2016 bluefox<dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -33,11 +33,6 @@ adapter.on('unload', function () {
         timer = 0;
     }
 });
-
-
-// is called if a subscribed state changes
-//adapter.on('stateChange', function (id, state) {
-//});
 
 function processMessage(obj) {
     if (!obj || !obj.command) return;
@@ -94,7 +89,7 @@ function pingAll() {
         if (ping.sys && ping.sys.promise_probe) {
             ping.sys.promise_probe(_host)
                 .then(function (res) {
-                    adapter.log.debug('Ping ' + res.host + ' ' + res.alive);
+                    adapter.log.debug('Ping result for ' + res.host + ': ' + res.alive);
                     adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
                     count--;
                     if (!count) stop();
@@ -102,13 +97,13 @@ function pingAll() {
         } else if (ping.promise) {
             ping.promise.probe(_host)
                 .then(function (res) {
-                    adapter.log.debug('Ping ' + res.host + ' ' + res.alive);
+                    adapter.log.debug('Ping result for ' + res.host + ': ' + res.alive);
                     adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
                     count--;
                     if (!count) stop();
                 });
         }
-        adapter.log.debug('Ping ' + _host);
+        adapter.log.debug('Pinging ' + _host);
     });
 }
 
@@ -145,7 +140,7 @@ function addState(name, ip, room, callback) {
     });
 }
 
-function syncConfig() {
+function syncConfig(callback) {
     adapter.getStatesOf('', host, function (err, _states) {
         var configToDelete = [];
         var configToAdd    = [];
@@ -184,9 +179,13 @@ function syncConfig() {
         }
 
         if (configToAdd.length) {
+            var count = 0;
             for (var r = 0; r < adapter.config.devices.length; r++) {
                 if (configToAdd.indexOf(adapter.config.devices[r].ip) != -1) {
-                    addState(adapter.config.devices[r].name, adapter.config.devices[r].ip, adapter.config.devices[r].room);
+                    count++;
+                    addState(adapter.config.devices[r].name, adapter.config.devices[r].ip, adapter.config.devices[r].room, function () {
+                        if (!--count && callback) callback();
+                    });
                 }
             }
         }
@@ -197,6 +196,7 @@ function syncConfig() {
                 adapter.deleteState('', host, id);
             }
         }
+        if (!count && callback) callback();
     });
 }
 
@@ -206,13 +206,12 @@ function main() {
     for (var i = 0; i < adapter.config.devices.length; i++) {
         hosts.push(adapter.config.devices[i].ip);
     }
-    if (adapter.config.interval < 5000) {
-        adapter.config.interval = 5000;
-    }
 
-    syncConfig();
+    if (adapter.config.interval < 5000) adapter.config.interval = 5000;
 
-    pingAll();
-    timer = setInterval(pingAll, adapter.config.interval);
+    syncConfig(function () {
+        pingAll();
+        timer = setInterval(pingAll, adapter.config.interval);
+    });
 }
 

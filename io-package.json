@@ -1,15 +1,15 @@
 {
     "common": {
         "name":                     "ping",
-        "version":                  "0.1.4",
+        "version":                  "1.0.0",
         "title":                    "PING Adapter",
         "desc":                     {
             "en": "This adapter cyclic polls configured IPs.",
             "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
-            "ru": "Драйвер опрашивает заданные IP адреса постоянно при помощи утилиты PING"
+            "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING"
         },
         "authors": [
-            "bluefox <bluefox@ccu.io>"
+            "bluefox <dogafox@gmail.com>"
         ],
         "license":                  "MIT",
         "platform":                 "Javascript/Node.js",
