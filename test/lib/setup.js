@@ -398,7 +398,7 @@ function setupController(cb) {
 }
 
 function startAdapter(objects, states, callback) {
-    console.log('startAdapter...');
+    console.log('[' + getTime() + '] startAdapter...');
     if (fs.existsSync(rootDir + 'tmp/node_modules/' + pkg.name + '/' + pkg.main)) {
         try {
             if (debug) {
@@ -554,11 +554,25 @@ function _stopController() {
         states = null;
     }
 }
+function getTime() {
+    var d = new Date();
+    var m = d.getMinutes();
+    var s = d.getSeconds();
+    var ms = d.getMilliseconds();
+    if (m < 10) m = '0' + m.toString();
+    if (s < 10) s = '0' + s.toString();
+    if (ms < 10) {
+        ms = '00' + ms.toString();
+    } else if (ms < 100) {
+        ms = '0' + ms.toString();
+    }
+    return m + ':' + s + '.' + ms;
 
+}
 function stopController(cb) {
     var timeout;
     if (objects) {
-        console.log('Set system.adapter.' + pkg.name + '.0');
+        console.log('[' + getTime() + '] Set system.adapter.' + pkg.name + '.0');
         objects.setObject('system.adapter.' + pkg.name + '.0', {
             common:{
                 enabled: false
@@ -619,4 +633,5 @@ if (typeof module !== undefined && module.parent) {
     module.exports.stopAdapter      = stopAdapter;
     module.exports.startAdapter     = startAdapter;
     module.exports.appName          = appName;
+    module.exports.getTime          = getTime;
 }
