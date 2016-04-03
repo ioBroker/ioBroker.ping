@@ -116,7 +116,7 @@ describe('Test PING', function() {
     });
 
     it('Test PING: if localhost alive', function (done) {
-        this.timeout(5000);
+        this.timeout(8000);
         var sID = 'ping.0.' + hostname + '.127_0_0_1';
 
         states.getState(sID, function (err, state) {
