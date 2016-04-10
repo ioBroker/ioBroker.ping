@@ -10,13 +10,13 @@
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
 "use strict";
-var utils =   require(__dirname + '/lib/utils'); // Get common adapter utils
+var utils   = require(__dirname + '/lib/utils'); // Get common adapter utils
+var ping    = require(__dirname + '/lib/ping');
 var adapter = utils.adapter('ping');
-var ping =    require('ping');
 
-
-var timer =     null;
+var timer     = null;
 var stopTimer = null;
+var isStopping = false;
 
 adapter.on('message', function (obj) {
     if (obj) processMessage(obj);
@@ -32,6 +32,7 @@ adapter.on('unload', function () {
         clearInterval(timer);
         timer = 0;
     }
+    isStopping = true;
 });
 
 function processMessage(obj) {
@@ -40,18 +41,11 @@ function processMessage(obj) {
         case 'ping': {
             // Try to connect to mqtt broker
             if (obj.callback && obj.message) {
-                if (ping.sys && ping.sys.promise_probe) {
-                    ping.sys.promise_probe(obj.message)
-                        .then(function (res) {
-                            adapter.sendTo(obj.from, obj.command, res, obj.callback);
-                        });
-                } else if (ping.promise) {
-                    ping.promise.probe(obj.message)
-                        .then(function (res) {
-                            adapter.sendTo(obj.from, obj.command, res, obj.callback);
-                        });
-                }
+                ping.probe(obj.message, {log: adapter.log.debug}, function (err, result) {
+                    adapter.sendTo(obj.from, obj.command, res, obj.callback);
+                });
             }
+            break;
         }
     }
 }
@@ -64,6 +58,7 @@ function processMessages() {
         }
     });
 }
+
 // Terminate adapter after 30 seconds idle
 function stop() {
     if (stopTimer) clearTimeout(stopTimer);
@@ -73,37 +68,45 @@ function stop() {
         stopTimer = setTimeout(function () {
             stopTimer = null;
             if (timer) clearInterval(timer);
+            isStopping = true;
             adapter.stop();
         }, 30000);
     }
 }
 
 var host  = ''; // Name of the PC, where the ping runs
-var hosts = []; // List of all addresses to ping
 
-function pingAll() {
+function pingAll(hosts) {
     if (stopTimer) clearTimeout(stopTimer);
 
-    var count = hosts.length;
-    hosts.forEach(function (_host) {
-        if (ping.sys && ping.sys.promise_probe) {
-            ping.sys.promise_probe(_host)
-                .then(function (res) {
-                    adapter.log.debug('Ping result for ' + res.host + ': ' + res.alive);
-                    adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
-                    count--;
-                    if (!count) stop();
-                });
-        } else if (ping.promise) {
-            ping.promise.probe(_host)
-                .then(function (res) {
-                    adapter.log.debug('Ping result for ' + res.host + ': ' + res.alive);
-                    adapter.setState({device: '', channel: host, state: res.host.replace(/[.\s]+/g, '_')}, {val: res.alive, ack: true});
-                    count--;
-                    if (!count) stop();
-                });
+    if (!hosts) {
+        hosts = [];
+        for (var i = 0; i < adapter.config.devices.length; i++) {
+            hosts.push(adapter.config.devices[i].ip);
         }
-        adapter.log.debug('Pinging ' + _host);
+    }
+    if (!hosts.length) {
+        timer = setTimeout(function () {
+            pingAll();
+        }, adapter.config.interval);
+        return;
+    }
+
+    var ip = hosts.pop();
+    adapter.log.debug('Pinging ' + ip);
+
+    ping.probe(ip, {log: adapter.log.debug}, function (err, result) {
+        if (err) adapter.log.error(err);
+        if (result) {
+            adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
+            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
+            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
+        }
+        if (!isStopping) {
+            setTimeout(function () {
+                pingAll(hosts);
+            }, 0);
+        }
     });
 }
 
@@ -112,6 +115,7 @@ function createState(name, ip, room, callback) {
 
     if (room) {
         adapter.addStateToEnum('room', room, '', host, id);
+        adapter.addStateToEnum('room', room, '', host, id + '.ms');
     }
 
     adapter.createState('', host, id, {
@@ -122,6 +126,18 @@ function createState(name, ip, room, callback) {
         write:  'false',
         role:   'indicator.reachable',
         desc:   'Ping state of ' + ip
+    }, {
+        ip: ip
+    }, callback);
+
+    adapter.createState('', host, id + '.ms', {
+        name:   'Response for ' + (name || ip),
+        def:    0,
+        type:   'number',
+        read:   'true',
+        write:  'false',
+        role:   'value',
+        desc:   'Response time in ms for ' + ip
     }, {
         ip: ip
     }, callback);
@@ -203,15 +219,16 @@ function syncConfig(callback) {
 function main() {
     host = adapter.host;
 
-    for (var i = 0; i < adapter.config.devices.length; i++) {
-        hosts.push(adapter.config.devices[i].ip);
+    if (!adapter.config.devices.length) {
+        adapter.log.warn('No one IP configured for ping');
+        stop();
+        return;
     }
 
     if (adapter.config.interval < 5000) adapter.config.interval = 5000;
 
     syncConfig(function () {
         pingAll();
-        timer = setInterval(pingAll, adapter.config.interval);
     });
 }
 

@@ -12,6 +12,9 @@ ioBroker PING Adapter
 This adapter uses the ping library from https://github.com/danielzzz/node-ping
 
 ## Changelog
+### 1.0.1 (2016-04-10)
+* (bluefox) rewrite ping for windows
+
 ### 1.0.0 (2016-04-03)
 * (bluefox) support of freebsd and all windows languages
 * (bluefox) add tests

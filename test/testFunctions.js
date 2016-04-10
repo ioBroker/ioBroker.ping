@@ -99,20 +99,22 @@ describe('Test PING', function() {
 
     it('Test PING: check creation of state', function (done) {
         this.timeout(2000);
-        // if object exists
-        objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
-            expect(err).to.be.not.ok;
-            expect(obj).to.be.ok;
-            objects.getObject('ping.0.' + hostname + '.google_com', function (err, obj) {
+        setTimeout(function () {
+            // if object exists
+            objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
                 expect(err).to.be.not.ok;
                 expect(obj).to.be.ok;
-                objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
+                objects.getObject('ping.0.' + hostname + '.google_com', function (err, obj) {
                     expect(err).to.be.not.ok;
                     expect(obj).to.be.ok;
-                    done();
+                    objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
+                        expect(err).to.be.not.ok;
+                        expect(obj).to.be.ok;
+                        done();
+                    });
                 });
             });
-        });
+        }, 1000);
     });
 
     it('Test PING: if localhost alive', function (done) {
