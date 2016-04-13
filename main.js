@@ -115,7 +115,7 @@ function createState(name, ip, room, callback) {
 
     if (room) {
         adapter.addStateToEnum('room', room, '', host, id);
-        adapter.addStateToEnum('room', room, '', host, id + '.ms');
+        //adapter.addStateToEnum('room', room, '', host, id + '.ms');
     }
 
     adapter.createState('', host, id, {
@@ -130,7 +130,7 @@ function createState(name, ip, room, callback) {
         ip: ip
     }, callback);
 
-    adapter.createState('', host, id + '.ms', {
+    /*adapter.createState('', host, id + '.ms', {
         name:   'Response for ' + (name || ip),
         def:    0,
         type:   'number',
@@ -140,7 +140,7 @@ function createState(name, ip, room, callback) {
         desc:   'Response time in ms for ' + ip
     }, {
         ip: ip
-    }, callback);
+    }, callback);*/
 }
 
 function addState(name, ip, room, callback) {
@@ -209,7 +209,9 @@ function syncConfig(callback) {
             for (var e = 0; e < configToDelete.length; e++) {
                 id = configToDelete[e].replace(/[.\s]+/g, '_');
                 adapter.deleteStateFromEnum('room', '',  host, id);
+                //adapter.deleteStateFromEnum('room', '',  host, id + '.ms');
                 adapter.deleteState('', host, id);
+                //adapter.deleteState('', host, id + '.ms');
             }
         }
         if (!count && callback) callback();
