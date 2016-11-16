@@ -9,15 +9,17 @@ ioBroker PING Adapter
 
 # Pings configured IP addresses.
 
-This adapter uses the ping library from https://github.com/danielzzz/node-ping
+Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
+### 1.1.3 (2016-11-16)
+* (bluefox) catch error if no IP defined
+
 ### 1.1.1 (2016-04-10)
 * (bluefox) remove ms
 
 ### 1.1.0 (2016-04-10)
 * (bluefox) rewrite ping for windows
-
 
 ### 1.0.0 (2016-04-03)
 * (bluefox) support of freebsd and all windows languages

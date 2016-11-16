@@ -171,6 +171,10 @@ function syncConfig(callback) {
         if (_states) {
             for (var j = 0; j < _states.length; j++) {
                 var ip = _states[j].native.ip;
+                if (!ip) {
+                    adapter.log.warn('No IP address found for ' + JSON.stringify(_states[j]));
+                    continue;
+                }
                 id = ip.replace(/[.\s]+/g, '_');
                 var pos = configToAdd.indexOf(ip);
                 if (pos != -1) {
