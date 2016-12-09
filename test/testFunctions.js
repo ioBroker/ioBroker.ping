@@ -98,7 +98,7 @@ describe('Test PING', function() {
     });
 
     it('Test PING: check creation of state', function (done) {
-        this.timeout(7000);
+        this.timeout(10000);
         setTimeout(function () {
             // if object exists
             objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
@@ -114,7 +114,7 @@ describe('Test PING', function() {
                     });
                 });
             });
-        }, 1000);
+        }, 2000);
     });
 
     it('Test PING: if localhost alive', function (done) {
@@ -125,7 +125,7 @@ describe('Test PING', function() {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
-                    console.log('[' + setup.getTime() + '] ' + id + ': ' + JSON.stringify(state));
+                    console.log(id + ': ' + JSON.stringify(state));
                     if (id === sID) {
                         onStateChanged = null;
                         expect(state.val).to.be.true;
@@ -147,7 +147,7 @@ describe('Test PING', function() {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
-                    console.log('[' + setup.getTime() + '] ' + id + ': ' + JSON.stringify(state));
+                    console.log(id + ': ' + JSON.stringify(state));
                     if (id === sID) {
                         onStateChanged = null;
                         expect(state.val).to.be.true;
@@ -169,7 +169,7 @@ describe('Test PING', function() {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
-                    console.log('[' + setup.getTime() + '] ' + id + ': ' + JSON.stringify(state));
+                    console.log(id + ': ' + JSON.stringify(state));
                     if (id === sID) {
                         onStateChanged = null;
                         expect(state.val).to.be.false;
