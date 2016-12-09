@@ -93,8 +93,8 @@ describe('Test PING', function() {
     });
 
     it('Test PING: Check if adapter started', function (done) {
-        this.timeout(5000);
-        checkConnectionOfAdapter(done);
+        this.timeout(10000);
+        checkConnectionOfAdapter(function () {setTimeout(done, 5000);});
     });
 
     it('Test PING: check creation of state', function (done) {
