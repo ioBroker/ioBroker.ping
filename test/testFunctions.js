@@ -98,7 +98,7 @@ describe('Test PING', function() {
     });
 
     it('Test PING: check creation of state', function (done) {
-        this.timeout(2000);
+        this.timeout(7000);
         setTimeout(function () {
             // if object exists
             objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
@@ -110,7 +110,7 @@ describe('Test PING', function() {
                     objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
                         expect(err).to.be.not.ok;
                         expect(obj).to.be.ok;
-                        done();
+                        setTimeout(done, 5000);
                     });
                 });
             });
