@@ -98,7 +98,7 @@ describe('Test PING', function() {
     });
 
     it('Test PING: check creation of state', function (done) {
-        this.timeout(10000);
+        this.timeout(15000);
         setTimeout(function () {
             // if object exists
             objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
@@ -114,7 +114,7 @@ describe('Test PING', function() {
                     });
                 });
             });
-        }, 2000);
+        }, 5000);
     });
 
     it('Test PING: if localhost alive', function (done) {
