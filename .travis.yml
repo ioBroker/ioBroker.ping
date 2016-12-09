@@ -10,7 +10,6 @@ node_js:
 before_script:
   - npm install winston@2.3.0
   - npm install https://github.com/ioBroker/ioBroker.js-controller/tarball/master --production
-  - /bin/ping -n -w 2 -c 1 google.com
 env:
   - CXX=g++-4.8
 addons:
