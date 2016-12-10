@@ -93,12 +93,12 @@ describe('Test PING', function() {
     });
 
     it('Test PING: Check if adapter started', function (done) {
-        this.timeout(20000);
-        checkConnectionOfAdapter(function () {setTimeout(done, 15000);});
+        this.timeout(5000);
+        checkConnectionOfAdapter(done);
     });
 
     it('Test PING: check creation of state', function (done) {
-        this.timeout(25000);
+        this.timeout(10000);
         setTimeout(function () {
             // if object exists
             objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
@@ -114,7 +114,7 @@ describe('Test PING', function() {
                     });
                 });
             });
-        }, 5000);
+        }, 2000);
     });
 
     it('Test PING: if localhost alive', function (done) {

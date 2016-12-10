@@ -148,16 +148,10 @@ function addState(name, ip, room, callback) {
         if (err || !obj) {
             // if root does not exist, channel will not be created
             adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
-                createState(name, ip, room, function () {
-                    adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created after channel creation');
-                    callback();
-                });
+                createState(name, ip, room, callback);
             });
         } else {
-            createState(name, ip, room, function () {
-                adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created');
-                callback();
-            });
+            createState(name, ip, room, callback);
         }
     });
 }
