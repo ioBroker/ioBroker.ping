@@ -5,7 +5,7 @@ var objects = null;
 var states  = null;
 var onStateChanged = null;
 var onObjectChanged = null;
-var hostname = require('os').hostname();
+var hostname = require('os').hostname().replace(/[.\s]+/g, '_');
 
 function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
