@@ -93,12 +93,12 @@ describe('Test PING', function() {
     });
 
     it('Test PING: Check if adapter started', function (done) {
-        this.timeout(10000);
-        checkConnectionOfAdapter(function () {setTimeout(done, 5000);});
+        this.timeout(20000);
+        checkConnectionOfAdapter(function () {setTimeout(done, 15000);});
     });
 
     it('Test PING: check creation of state', function (done) {
-        this.timeout(15000);
+        this.timeout(25000);
         setTimeout(function () {
             // if object exists
             objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
