@@ -148,10 +148,16 @@ function addState(name, ip, room, callback) {
         if (err || !obj) {
             // if root does not exist, channel will not be created
             adapter.createChannel('', host, [], function () {
-                createState(name, ip, room, callback);
+                createState(name, ip, room, function () {
+                    adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created');
+                    callback();
+                });
             });
         } else {
-            createState(name, ip, room, callback);
+            createState(name, ip, room, function () {
+                adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created');
+                callback();
+            });
         }
     });
 }
@@ -237,4 +243,3 @@ function main() {
         pingAll();
     });
 }
-
