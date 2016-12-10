@@ -149,7 +149,7 @@ function addState(name, ip, room, callback) {
             // if root does not exist, channel will not be created
             adapter.createChannel('', host, [], function () {
                 createState(name, ip, room, function () {
-                    adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created');
+                    adapter.log.debug(' State ' + name + ' ' + ip + ' ' + room + ' created after channel creation');
                     callback();
                 });
             });
@@ -230,6 +230,7 @@ function syncConfig(callback) {
 
 function main() {
     host = adapter.host;
+    adapter.log.debug('Host=' + host);
 
     if (!adapter.config.devices.length) {
         adapter.log.warn('No one IP configured for ping');
