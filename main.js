@@ -147,7 +147,7 @@ function addState(name, ip, room, callback) {
     adapter.getObject(host, function (err, obj) {
         if (err || !obj) {
             // if root does not exist, channel will not be created
-            adapter.createChannel('', host, [], function () {
+            adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
                 createState(name, ip, room, callback);
             });
         } else {
@@ -224,6 +224,7 @@ function syncConfig(callback) {
 
 function main() {
     host = adapter.host;
+    adapter.log.debug('Host=' + host);
 
     if (!adapter.config.devices.length) {
         adapter.log.warn('No one IP configured for ping');
@@ -237,4 +238,3 @@ function main() {
         pingAll();
     });
 }
-

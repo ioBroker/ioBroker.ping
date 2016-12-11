@@ -101,13 +101,13 @@ describe('Test PING', function() {
         this.timeout(10000);
         setTimeout(function () {
             // if object exists
-            objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
+            objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
                 expect(err).to.be.not.ok;
                 expect(obj).to.be.ok;
                 objects.getObject('ping.0.' + hostname + '.google_com', function (err, obj) {
                     expect(err).to.be.not.ok;
                     expect(obj).to.be.ok;
-                    objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
+                    objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
                         expect(err).to.be.not.ok;
                         expect(obj).to.be.ok;
                         setTimeout(done, 5000);
