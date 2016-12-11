@@ -99,8 +99,8 @@ function pingAll(hosts) {
         if (err) adapter.log.error(err);
         if (result) {
             adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
-            adapter.setState({device: '', channel: host.replace(/[.\s]+/g, '_'), state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
-            adapter.setState({device: '', channel: host.replace(/[.\s]+/g, '_'), state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
+            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
+            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
         }
         if (!isStopping) {
             setTimeout(function () {
@@ -114,11 +114,11 @@ function createState(name, ip, room, callback) {
     var id = ip.replace(/[.\s]+/g, '_');
 
     if (room) {
-        adapter.addStateToEnum('room', room, '', host.replace(/[.\s]+/g, '_'), id);
-        //adapter.addStateToEnum('room', room, '', host.replace(/[.\s]+/g, '_'), id + '.ms');
+        adapter.addStateToEnum('room', room, '', host, id);
+        //adapter.addStateToEnum('room', room, '', host, id + '.ms');
     }
 
-    adapter.createState('', host.replace(/[.\s]+/g, '_'), id, {
+    adapter.createState('', host, id, {
         name:   name || ip,
         def:    false,
         type:   'boolean',
@@ -130,7 +130,7 @@ function createState(name, ip, room, callback) {
         ip: ip
     }, callback);
 
-    /*adapter.createState('', host.replace(/[.\s]+/g, '_'), id + '.ms', {
+    /*adapter.createState('', host, id + '.ms', {
         name:   'Response for ' + (name || ip),
         def:    0,
         type:   'number',
@@ -144,7 +144,7 @@ function createState(name, ip, room, callback) {
 }
 
 function addState(name, ip, room, callback) {
-    adapter.getObject(host.replace(/[.\s]+/g, '_'), function (err, obj) {
+    adapter.getObject(host, function (err, obj) {
         if (err || !obj) {
             // if root does not exist, channel will not be created
             adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
@@ -157,7 +157,7 @@ function addState(name, ip, room, callback) {
 }
 
 function syncConfig(callback) {
-    adapter.getStatesOf('', host.replace(/[.\s]+/g, '_'), function (err, _states) {
+    adapter.getStatesOf('', host, function (err, _states) {
         var configToDelete = [];
         var configToAdd    = [];
         var k;
@@ -186,9 +186,9 @@ function syncConfig(callback) {
                                 adapter.extendObject(_states[j]._id, {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip)}});
                             }
                             if (adapter.config.devices[u].room) {
-                                adapter.addStateToEnum('room', adapter.config.devices[u].room, '', host.replace(/[.\s]+/g, '_'), id);
+                                adapter.addStateToEnum('room', adapter.config.devices[u].room, '', host, id);
                             } else {
-                                adapter.deleteStateFromEnum('room', '', host.replace(/[.\s]+/g, '_'), id);
+                                adapter.deleteStateFromEnum('room', '', host, id);
                             }
                         }
                     }
@@ -212,10 +212,10 @@ function syncConfig(callback) {
         if (configToDelete.length) {
             for (var e = 0; e < configToDelete.length; e++) {
                 id = configToDelete[e].replace(/[.\s]+/g, '_');
-                adapter.deleteStateFromEnum('room', '',  host.replace(/[.\s]+/g, '_'), id);
-                //adapter.deleteStateFromEnum('room', '',  host.replace(/[.\s]+/g, '_'), id + '.ms');
-                adapter.deleteState('', host.replace(/[.\s]+/g, '_'), id);
-                //adapter.deleteState('', host.replace(/[.\s]+/g, '_'), id + '.ms');
+                adapter.deleteStateFromEnum('room', '',  host, id);
+                //adapter.deleteStateFromEnum('room', '',  host, id + '.ms');
+                adapter.deleteState('', host, id);
+                //adapter.deleteState('', host, id + '.ms');
             }
         }
         if (!count && callback) callback();
