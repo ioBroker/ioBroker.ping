@@ -2,14 +2,14 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2016 bluefox<dogafox@gmail.com>
+ *      (c) 2014-2017 bluefox<dogafox@gmail.com>
  *
  *      MIT License
  *
  */
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
-"use strict";
+'use strict';
 var utils   = require(__dirname + '/lib/utils'); // Get common adapter utils
 var ping    = require(__dirname + '/lib/ping');
 var adapter = utils.adapter('ping');

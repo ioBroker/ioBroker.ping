@@ -12,6 +12,9 @@ ioBroker PING Adapter
 Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
+### 1.2.0 (2016-12-09)
+* (bluefox) change configuration dialog
+
 ### 1.1.3 (2016-11-16)
 * (bluefox) catch error if no IP defined
 
@@ -59,7 +62,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2016, bluefox <dogafox@gmail.com>
+Copyright (c) 2014-2017, bluefox <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -30,7 +30,10 @@
         "PING adapter settings": {"en": "PING adapter settings", "de": "PING Adapter-Einstellungen", "ru": "Настройки драйвера PING"},
         "Ping settings":         {"en": "Ping settings",         "de": "PING Einstellungen",         "ru": "Настройки PING"},
         "Ping addresses":        {"en": "IP addresses to ping",  "de": "IP Adresse für Monitoring",  "ru": "Список IP адресов для мониторинга"},
-        "Interval[ms]:":         {"en": "Ping interval[ms]",     "de": "Ping Intervall[ms]",         "ru": "Интервал опроса[мс]:"}
+        "Interval[ms]:":         {"en": "Ping interval[ms]",     "de": "Ping Intervall[ms]",         "ru": "Интервал опроса[мс]:"},
+        "Room":                  {"en": "Room",                  "de": "Raum",                       "ru": "Комната"},
+        "Name":                  {"en": "Name",                  "de": "Name",                       "ru": "Имя"},
+        "IP Address":            {"en": "IP Address",            "de": "IP Adresse",                 "ru": "IP Адрес"}
     };
 
     function setValue(id, value, onChange) {
@@ -73,7 +76,15 @@
             setValue(key, settings[key], onChange);
         }
 
-        editTable('devices', ['name', 'ip', 'room'], devices, 350);
+        if (typeof values2table === 'function') {
+            $('#devices').hide();
+            $('#pager-devices').hide();
+            values2table('values', devices, onChange);
+        } else {
+            editTable('devices', ['name', 'ip', 'room'], devices, 350);
+            $('#values').hide();
+        }
+
         onChange(false);
     }
 
@@ -92,7 +103,11 @@
         });
 
         // Get edited table
-        obj.devices = getTableResult('devices', ['name', 'ip', 'room']);
+        if (typeof table2values === 'function') {
+            obj.devices = table2values('values');
+        } else {
+            obj.devices = getTableResult('devices', ['name', 'ip', 'room']);
+        }
 
         callback(obj);
     }
@@ -112,5 +127,21 @@
     </table>
     <h4 class="translate">Ping addresses</h4>
     <table id="devices"></table><div id="pager-devices"></div>
+    <div id="values" style="width: 100%; height: calc(100% - 195px)">
+        <button class="table-button-add" style="margin-left: 10px; width: 1.5em; height: 1.5em"></button>
+        <div style="width: 100%; height: calc(100% - 30px); overflow: auto;">
+            <table class="table-values" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th data-name="_index"   style="width: 40px" class="translate"></th>
+                    <th data-name="name"     style="width: 30%" class="translate">Name</th>
+                    <th data-name="ip"       class="translate">IP Address</th>
+                    <th data-name="room" data-type="select"    class="translate">Room</th>
+                    <th data-buttons="delete" style="width: 40px"></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
 </html>

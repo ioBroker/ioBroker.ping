@@ -3,6 +3,11 @@
         "name":                     "ping",
         "version":                  "1.1.3",
         "news": {
+            "1.2.0": {
+                "en": "change configuration dialog",
+                "de": "Konfigurationstabelle geändert",
+                "ru": "Улучшено редактирование адресов"
+            },
             "1.1.3": {
                 "en": "catch error if no IP defined",
                 "de": "Bearbeite den Fehler, falls kein IP definiert",
