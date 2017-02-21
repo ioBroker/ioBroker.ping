@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
-
+<script type="text/javascript" src="words.js"></script>
 <style>
     .table_header {
         background-color: blue;
@@ -26,27 +26,18 @@
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
     var devices = [];
-    systemDictionary = {
-        "PING adapter settings": {"en": "PING adapter settings", "de": "PING Adapter-Einstellungen", "ru": "Настройки драйвера PING"},
-        "Ping settings":         {"en": "Ping settings",         "de": "PING Einstellungen",         "ru": "Настройки PING"},
-        "Ping addresses":        {"en": "IP addresses to ping",  "de": "IP Adresse für Monitoring",  "ru": "Список IP адресов для мониторинга"},
-        "Interval[ms]:":         {"en": "Ping interval[ms]",     "de": "Ping Intervall[ms]",         "ru": "Интервал опроса[мс]:"},
-        "Room":                  {"en": "Room",                  "de": "Raum",                       "ru": "Комната"},
-        "Name":                  {"en": "Name",                  "de": "Name",                       "ru": "Имя"},
-        "IP Address":            {"en": "IP Address",            "de": "IP Adresse",                 "ru": "IP Адрес"}
-    };
 
     function setValue(id, value, onChange) {
-        // example: select elements with id=key and class=value and insert value
-        if ($('#' + id + '.value').attr('type') == 'checkbox') {
-            $('#' + id + '.value').prop('checked', value).change(function() {
+        var $value = $('#' + id + '.value');
+        if ($value.attr('type') === 'checkbox') {
+            $value.prop('checked', value).change(function() {
                 onChange();
             });
         } else {
-            $('#' + id + '.value').val(value).change(function() {
+            $value.val(value).change(function() {
                 onChange();
             }).keyup(function() {
-                // Chack that only numbers entered
+                // Check that only numbers entered
                 if ($(this).hasClass('number')) {
                     var val = $(this).val();
                     if (val) {
@@ -70,10 +61,12 @@
     function load(settings, onChange) {
         if (!settings) return;
 
+        if (settings.noHostname === undefined) settings.noHostname = false;
+
         devices = settings.devices || [];
 
         for (var key in settings) {
-            setValue(key, settings[key], onChange);
+            if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
         }
 
         if (typeof values2table === 'function') {
@@ -88,14 +81,11 @@
         onChange(false);
     }
 
-    // ... and the function save has to exist.
-    // you have to make sure the callback is called with the settings object as first param!
     function save(callback) {
-        // example: select elements with class=value and build settings object
         var obj = {};
         $('.value').each(function () {
             var $this = $(this);
-            if ($this.attr('type') == 'checkbox') {
+            if ($this.attr('type') === 'checkbox') {
                 obj[$this.attr('id')] = $this.prop('checked');
             } else {
                 obj[$this.attr('id')] = $this.val();
@@ -117,17 +107,18 @@
 <div id="adapter-container">
 
     <table><tr>
-        <td><img src="ping.png" width="64" height="64"></td>
+        <td><img src="ping.png" width="64px" height="64px"></td>
         <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">PING adapter settings</h3></td>
     </tr></table>
 
     <h4 class="translate">Ping settings</h4>
     <table>
-        <tr><td class="translate">Interval[ms]:</td><td><input class="value number" id="interval" type="input" size="6"/></td></tr>
+        <tr><td><label class="translate" for="interval">Interval[ms]:</label></td><td class="admin-icon"></td><td><input class="value number" id="interval" size="6" /></td></tr>
+        <tr><td><label class="translate" for="noHostname">No host name in state name:</label></td><td class="admin-icon"></td><td><input class="value" id="noHostname" type="checkbox" /></td></tr>
     </table>
     <h4 class="translate">Ping addresses</h4>
     <table id="devices"></table><div id="pager-devices"></div>
-    <div id="values" style="width: 100%; height: calc(100% - 195px)">
+    <div id="values" style="width: 100%; height: calc(100% - 230px)">
         <button class="table-button-add" style="margin-left: 10px; width: 1.5em; height: 1.5em"></button>
         <div style="width: 100%; height: calc(100% - 30px); overflow: auto;">
             <table class="table-values" style="width: 100%;">

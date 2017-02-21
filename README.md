@@ -12,6 +12,9 @@ ioBroker PING Adapter
 Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
+### 1.3.0 (2017-02-21)
+* (bluefox) allow to remove host name from state's name
+
 ### 1.2.0 (2016-12-09)
 * (bluefox) change configuration dialog
 

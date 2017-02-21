@@ -10,12 +10,12 @@
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
 'use strict';
-var utils   = require(__dirname + '/lib/utils'); // Get common adapter utils
-var ping    = require(__dirname + '/lib/ping');
-var adapter = utils.adapter('ping');
+var utils      = require(__dirname + '/lib/utils'); // Get common adapter utils
+var ping       = require(__dirname + '/lib/ping');
+var adapter    = utils.adapter('ping');
 
-var timer     = null;
-var stopTimer = null;
+var timer      = null;
+var stopTimer  = null;
 var isStopping = false;
 
 adapter.on('message', function (obj) {
@@ -144,16 +144,20 @@ function createState(name, ip, room, callback) {
 }
 
 function addState(name, ip, room, callback) {
-    adapter.getObject(host, function (err, obj) {
-        if (err || !obj) {
-            // if root does not exist, channel will not be created
-            adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
+    if (host) {
+        adapter.getObject(host, function (err, obj) {
+            if (err || !obj) {
+                // if root does not exist, channel will not be created
+                adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
+                    createState(name, ip, room, callback);
+                });
+            } else {
                 createState(name, ip, room, callback);
-            });
-        } else {
-            createState(name, ip, room, callback);
-        }
-    });
+            }
+        });
+    } else {
+        createState(name, ip, room, callback);
+    }
 }
 
 function syncConfig(callback) {
@@ -223,14 +227,16 @@ function syncConfig(callback) {
 }
 
 function main() {
-    host = adapter.host;
-    adapter.log.debug('Host=' + host);
+    host = adapter.config.noHostname ? null : adapter.host;
+    adapter.log.debug('Host=' + (host || ' no host name'));
 
     if (!adapter.config.devices.length) {
         adapter.log.warn('No one IP configured for ping');
         stop();
         return;
     }
+
+    adapter.config.interval = parseInt(adapter.config.interval, 10);
 
     if (adapter.config.interval < 5000) adapter.config.interval = 5000;
 
