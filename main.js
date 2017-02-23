@@ -99,8 +99,8 @@ function pingAll(hosts) {
         if (err) adapter.log.error(err);
         if (result) {
             adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
-            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
-            adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
+            adapter.setState({device: '', channel: host.replace(/[.\s]+/g, '_'), state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
+            //adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
         }
         if (!isStopping) {
             setTimeout(function () {
