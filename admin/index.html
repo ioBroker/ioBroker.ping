@@ -1,29 +1,15 @@
 <html>
-
+<head>
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
-<link rel="stylesheet" type="text/css" href="../../lib/css/jqGrid/ui.jqgrid-4.5.4.css"/>
-<link rel="stylesheet" type="text/css" href="../../lib/css/jquery.multiselect-1.13.css"/>
 <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
-<script type="text/javascript" src="../../lib/js/jqGrid/jquery.jqGrid-4.5.4.min.js"></script>
-<script type="text/javascript" src="../../lib/js/jqGrid/grid.locale-all.js"></script>
 
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 <script type="text/javascript" src="words.js"></script>
-<style>
-    .table_header {
-        background-color: blue;
-        color: white;
-    }
-    .ip {
-        width: 150px;
-        text-align: right;
-    }
-</style>
-<!-- you have to define 2 functions in the global scope: -->
+
 <script type="text/javascript">
     var devices = [];
 
@@ -69,14 +55,7 @@
             if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
         }
 
-        if (typeof values2table === 'function') {
-            $('#devices').hide();
-            $('#pager-devices').hide();
-            values2table('values', devices, onChange);
-        } else {
-            editTable('devices', ['name', 'ip', 'room'], devices, 350);
-            $('#values').hide();
-        }
+        values2table('values', devices, onChange);
 
         onChange(false);
     }
@@ -93,16 +72,13 @@
         });
 
         // Get edited table
-        if (typeof table2values === 'function') {
-            obj.devices = table2values('values');
-        } else {
-            obj.devices = getTableResult('devices', ['name', 'ip', 'room']);
-        }
+        obj.devices = table2values('values');
 
         callback(obj);
     }
 </script>
-
+</head>
+<body>
 <!-- you have to put your config page in a div with id adapter-container -->
 <div id="adapter-container">
 
@@ -117,7 +93,6 @@
         <tr><td><label class="translate" for="noHostname">No host name in state name:</label></td><td class="admin-icon"></td><td><input class="value" id="noHostname" type="checkbox" /></td></tr>
     </table>
     <h4 class="translate">Ping addresses</h4>
-    <table id="devices"></table><div id="pager-devices"></div>
     <div id="values" style="width: 100%; height: calc(100% - 230px)">
         <button class="table-button-add" style="margin-left: 10px; width: 1.5em; height: 1.5em"></button>
         <div style="width: 100%; height: calc(100% - 30px); overflow: auto;">
@@ -135,4 +110,5 @@
         </div>
     </div>
 </div>
+</body>
 </html>
