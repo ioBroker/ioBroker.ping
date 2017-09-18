@@ -64,7 +64,7 @@ function stop() {
     if (stopTimer) clearTimeout(stopTimer);
 
     // Stop only if schedule mode
-    if (adapter.common && adapter.common.mode == 'schedule') {
+    if (adapter.common && adapter.common.mode === 'schedule') {
         stopTimer = setTimeout(function () {
             stopTimer = null;
             if (timer) clearInterval(timer);
@@ -143,6 +143,34 @@ function createState(name, ip, room, callback) {
     }, callback);*/
 }
 
+function processTasks(tasks, callback) {
+    if (!tasks || !tasks.length) {
+        callback && callback();
+    } else {
+        var task = tasks.shift();
+        if (task.type === 'extendObject') {
+            adapter.extendObject(task.id, task.data, function (/* err */) {
+                setImmediate(processTasks, tasks, callback);
+            });
+        } else if (task.type === 'addStateToEnum') {
+            adapter.addStateToEnum('room', task.data, '', host, task.id, function (/* err */) {
+                setImmediate(processTasks, tasks, callback);
+            });
+        } else if (task.type === 'deleteStateFromEnum') {
+            adapter.deleteStateFromEnum('room', '', host, task.id, function (/* err */) {
+                setImmediate(processTasks, tasks, callback);
+            });
+        } else if (task.type === 'deleteState') {
+            adapter.deleteState('', host, task.id, function (/* err */) {
+                setImmediate(processTasks, tasks, callback);
+            });
+        } else {
+            adapter.log.error('Unknown task name: ' + JSON.stringify(task));
+            setImmediate(processTasks, tasks, callback);
+        }
+    }
+}
+
 function addState(name, ip, room, callback) {
     if (host) {
         adapter.getObject(host, function (err, obj) {
@@ -171,6 +199,7 @@ function syncConfig(callback) {
                 configToAdd.push(adapter.config.devices[k].ip);
             }
         }
+        var tasks = [];
 
         if (_states) {
             for (var j = 0; j < _states.length; j++) {
@@ -179,20 +208,42 @@ function syncConfig(callback) {
                     adapter.log.warn('No IP address found for ' + JSON.stringify(_states[j]));
                     continue;
                 }
+
                 id = ip.replace(/[.\s]+/g, '_');
                 var pos = configToAdd.indexOf(ip);
-                if (pos != -1) {
+                if (pos !== -1) {
                     configToAdd.splice(pos, 1);
                     // Check name and room
                     for (var u = 0; u < adapter.config.devices.length; u++) {
-                        if (adapter.config.devices[u].ip == ip) {
-                            if (_states[j].common.name != (adapter.config.devices[u].name || adapter.config.devices[u].ip)) {
-                                adapter.extendObject(_states[j]._id, {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip)}});
+                        if (adapter.config.devices[u].ip === ip) {
+                            // update name
+                            if (_states[j].common.name !== (adapter.config.devices[u].name || adapter.config.devices[u].ip)) {
+                                tasks.push({
+                                    type: 'extendObject',
+                                    id:   _states[j]._id,
+                                    data: {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip), read: true, write: false}}
+                                });
+                            } else if (typeof _states[j].common.read !== 'boolean') {
+                                // fix error, that type was string and not boolean
+                                tasks.push({
+                                    type: 'extendObject',
+                                    id:   _states[j]._id,
+                                    data: {common: {read: true, write: false}}
+                                });
                             }
+
+                            // update room
                             if (adapter.config.devices[u].room) {
-                                adapter.addStateToEnum('room', adapter.config.devices[u].room, '', host, id);
+                                tasks.push({
+                                    type: 'addStateToEnum',
+                                    id:   id,
+                                    data: adapter.config.devices[u].room
+                                });
                             } else {
-                                adapter.deleteStateFromEnum('room', '', host, id);
+                                tasks.push({
+                                    type: 'deleteStateFromEnum',
+                                    id:   id
+                                });
                             }
                         }
                     }
@@ -202,27 +253,34 @@ function syncConfig(callback) {
             }
         }
 
-        if (configToAdd.length) {
-            var count = 0;
-            for (var r = 0; r < adapter.config.devices.length; r++) {
-                if (configToAdd.indexOf(adapter.config.devices[r].ip) != -1) {
-                    count++;
-                    addState(adapter.config.devices[r].name, adapter.config.devices[r].ip, adapter.config.devices[r].room, function () {
-                        if (!--count && callback) callback();
-                    });
-                }
-            }
-        }
         if (configToDelete.length) {
             for (var e = 0; e < configToDelete.length; e++) {
                 id = configToDelete[e].replace(/[.\s]+/g, '_');
-                adapter.deleteStateFromEnum('room', '',  host, id);
-                //adapter.deleteStateFromEnum('room', '',  host, id + '.ms');
-                adapter.deleteState('', host, id);
-                //adapter.deleteState('', host, id + '.ms');
+                tasks.push({
+                    type: 'deleteStateFromEnum',
+                    id:   id
+                });
+                tasks.push({
+                    type: 'deleteState',
+                    id:   id
+                });
             }
         }
-        if (!count && callback) callback();
+
+        processTasks(tasks, function () {
+            var count = 0;
+            if (configToAdd.length) {
+                for (var r = 0; r < adapter.config.devices.length; r++) {
+                    if (configToAdd.indexOf(adapter.config.devices[r].ip) !== -1) {
+                        count++;
+                        addState(adapter.config.devices[r].name, adapter.config.devices[r].ip, adapter.config.devices[r].room, function () {
+                            if (!--count && callback) callback();
+                        });
+                    }
+                }
+            }
+            if (!count && callback) callback();
+        });
     });
 }
 

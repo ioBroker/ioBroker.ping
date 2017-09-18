@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "ping",
-        "version":                  "1.3.0",
+        "version":                  "1.3.1",
         "news": {
+            "1.3.1": {
+                "en": "object values are converted to the valid type",
+                "de": "Objektwerte werden in den gültigen Typ konvertiert",
+                "ru": "значения объекта преобразованы в допустимый тип"
+            },
             "1.3.0": {
                 "en": "allow to remove host name from state name",
                 "de": "Es ist möglich Hostname aus dem Zustandsname zu entfernen",
