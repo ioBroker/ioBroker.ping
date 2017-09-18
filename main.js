@@ -122,8 +122,8 @@ function createState(name, ip, room, callback) {
         name:   name || ip,
         def:    false,
         type:   'boolean',
-        read:   'true',
-        write:  'false',
+        read:   true,
+        write:  false,
         role:   'indicator.reachable',
         desc:   'Ping state of ' + ip
     }, {
@@ -134,8 +134,8 @@ function createState(name, ip, room, callback) {
         name:   'Response for ' + (name || ip),
         def:    0,
         type:   'number',
-        read:   'true',
-        write:  'false',
+        read:   true,
+        write:  false,
         role:   'value',
         desc:   'Response time in ms for ' + ip
     }, {
