@@ -148,25 +148,53 @@ function processTasks(tasks, callback) {
         callback && callback();
     } else {
         var task = tasks.shift();
+
+        // Workaround because of this fixed bug: https://github.com/ioBroker/ioBroker.js-controller/commit/d8d7cf2f34f24e0723a18a1cbd3f8ea23037692d
+        var timeout = setTimeout(function () {
+            adapter.log.warn('please update js-controller to at least 1.2.0');
+            timeout = null;
+            processTasks(tasks, callback);
+        }, 1000);
+
         if (task.type === 'extendObject') {
             adapter.extendObject(task.id, task.data, function (/* err */) {
-                setImmediate(processTasks, tasks, callback);
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
             });
         } else if (task.type === 'addStateToEnum') {
             adapter.addStateToEnum('room', task.data, '', host, task.id, function (/* err */) {
-                setImmediate(processTasks, tasks, callback);
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
             });
         } else if (task.type === 'deleteStateFromEnum') {
             adapter.deleteStateFromEnum('room', '', host, task.id, function (/* err */) {
-                setImmediate(processTasks, tasks, callback);
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
             });
         } else if (task.type === 'deleteState') {
             adapter.deleteState('', host, task.id, function (/* err */) {
-                setImmediate(processTasks, tasks, callback);
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
             });
         } else {
             adapter.log.error('Unknown task name: ' + JSON.stringify(task));
-            setImmediate(processTasks, tasks, callback);
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+                setImmediate(processTasks, tasks, callback);
+            }
         }
     }
 }

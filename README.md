@@ -12,7 +12,7 @@ ioBroker PING Adapter
 Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
-### 1.3.1 (2017-09-18)
+### 1.3.2 (2017-09-20)
 * (ldittmar) object values are converted to the valid type
 
 ### 1.3.0 (2017-02-21)
