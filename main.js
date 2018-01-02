@@ -12,7 +12,7 @@
 'use strict';
 var utils      = require(__dirname + '/lib/utils'); // Get common adapter utils
 var ping       = require(__dirname + '/lib/ping');
-var adapter    = utils.adapter('ping');
+var adapter    = utils.Adapter('ping');
 
 var timer      = null;
 var stopTimer  = null;
