@@ -74,7 +74,34 @@ function stop() {
     }
 }
 
-var host  = ''; // Name of the PC, where the ping runs
+var hostDeviceName = ''; // Device name for states
+var hostDevice = ''; // Device id for states
+
+function getChannelDCForHost(host) {
+    return {device: hostDevice, channel: host.replace(/[.\s]+/g, '_')};
+}
+
+function channelDCtoStateDCS(DC) {
+    return { device: DC.device, channel: '', state: DC.channel};
+}
+
+function getStateReachableDCSForHost(host) {
+    var result = getChannelDCForHost(host);
+    result.state = 'alive';
+    return result;
+}
+
+function getStateTimeDCSForHost(host) {
+    var result = getChannelDCForHost(host);
+    result.state = 'time';
+    return result;
+}
+
+function getStateRpsDCSForHost(host) {
+    var result = getChannelDCForHost(host);
+    result.state = 'rps';
+    return result;
+}
 
 function pingAll(hosts) {
     if (stopTimer) clearTimeout(stopTimer);
@@ -92,15 +119,25 @@ function pingAll(hosts) {
         return;
     }
 
-    var ip = hosts.pop();
-    adapter.log.debug('Pinging ' + ip);
+    var host = hosts.pop();
+    adapter.log.debug('Pinging ' + host);
 
-    ping.probe(ip, {log: adapter.log.debug}, function (err, result) {
+    ping.probe(host, {log: adapter.log.debug}, function (err, result) {
         if (err) adapter.log.error(err);
         if (result) {
             adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
-            adapter.setState({device: '', channel: host ? host.replace(/[.\s]+/g, '_') : '', state: result.host.replace(/[.\s]+/g, '_')},         {val: result.alive, ack: true});
-            //adapter.setState({device: '', channel: host, state: result.host.replace(/[.\s]+/g, '_') + '.ms'}, {val: result.ms,    ack: true});
+            adapter.setState(channelDCtoStateDCS(getChannelDCForHost(result.host)), {val: result.alive, ack: true}); // Added for backward compatible
+            adapter.setState(getStateReachableDCSForHost(result.host), {val: result.alive, ack: true});
+            adapter.setState(getStateTimeDCSForHost(result.host), {val: result.ms === null ? '-' : result.ms / 1000, ack: true});
+            var rps = 0;
+            if (result.alive) {
+                if (!(result.ms === null)) {
+                   if (result.ms > 0) {
+                      rps = result.ms <= 1 ? 1000 : 1000 / result.ms;
+                   }
+                }
+            }
+            adapter.setState(getStateRpsDCSForHost(result.host), {val: rps,    ack: true});
         }
         if (!isStopping) {
             setTimeout(function () {
@@ -110,37 +147,25 @@ function pingAll(hosts) {
     });
 }
 
-function createState(name, ip, room, callback) {
-    var id = ip.replace(/[.\s]+/g, '_');
-
-    if (room) {
-        adapter.addStateToEnum('room', room, '', host, id);
-        //adapter.addStateToEnum('room', room, '', host, id + '.ms');
+function getChannelIdFromFullId(id) {
+    var DCS = adapter.idToDCS(id)
+    var channel = DCS.channel;
+    if (!channel) {
+        channel = DCS.device;
     }
+    return channel;
+}
 
-    adapter.createState('', host, id, {
-        name:   name || ip,
-        def:    false,
-        type:   'boolean',
-        read:   true,
-        write:  false,
-        role:   'indicator.reachable',
-        desc:   'Ping state of ' + ip
-    }, {
-        ip: ip
-    }, callback);
-
-    /*adapter.createState('', host, id + '.ms', {
-        name:   'Response for ' + (name || ip),
-        def:    0,
-        type:   'number',
-        read:   true,
-        write:  false,
-        role:   'value',
-        desc:   'Response time in ms for ' + ip
-    }, {
-        ip: ip
-    }, callback);*/
+function getStateIdFromFullId(id) {
+    var DCS = adapter.idToDCS(id)
+    var state = DCS.state;
+    if (!state) {
+        state = DCS.channel;
+        if (!state) {
+            state = DCS.device;
+        }
+    }
+    return state;
 }
 
 function processTasks(tasks, callback) {
@@ -148,6 +173,7 @@ function processTasks(tasks, callback) {
         callback && callback();
     } else {
         var task = tasks.shift();
+        adapter.log.debug('Task' + JSON.stringify(task));
 
         // Workaround because of this fixed bug: https://github.com/ioBroker/ioBroker.js-controller/commit/d8d7cf2f34f24e0723a18a1cbd3f8ea23037692d
         var timeout = setTimeout(function () {
@@ -157,23 +183,110 @@ function processTasks(tasks, callback) {
         }, 1000);
 
         if (task.type === 'extendObject') {
-            adapter.extendObject(task.id, task.data, function (/* err */) {
+            adapter.extendObject(task.id, task.data, function ( err ) {
+                if (err) {
+                    adapter.log.error('Cannot update object: ' + task.id + ' Error: ' + err);
+                }
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
                     setImmediate(processTasks, tasks, callback);
                 }
             });
-        } else if (task.type === 'addStateToEnum') {
-            adapter.addStateToEnum('room', task.data, '', host, task.id, function (/* err */) {
+        } else if (task.type === 'deleteChannel') {
+            adapter.deleteChannel(task.device, task.channel, function ( err ) {
+                if (err) {
+                    adapter.log.error('Cannot delete channel : ' + task.device + '.' + task.channel + ' Error: ' + err);
+                }
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
                     setImmediate(processTasks, tasks, callback);
                 }
             });
-        } else if (task.type === 'deleteStateFromEnum') {
-            adapter.deleteStateFromEnum('room', '', host, task.id, function (/* err */) {
+        } else if (task.type === 'createChannel') {
+            var channel = task.channelInfo.channel;
+            adapter.createChannel(channel.id.device, channel.id.channel, channel.common, channel.native, function ( err ) {
+                if (err) {
+                    adapter.log.error('Cannot create channel: ' + JSON.stringify(task.channelInfo) + ' Error: ' + err);
+                } else {
+                    for(var i = 0; i < task.channelInfo.states.length; i++) {
+                        tasks.push({
+                            type: 'createState',
+                            stateInfo: task.channelInfo.states[i]
+                        });
+                    }
+                }
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
+            });
+
+        } else if (task.type === 'updateStatesOfChannel') {
+            adapter.getStatesOf(task.channelInfo.channel.id.device, task.channelInfo.channel.id.channel, function (err, _states) {
+                if (err) {
+                    adapter.log.error('Cannot read states for channel: ' + JSON.stringify(task.channelInfo) + ' Error: ' + err);
+                }
+                var states = task.channelInfo.states;
+                if (_states) {
+                    for (var j = 0; j < _states.length; j++) {
+                        var state = getStateIdFromFullId(_states[j]._id);
+                        var host = _states[j].native.host;
+                        if (!host) {
+                            adapter.log.warn('No host address found for ' + JSON.stringify(_states[j]));
+                            continue;
+                        }
+
+                        var pos = -1;
+                        for (var k = 0; k < states.length; k++) {
+                            if ((states[k].id.state === state)) {
+                                pos = k;
+                                break;
+                            }
+                        }
+                        if (pos === -1) {
+                            tasks.push({
+                                type: 'deleteState',
+                                device: task.channelInfo.channel.id.device,
+                                channel: task.channelInfo.channel.id.channel,
+                                state: state
+                            });
+                            continue;
+                        }
+
+                        if (JSON.stringify(_states[j].common) !== JSON.stringify(states[pos].common))  {
+                            tasks.push({
+                                type: 'extendObject',
+                                id:   _states[j]._id,
+                                data: {common: states[pos].common}
+                            });
+                        }
+                        states.splice(pos, 1);
+                    }
+                }
+
+                if (states.length) {
+                    for (var r = 0; r < states.length; r++) {
+                        tasks.push({
+                            type: 'createState',
+                            stateInfo: states[r]
+                        });
+                    }
+                }
+
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    setImmediate(processTasks, tasks, callback);
+                }
+            });
+        } else if (task.type === 'createState') {
+            adapter.createState(task.stateInfo.id.device, task.stateInfo.id.channel, task.stateInfo.id.state, task.stateInfo.common, task.stateInfo.native,  function (err) {
+                if (err) {
+                    adapter.log.error('Cannot create state: ' + JSON.stringify(task.stateInfo) + ' Error: ' + err);
+                }
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -181,7 +294,10 @@ function processTasks(tasks, callback) {
                 }
             });
         } else if (task.type === 'deleteState') {
-            adapter.deleteState('', host, task.id, function (/* err */) {
+            adapter.deleteState(task.device, task.channel, task.state, function ( err ) {
+                if (err) {
+                    adapter.log.error('Cannot delete state : ' + task.device + '.' + task.channel + '.' + task.state + ' Error: ' + err);
+                }
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -199,125 +315,167 @@ function processTasks(tasks, callback) {
     }
 }
 
-function addState(name, ip, room, callback) {
-    if (host) {
-        adapter.getObject(host, function (err, obj) {
+function addOrUpdateDevice(device, callback) {
+    if (device) {
+        adapter.getObject(device, function (err, obj) {
             if (err || !obj) {
                 // if root does not exist, channel will not be created
-                adapter.createChannel('', host.replace(/[.\s]+/g, '_'), [], function () {
-                    createState(name, ip, room, callback);
+                adapter.createDevice(device, {name: hostDeviceName}, function (err, obj) {
+                    if (err) {
+                        adapter.log.error('Cannot create device: ' + device + ' Error: ' + err);
+                    }
+                    callback();
                 });
             } else {
-                createState(name, ip, room, callback);
+                callback();
             }
         });
     } else {
-        createState(name, ip, room, callback);
+        callback();
     }
 }
 
-function syncConfig(callback) {
-    adapter.getStatesOf('', host, function (err, _states) {
-        var configToDelete = [];
-        var configToAdd    = [];
-        var k;
-        var id;
-        if (adapter.config.devices) {
-            for (k = 0; k < adapter.config.devices.length; k++) {
-                configToAdd.push(adapter.config.devices[k].ip);
+function prepareStatesForHost(name, host) {
+    return {
+        channel: {
+            id: getChannelDCForHost(host),
+            common: {
+                name:   name || host,
+                desc:   'Ping of ' + host
+            },
+            native: {
+                host: host
             }
-        }
-        var tasks = [];
-
-        if (_states) {
-            for (var j = 0; j < _states.length; j++) {
-                var ip = _states[j].native.ip;
-                if (!ip) {
-                    adapter.log.warn('No IP address found for ' + JSON.stringify(_states[j]));
-                    continue;
+        },
+        states: [
+            {
+                id: getStateReachableDCSForHost(host),
+                common: {
+                    name:   'Alive ' + name || host,
+                    def:    false,
+                    type:   'boolean',
+                    read:   true,
+                    write:  false,
+                    role:   'indicator.reachable',
+                    desc:   'Ping state of ' + host
+                },
+                native: {
+                    host: host
                 }
+            },
+            {
+                id: getStateTimeDCSForHost(host),
+                common: {
+                    name:   'Time ' + (name || host),
+                    def:    0,
+                    type:   'number',
+                    unit:   'sec',
+                    read:   true,
+                    write:  false,
+                    role:   'value.interval',
+                    desc:   'Ping time to ' + host
+                },
+                native: {
+                    host: host
+                }
+            },
+            {
+                id: getStateRpsDCSForHost(host),
+                common: {
+                    name:   'RPS ' + (name || host),
+                    def:    0,
+                    min:    0,
+                    max:    1000,
+                    type:   'number',
+                    unit:   'hz',
+                    read:   true,
+                    write:  false,
+                    role:   'value',
+                    desc:   'Ping round trips per second to ' + host
+                },
+                native: {
+                    host: host
+                }
+            }
+        ]
+    };
+}
 
-                id = ip.replace(/[.\s]+/g, '_');
-                var pos = configToAdd.indexOf(ip);
-                if (pos !== -1) {
-                    configToAdd.splice(pos, 1);
-                    // Check name and room
-                    for (var u = 0; u < adapter.config.devices.length; u++) {
-                        if (adapter.config.devices[u].ip === ip) {
-                            // update name
-                            if (_states[j].common.name !== (adapter.config.devices[u].name || adapter.config.devices[u].ip)) {
-                                tasks.push({
-                                    type: 'extendObject',
-                                    id:   _states[j]._id,
-                                    data: {common: {name: (adapter.config.devices[u].name || adapter.config.devices[u].ip), read: true, write: false}}
-                                });
-                            } else if (typeof _states[j].common.read !== 'boolean') {
-                                // fix error, that type was string and not boolean
-                                tasks.push({
-                                    type: 'extendObject',
-                                    id:   _states[j]._id,
-                                    data: {common: {read: true, write: false}}
-                                });
-                            }
+function syncConfig(callback) {
+    addOrUpdateDevice(hostDevice, function (){
+        adapter.log.debug('Get channels for device ' + hostDevice);
+        adapter.getChannelsOf(hostDevice, function (err, _channels) {
+            if (err) {
+                adapter.log.error('Cannot read channels for device: ' + hostDevice + ' Error: ' + err);
+            }
+            var configToAdd = [];
+            if (adapter.config.devices) {
+                for (var k = 0; k < adapter.config.devices.length; k++) {
+                    configToAdd.push(prepareStatesForHost(adapter.config.devices[k].name, adapter.config.devices[k].ip));
+                }
+            }
+            var tasks = [];
 
-                            // update room
-                            if (adapter.config.devices[u].room) {
-                                tasks.push({
-                                    type: 'addStateToEnum',
-                                    id:   id,
-                                    data: adapter.config.devices[u].room
-                                });
-                            } else {
-                                tasks.push({
-                                    type: 'deleteStateFromEnum',
-                                    id:   id
-                                });
-                            }
+            if (_channels) {
+                for (var j = 0; j < _channels.length; j++) {
+                    var channel = getChannelIdFromFullId(_channels[j]._id);
+
+                    var host = _channels[j].native.host;
+                    if (!host) {
+                        adapter.log.warn('No host address found for ' + JSON.stringify(_channels[j]));
+                        continue;
+                    }
+
+                    var pos = -1;
+                    for (var k = 0; k < configToAdd.length; k++) {
+                        if ((configToAdd[k].channel.id.channel === channel)) {
+                            pos = k;
+                            break;
                         }
                     }
-                } else {
-                    configToDelete.push(ip);
-                }
-            }
-        }
-
-        if (configToDelete.length) {
-            for (var e = 0; e < configToDelete.length; e++) {
-                id = configToDelete[e].replace(/[.\s]+/g, '_');
-                tasks.push({
-                    type: 'deleteStateFromEnum',
-                    id:   id
-                });
-                tasks.push({
-                    type: 'deleteState',
-                    id:   id
-                });
-            }
-        }
-
-        processTasks(tasks, function () {
-            var count = 0;
-            if (configToAdd.length) {
-                for (var r = 0; r < adapter.config.devices.length; r++) {
-                    if (configToAdd.indexOf(adapter.config.devices[r].ip) !== -1) {
-                        count++;
-                        addState(adapter.config.devices[r].name, adapter.config.devices[r].ip, adapter.config.devices[r].room, function () {
-                            if (!--count && callback) callback();
+                    if (pos === -1) {
+                        tasks.push({
+                            type: 'deleteChannel',
+                            device: hostDevice,
+                            channel: channel
+                        });
+                        continue;
+                    }
+                    if (JSON.stringify(_channels[j].common) !== JSON.stringify(configToAdd[pos].channel.common))  {
+                        tasks.push({
+                            type: 'extendObject',
+                            id:   _channels[j]._id,
+                            data: {common: configToAdd[pos].channel.common}
                         });
                     }
+                    tasks.push({
+                        type: 'updateStatesOfChannel',
+                        channelInfo: configToAdd[pos]
+                    });
+                    configToAdd.splice(pos, 1);
+                }
+            };
+
+            if (configToAdd.length) {
+                for (var r = 0; r < configToAdd.length; r++) {
+                    tasks.push({
+                        type: 'createChannel',
+                        channelInfo: configToAdd[r]
+                    });
                 }
             }
-            if (!count && callback) callback();
+            processTasks(tasks, callback);
         });
     });
 }
 
 function main() {
-    host = adapter.config.noHostname ? null : adapter.host;
-    adapter.log.debug('Host=' + (host || ' no host name'));
+    hostDeviceName = adapter.config.noHostname ? null : adapter.host;
+    hostDevice = hostDeviceName ? hostDeviceName.replace(/[.\s]+/g, '_') : ''
+    adapter.log.debug('Host=' + (hostDeviceName || ' no host name'));
 
     if (!adapter.config.devices.length) {
-        adapter.log.warn('No one IP configured for ping');
+        adapter.log.warn('No one host configured for ping');
         stop();
         return;
     }

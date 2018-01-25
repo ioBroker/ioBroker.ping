@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.3.2",
+        "version": "1.4.0",
         "news": {
+            "1.4.0": {
+                "en": "Add states with ping time to hosts",
+                "ru": "Добавлены состояния со временем пинга до каждого хоста"
+            },
             "1.3.2": {
                 "en": "object values are converted to the valid type",
                 "de": "Objektwerte werden in den gültigen Typ konvertiert",
