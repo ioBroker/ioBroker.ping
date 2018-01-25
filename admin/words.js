@@ -3,7 +3,8 @@ systemDictionary = {
     "Ping settings":         {"en": "Ping settings",         "de": "PING Einstellungen",         "ru": "Настройки PING"},
     "Ping addresses":        {"en": "IP addresses to ping",  "de": "IP Adresse für Monitoring",  "ru": "Список IP адресов для мониторинга"},
     "Interval[ms]:":         {"en": "Ping interval[ms]",     "de": "Ping Intervall[ms]",         "ru": "Интервал опроса[мс]:"},
-    "Room":                  {"en": "Room",                  "de": "Raum",                       "ru": "Комната"},
+    "Extended Info":         {"en": "Extended Info",                                             "ru": "Расширенная информация"},
+    "Use name":              {"en": "Use name",                                                  "ru": "Использовать Имя"},
     "Name":                  {"en": "Name",                  "de": "Name",                       "ru": "Имя"},
     "IP Address":            {"en": "IP Address",            "de": "IP Adresse",                 "ru": "IP Адрес"},
     "No host name in state name:": {

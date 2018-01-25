@@ -12,6 +12,9 @@ ioBroker PING Adapter
 Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
+### 1.4.0 (2018-01-25)
+* (vdemidov) refactored, added ping time and roundtrips per second for every host
+
 ### 1.3.2 (2017-09-20)
 * (ldittmar) object values are converted to the valid type
 
