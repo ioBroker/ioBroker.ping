@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2017 bluefox<dogafox@gmail.com>
+ *      (c) 2014-2019 bluefox<dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -12,7 +12,8 @@
 'use strict';
 var utils      = require(__dirname + '/lib/utils'); // Get common adapter utils
 var ping       = require(__dirname + '/lib/ping');
-var adapter    = utils.Adapter('ping');
+let adapter;
+const adapterName = require('./package.json').name.split('.').pop();
 
 var timer      = null;
 var stopTimer  = null;
@@ -20,22 +21,30 @@ var isStopping = false;
 
 const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
 
-adapter.on('message', function (obj) {
-    if (obj) processMessage(obj);
-    processMessages();
-});
+function startAdapter(options) {
+    options = options || {};
+    Object.assign(options, {name: adapterName});
 
-adapter.on('ready', function () {
-    main();
-});
+    adapter = new utils.Adapter(options);
 
-adapter.on('unload', function () {
-    if (timer) {
-        clearInterval(timer);
-        timer = 0;
-    }
-    isStopping = true;
-});
+    adapter.on('message', function (obj) {
+        if (obj) processMessage(obj);
+        processMessages();
+    });
+
+    adapter.on('ready', function () {
+        main();
+    });
+
+    adapter.on('unload', function () {
+        if (timer) {
+            clearInterval(timer);
+            timer = 0;
+        }
+        isStopping = true;
+    });
+    return adapter;
+}
 
 function processMessage(obj) {
     if (!obj || !obj.command) return;
@@ -570,4 +579,12 @@ function main() {
     syncConfig(function (pingTaskList) {
         pingAll(pingTaskList, 0);
     });
+}
+
+// If started as allInOne/compact mode => return function to create instance
+if (module && module.parent) {
+    module.exports = startAdapter;
+} else {
+    // or start the instance directly
+    startAdapter();
 }

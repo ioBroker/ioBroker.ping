@@ -1,8 +1,13 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.0",
+        "version": "1.4.1",
         "news": {
+            "1.4.1": {
+                "en": "Add support compact mode",
+                "de": "Support-Kompaktmodus hinzugefügt",
+                "ru": "Добавить поддержку компактного режима"
+            },
             "1.4.0": {
                 "en": "Add states with ping time to hosts",
                 "ru": "Добавлены состояния со временем пинга до каждого хоста"
@@ -40,6 +45,7 @@
         "license": "MIT",
         "platform": "Javascript/Node.js",
         "mode": "daemon",
+        "compact": true,
         "availableModes": [
             "daemon",
             "schedule"
