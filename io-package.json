@@ -33,7 +33,7 @@
                 "ru": "Ловит ошибку, если нет IP адреса"
             }
         },
-        "title": "PING Adapter",
+        "title": "PING",
         "desc": {
             "en": "This adapter cyclic polls configured IPs.",
             "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
