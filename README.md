@@ -1,5 +1,5 @@
 ![Logo](admin/ping.png)
-# ioBroker PING Adapter
+# PING Adapter
 
 ![Number of Installations](http://iobroker.live/badges/ping-installed.svg) ![Number of Installations](http://iobroker.live/badges/ping-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.ping.svg)](https://www.npmjs.com/package/iobroker.ping)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.ping.svg)](https://www.npmjs.com/package/iobroker.ping)
