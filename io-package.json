@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.1",
+        "version": "1.4.2",
         "news": {
+            "1.4.2": {
+                "en": "Sort list of IP addresses",
+                "de": "Liste der IP-Adressen sortieren",
+                "ru": "Сортировать список IP-адресов",
+                "pt": "Classificar lista de endereços IP",
+                "nl": "Sorteer lijst van IP-adressen",
+                "fr": "Trier la liste des adresses IP",
+                "it": "Elenco di elenchi di indirizzi IP",
+                "es": "Ordenar lista de direcciones IP",
+                "pl": "Sortuj listę adresów IP",
+                "zh-cn": "IP地址排序列表"
+            },
             "1.4.1": {
                 "en": "Add support compact mode",
                 "de": "Support-Kompaktmodus hinzugefügt",
@@ -37,7 +49,14 @@
         "desc": {
             "en": "This adapter cyclic polls configured IPs.",
             "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
-            "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING"
+            "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING",
+            "pt": "As pesquisas cíclicas deste adaptador configuraram IPs.",
+            "nl": "Deze adapter cyclische polls geconfigureerde IP's.",
+            "fr": "Cet adaptateur interroge cycliquement les adresses IP configurées.",
+            "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
+            "es": "Este adaptador sondea cíclicamente las IP configuradas.",
+            "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
+            "zh-cn": "该适配器循环轮询配置的IP。"
         },
         "authors": [
             "bluefox <dogafox@gmail.com>"

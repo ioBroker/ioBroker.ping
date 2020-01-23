@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2019 bluefox<dogafox@gmail.com>
+ *      (c) 2014-2020 bluefox<dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -10,14 +10,14 @@
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
 'use strict';
-var utils = require('@iobroker/adapter-core'); // Get common adapter utils
-var ping       = require(__dirname + '/lib/ping');
-let adapter;
+const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
+const ping        = require('./lib/ping');
 const adapterName = require('./package.json').name.split('.').pop();
+let adapter;
 
-var timer      = null;
-var stopTimer  = null;
-var isStopping = false;
+let timer      = null;
+let stopTimer  = null;
+let isStopping = false;
 
 const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
 
@@ -27,19 +27,18 @@ function startAdapter(options) {
 
     adapter = new utils.Adapter(options);
 
-    adapter.on('message', function (obj) {
-        if (obj) processMessage(obj);
-        processMessages();
-    });
+    adapter.on('message', obj => obj && processMessage(obj));
 
-    adapter.on('ready', function () {
-        main();
-    });
+    adapter.on('ready', () => main(adapter));
 
-    adapter.on('unload', function () {
+    adapter.on('unload', () => {
         if (timer) {
             clearInterval(timer);
-            timer = 0;
+            timer = null;
+        }
+        if (stopTimer) {
+            clearInterval(stopTimer);
+            stopTimer = null;
         }
         isStopping = true;
     });
@@ -47,38 +46,33 @@ function startAdapter(options) {
 }
 
 function processMessage(obj) {
-    if (!obj || !obj.command) return;
+    if (!obj || !obj.command) {
+        return;
+    }
+
     switch (obj.command) {
         case 'ping': {
-            // Try to connect to mqtt broker
+            // Try to ping one IP or name
             if (obj.callback && obj.message) {
-                ping.probe(obj.message, {log: adapter.log.debug}, function (err, result) {
-                    adapter.sendTo(obj.from, obj.command, res, obj.callback);
-                });
+                ping.probe(obj.message, {log: adapter.log.debug}, (err, result) =>
+                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback));
             }
             break;
         }
     }
 }
 
-function processMessages() {
-    adapter.getMessage(function (err, obj) {
-        if (obj) {
-            processMessage(obj.command, obj.message);
-            processMessages();
-        }
-    });
-}
-
 // Terminate adapter after 30 seconds idle
 function stop() {
-    if (stopTimer) clearTimeout(stopTimer);
+    stopTimer && clearTimeout(stopTimer);
+    stopTimer = null;
 
     // Stop only if schedule mode
     if (adapter.common && adapter.common.mode === 'schedule') {
-        stopTimer = setTimeout(function () {
+        stopTimer = setTimeout(() => {
             stopTimer = null;
-            if (timer) clearInterval(timer);
+            timer &&  clearInterval(timer);
+            timer = null;
             isStopping = true;
             adapter.stop();
         }, 30000);
@@ -86,61 +80,56 @@ function stop() {
 }
 
 function pingAll(taskList, index) {
-    if (stopTimer) clearTimeout(stopTimer);
+    stopTimer && clearTimeout(stopTimer);
+    stopTimer = null;
 
     if (index >= taskList.length) {
-        timer = setTimeout(function () {
-            pingAll(taskList, 0);
-        }, adapter.config.interval);
+        timer = setTimeout(() => pingAll(taskList, 0), adapter.config.interval);
         return;
     }
 
-    var task = taskList[index];
+    const task = taskList[index];
     index++;
     adapter.log.debug('Pinging ' + task.host);
 
-    ping.probe(task.host, {log: adapter.log.debug}, function (err, result) {
-        if (err) adapter.log.error(err);
+    ping.probe(task.host, {log: adapter.log.debug}, (err, result) => {
+        err && adapter.log.error(err);
+
         if (result) {
             adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
-            if (task.extended_info) {
-                adapter.setState(task.state_alive, { val: result.alive, ack: true });
-                adapter.setState(task.state_time, { val: result.ms === null ? '-' : result.ms / 1000, ack: true });
-                var rps = 0;
-                if (result.alive) {
-                    if (!(result.ms === null)) {
-                        if (result.ms > 0) {
-                            rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
-                        }
-                    }
+
+            if (task.extendedInfo) {
+                adapter.setState(task.stateAlive, {val: result.alive, ack: true});
+                adapter.setState(task.stateTime, {val: result.ms === null ? '-' : result.ms / 1000, ack: true});
+
+                let rps = 0;
+                if (result.alive && result.ms !== null && result.ms > 0) {
+                    rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
                 }
-                adapter.setState(task.state_rps, { val: rps, ack: true });
+                adapter.setState(task.stateRps, { val: rps, ack: true });
             } else {
-                adapter.setState(task.state_alive, { val: result.alive, ack: true });
+                adapter.setState(task.stateAlive, { val: result.alive, ack: true });
             }
         }
-        if (!isStopping) {
-            setTimeout(function () {
-                pingAll(taskList, index);
-            }, 0);
-        }
+
+        !isStopping && setTimeout(() =>
+            pingAll(taskList, index), 0);
     });
 }
 
 function buildId(id) {
-    let result = adapter.namespace + (id.device ? '.' + id.device : '') + (id.channel ? '.' + id.channel : '') + (id.state ? '.' + id.state : '');
-    return result;
+    return adapter.namespace + (id.device ? '.' + id.device : '') + (id.channel ? '.' + id.channel : '') + (id.state ? '.' + id.state : '');
 }
 
 function processTasks(tasks, callback) {
     if (!tasks || !tasks.length) {
         callback && callback();
     } else {
-        var task = tasks.shift();
+        const task = tasks.shift();
         adapter.log.debug('Task' + JSON.stringify(task));
 
         // Workaround because of this fixed bug: https://github.com/ioBroker/ioBroker.js-controller/commit/d8d7cf2f34f24e0723a18a1cbd3f8ea23037692d
-        var timeout = setTimeout(function () {
+        let timeout = setTimeout(() => {
             adapter.log.warn('please update js-controller to at least 1.2.0');
             timeout = null;
             processTasks(tasks, callback);
@@ -148,10 +137,8 @@ function processTasks(tasks, callback) {
 
         if (task.type === 'create_device') {
             adapter.log.debug('Create device id=' + buildId(task.id));
-            adapter.createDevice(task.id.device, task.data.common, task.data.native, function (err, obj) {
-                if (err) {
-                    adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
-                }
+            adapter.createDevice(task.id.device, task.data.common, task.data.native, (err, obj) => {
+                err && adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
 
                 if (timeout) {
                     clearTimeout(timeout);
@@ -161,10 +148,9 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'update_device') {
             adapter.log.debug('Update device id=' + buildId(task.id));
-            adapter.extendObject(task.id, task.data, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot update device : ' + buildId(task.id) + ' Error: ' + err);
-                }
+            adapter.extendObject(task.id, task.data, err => {
+                err && adapter.log.error('Cannot update device: ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -173,7 +159,8 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'delete_device') {
             adapter.log.debug('Delete device id=' + task.id);
-            adapter.delObject(task.id, function (err) {
+
+            adapter.delObject(task.id, err => {
                 if (err) {
                     adapter.log.error('Cannot delete device : ' + task.id + ' Error: ' + err);
                 }
@@ -185,10 +172,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'create_channel') {
             adapter.log.debug('Create channel id=' + buildId(task.id));
-            adapter.createChannel(task.id.device, task.id.channel, task.data.common, task.data.native, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
-                }
+
+            adapter.createChannel(task.id.device, task.id.channel, task.data.common, task.data.native, err =>  {
+                err && adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -197,10 +184,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'update_channel') {
             adapter.log.debug('Update channel id=' + buildId(task.id));
-            adapter.extendObject(task.id, task.data, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot update channel : ' + buildId(task.id) + ' Error: ' + err);
-                }
+
+            adapter.extendObject(task.id, task.data, err => {
+                err && adapter.log.error('Cannot update channel : ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -209,10 +196,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'delete_channel') {
             adapter.log.debug('Delete channel id=' + task.id);
-            adapter.delObject(task.id, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot delete channel : ' + task.id + ' Error: ' + err);
-                }
+
+            adapter.delObject(task.id, err => {
+                err && adapter.log.error('Cannot delete channel : ' + task.id + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -221,10 +208,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'create_state') {
             adapter.log.debug('Create state id=' + buildId(task.id));
-            adapter.createState(task.id.device, task.id.channel, task.id.state, task.data.common, task.data.native, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
-                }
+
+            adapter.createState(task.id.device, task.id.channel, task.id.state, task.data.common, task.data.native, err => {
+                err && adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -233,10 +220,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'update_state') {
             adapter.log.debug('Update state id=' + buildId(task.id));
-            adapter.extendObject(task.id, task.data, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
-                }
+
+            adapter.extendObject(task.id, task.data, err => {
+                err && adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -245,10 +232,10 @@ function processTasks(tasks, callback) {
             });
         } else if (task.type === 'delete_state') {
             adapter.log.debug('Delete state id=' + task.id);
-            adapter.delObject(task.id, function (err) {
-                if (err) {
-                    adapter.log.error('Cannot delete state : ' + task.id  + ' Error: ' + err);
-                }
+
+            adapter.delObject(task.id, err => {
+                err && adapter.log.error('Cannot delete state : ' + buildId(task.id) + ' Error: ' + err);
+
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = null;
@@ -257,6 +244,7 @@ function processTasks(tasks, callback) {
             });
         } else {
             adapter.log.error('Unknown task type: ' + JSON.stringify(task));
+
             if (timeout) {
                 clearTimeout(timeout);
                 timeout = null;
@@ -267,63 +255,65 @@ function processTasks(tasks, callback) {
 }
 
 function isDevicesEqual(rhs, lhs) {
-    return (rhs.common.name === lhs.common.name);
+    return rhs.common.name === lhs.common.name;
 }
 
 function isChannelsEqual(rhs, lhs) {
-    return (rhs.common.name === lhs.common.name)
-        && (rhs.native.host === lhs.native.host);
+    return rhs.common.name === lhs.common.name &&
+           rhs.native.host === lhs.native.host;
 }
 
 function isStatesEqual(rhs, lhs) {
-    return (rhs.common.name === lhs.common.name)
-        && (rhs.common.def === lhs.common.def)
-        && (rhs.common.min === lhs.common.min)
-        && (rhs.common.max === lhs.common.max)
-        && (rhs.common.type === lhs.common.type)
-        && (rhs.common.unit === lhs.common.unit)
-        && (rhs.common.read === lhs.common.read)
+    return (rhs.common.name  === lhs.common.name)
+        && (rhs.common.def   === lhs.common.def)
+        && (rhs.common.min   === lhs.common.min)
+        && (rhs.common.max   === lhs.common.max)
+        && (rhs.common.type  === lhs.common.type)
+        && (rhs.common.unit  === lhs.common.unit)
+        && (rhs.common.read  === lhs.common.read)
         && (rhs.common.write === lhs.common.write)
-        && (rhs.common.role === lhs.common.role)
-        && (rhs.native.host === lhs.native.host);
+        && (rhs.common.role  === lhs.common.role)
+        && (rhs.native.host  === lhs.native.host);
 }
 
-function prepare_tasks(prepared_objects, old_objects) {
-    var devices_to_update = [];
-    var channels_to_update = [];
-    var states_to_update = [];
+function prepareTasks(preparedObjects, old_objects) {
+    const devicesToUpdate  = [];
+    const channelsToUpdate = [];
+    const statesToUpdate   = [];
 
-    if (prepared_objects.device) {
-        const id_full = buildId(prepared_objects.device.id);
-        var old_obj = old_objects[id_full];
-        if (old_obj && old_obj.type === 'device') {
-            if (!isDevicesEqual(old_obj, prepared_objects.device)) {
-                devices_to_update.push({
+    if (preparedObjects.device) {
+        const fullID = buildId(preparedObjects.device.id);
+        const oldObj = old_objects[fullID];
+
+        if (oldObj && oldObj.type === 'device') {
+            if (!isDevicesEqual(oldObj, preparedObjects.device)) {
+                devicesToUpdate.push({
                     type: 'update_device',
-                    id: prepared_objects.device.id,
+                    id: preparedObjects.device.id,
                     data: {
-                        common: prepared_objects.device.common
+                        common: preparedObjects.device.common
                     }
                 });
             }
-            old_objects[id_full] = undefined;
+            old_objects[fullID] = undefined;
         } else {
-            devices_to_update.push({
+            devicesToUpdate.push({
                 type: 'create_device',
-                id: prepared_objects.device.id,
+                id: preparedObjects.device.id,
                 data: {
-                    common: prepared_objects.device.common
+                    common: preparedObjects.device.common
                 }
             });
         }
     }
 
-    prepared_objects.channels.forEach(function (channel) {
-        const id_full = buildId(channel.id);
-        var old_obj = old_objects[id_full];
-        if (old_obj && old_obj.type === 'channel') {
-            if (!isChannelsEqual(old_obj, channel)) {
-                channels_to_update.push({
+    preparedObjects.channels.forEach(channel => {
+        const fullID = buildId(channel.id);
+        const oldObj = old_objects[fullID];
+
+        if (oldObj && oldObj.type === 'channel') {
+            if (!isChannelsEqual(oldObj, channel)) {
+                channelsToUpdate.push({
                     type: 'update_channel',
                     id: channel.id,
                     data: {
@@ -332,9 +322,9 @@ function prepare_tasks(prepared_objects, old_objects) {
                     }
                 });
             }
-            old_objects[id_full] = undefined;
+            old_objects[fullID] = undefined;
         } else {
-            channels_to_update.push({
+            channelsToUpdate.push({
                 type: 'create_channel',
                 id: channel.id,
                 data: {
@@ -343,15 +333,15 @@ function prepare_tasks(prepared_objects, old_objects) {
                 }
             });
         }
+    });
 
-    })
+    preparedObjects.states.forEach(state => {
+        const fullID = buildId(state.id);
+        const oldObj = old_objects[fullID];
 
-    prepared_objects.states.forEach(function (state) {
-        const id_full = buildId(state.id);
-        var old_obj = old_objects[id_full];
-        if (old_obj && old_obj.type === 'state') {
-            if (!isStatesEqual(old_obj, state)) {
-                states_to_update.push({
+        if (oldObj && oldObj.type === 'state') {
+            if (!isStatesEqual(oldObj, state)) {
+                statesToUpdate.push({
                     type: 'update_state',
                     id: state.id,
                     data: {
@@ -360,9 +350,9 @@ function prepare_tasks(prepared_objects, old_objects) {
                     }
                 });
             }
-            old_objects[id_full] = undefined;
+            old_objects[fullID] = undefined;
         } else {
-            states_to_update.push({
+            statesToUpdate.push({
                 type: 'create_state',
                 id: state.id,
                 data: {
@@ -371,40 +361,39 @@ function prepare_tasks(prepared_objects, old_objects) {
                 }
             });
         }
+    });
 
-    })
+    const oldEntries       = Object.keys(old_objects).map(id => ([id, old_objects[id]])).filter(([id, object]) => object);
 
-    var old_entries = Object.keys(old_objects).map(id => ([id, old_objects[id]])).filter(([id, object]) => object);
+    const devicesToDelete  = oldEntries.filter(([id, object]) => object.type === 'device').map(([id, object]) => ({ type: 'delete_device', id: id }));
+    const channelsToDelete = oldEntries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({ type: 'delete_channel', id: id }));
+    const stateToDelete    = oldEntries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({ type: 'delete_state', id: id }));
 
-    var devices_to_delete = old_entries.filter(([id, object]) => object.type === 'device').map(([id, object]) => ({ type: 'delete_device', id: id }));
-    var channels_to_delete = old_entries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({ type: 'delete_channel', id: id }));
-    var states_to_delete = old_entries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({ type: 'delete_state', id: id }));
-
-    var tasks = states_to_delete.concat(channels_to_delete, devices_to_delete, devices_to_update, channels_to_update, states_to_update);
+    const tasks = stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
     return tasks;
 }
 
-function prepare_objects_for_host(hostDevice, config) {
-    var host = config.ip;
-    var name = config.name;
-    var id_name = (config.use_name ? (name || host) : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
+function prepareObjectsForHost(hostDevice, config) {
+    const host = config.ip;
+    const name = config.name;
+    const idName = (config.use_name ? (name || host) : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
 
     if (config.extended_info) {
-        var channel_id = { device: hostDevice, channel: id_name };
+        const channelID = {device: hostDevice, channel: idName};
 
-        var state_alive_id = { device: hostDevice, channel: id_name, state: 'alive' };
-        var state_time_id = { device: hostDevice, channel: id_name, state: 'time' };
-        var state_rps_id = { device: hostDevice, channel: id_name, state: 'rps' };
+        const stateAliveID = {device: hostDevice, channel: idName, state: 'alive'};
+        const stateTimeID  = {device: hostDevice, channel: idName, state: 'time'};
+        const stateRpsID   = {device: hostDevice, channel: idName, state: 'rps'};
         return {
             ping_task: {
                 host: config.ip,
-                extended_info: true,
-                state_alive: state_alive_id,
-                state_time: state_time_id,
-                state_rps: state_rps_id
+                extendedInfo: true,
+                stateAlive: stateAliveID,
+                stateTime: stateTimeID,
+                stateRps: stateRpsID
             },
             channel: {
-                id: channel_id,
+                id: channelID,
                 common: {
                     name: name || host,
                     desc: 'Ping of ' + host
@@ -415,7 +404,7 @@ function prepare_objects_for_host(hostDevice, config) {
             },
             states: [
                 {
-                    id: state_alive_id,
+                    id: stateAliveID,
                     common: {
                         name: 'Alive ' + name || host,
                         def: false,
@@ -430,7 +419,7 @@ function prepare_objects_for_host(hostDevice, config) {
                     }
                 },
                 {
-                    id: state_time_id,
+                    id: stateTimeID,
                     common: {
                         name: 'Time ' + (name || host),
                         def: 0,
@@ -446,7 +435,7 @@ function prepare_objects_for_host(hostDevice, config) {
                     }
                 },
                 {
-                    id: state_rps_id,
+                    id: stateRpsID,
                     common: {
                         name: 'RPS ' + (name || host),
                         def: 0,
@@ -466,16 +455,16 @@ function prepare_objects_for_host(hostDevice, config) {
             ]
         };
     } else {
-        var state_id = { device: hostDevice, channel: '', state: id_name };
+        const stateID = {device: hostDevice, channel: '', state: idName};
         return {
             ping_task: {
                 host: config.ip,
-                extended_info: false,
-                state_alive: state_id,
+                extendedInfo: false,
+                stateAlive: stateID,
             },
             states: [
                 {
-                    id: state_id,
+                    id: stateID,
                     common: {
                         name: 'Alive ' + name || host,
                         def: false,
@@ -491,48 +480,51 @@ function prepare_objects_for_host(hostDevice, config) {
                 }
             ]
         };
-    };
+    }
 }
 
 function prepare_objects_by_config() {
-    var result = {};
-    var hostDeviceName = adapter.host;
-    var hostDevice = '';
-    adapter.log.debug('Host=' + (hostDeviceName || ' no host name'));
+    const result = {};
+    const hostDeviceName = adapter.host;
+    let hostDevice = '';
 
+    adapter.log.debug('Host=' + (hostDeviceName || ' no host name'));
 
     if (!adapter.config.noHostname) {
         hostDevice = hostDeviceName ? hostDeviceName.replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_') : '';
         result.device = {
-            id: { device: hostDevice },
+            id: {
+                device: hostDevice
+            },
             common: {
                 name: hostDeviceName
             }
         };
     }
-    var pingTaskList = [];
-    var channels = [];
-    var states = [];
-    var used_ids = {};
+    const pingTaskList = [];
+    const channels = [];
+    let   states = [];
+    const usedIDs = {};
 
-    for (var k = 0; k < adapter.config.devices.length; k++) {
-        var device = adapter.config.devices[k];
-        var config = prepare_objects_for_host(hostDevice, device);
+    for (let k = 0; k < adapter.config.devices.length; k++) {
+        const device = adapter.config.devices[k];
+        const config = prepareObjectsForHost(hostDevice, device);
         if (config.channel) {
-            var id_full = buildId(config.channel.id);
-            if (used_ids[id_full]) {
-                adapter.log.warn('Objects with same id = ' + id_full + ' created for two hosts ' + JSON.stringify(used_ids[id_full]) + '  ' + JSON.stringify(device));
+            const fullID = buildId(config.channel.id);
+            if (usedIDs[fullID]) {
+                adapter.log.warn('Objects with same id = ' + fullID + ' created for two hosts ' + JSON.stringify(usedIDs[fullID]) + '  ' + JSON.stringify(device));
             } else {
-                used_ids[id_full] = device;
+                usedIDs[fullID] = device;
             }
             channels.push(config.channel);
         }
+
         config.states.forEach(state => {
-            var id_full = buildId(state.id);
-            if (used_ids[id_full]) {
-                adapter.log.warn('Objects with same id = ' + id_full + ' created for two hosts ' + JSON.stringify(used_ids[id_full]) + '  ' + JSON.stringify(device));
+            const fullID = buildId(state.id);
+            if (usedIDs[fullID]) {
+                adapter.log.warn('Objects with same id = ' + fullID + ' created for two hosts ' + JSON.stringify(usedIDs[fullID]) + '  ' + JSON.stringify(device));
             } else {
-                used_ids[id_full] = device;
+                usedIDs[fullID] = device;
             }
         });
 
@@ -548,25 +540,24 @@ function prepare_objects_by_config() {
 
 function syncConfig(callback) {
     adapter.log.debug('Prepare objects');
-    var prepared_objects = prepare_objects_by_config();
+    const preparedObjects = prepare_objects_by_config();
     adapter.log.debug('Get existing objects');
-    adapter.getAdapterObjects(function (_objects) {
+    adapter.getAdapterObjects(_objects => {
         adapter.log.debug('Prepare tasks of objects update');
-        var tasks = prepare_tasks(prepared_objects, _objects);
+        const tasks = prepareTasks(preparedObjects, _objects);
 
         adapter.log.debug('Start tasks of objects update');
-        processTasks(tasks, function () {
+        processTasks(tasks,  () => {
             adapter.log.debug('Finished tasks of objects update');
-            callback(prepared_objects.pingTaskList);
+            callback(preparedObjects.pingTaskList);
         });
     });
 }
 
-function main() {
+function main(adapter) {
     if (!adapter.config.devices.length) {
         adapter.log.warn('No one host configured for ping');
-        stop();
-        return;
+        return stop();
     }
 
     adapter.config.interval = parseInt(adapter.config.interval, 10);
@@ -576,9 +567,8 @@ function main() {
         adapter.config.interval = 5000;
     }
 
-    syncConfig(function (pingTaskList) {
-        pingAll(pingTaskList, 0);
-    });
+    syncConfig(pingTaskList =>
+        pingAll(pingTaskList, 0));
 }
 
 // If started as allInOne/compact mode => return function to create instance

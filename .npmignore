@@ -1,5 +1,9 @@
-Gruntfile.js
+gulpfile.js
 tasks
 test
+.idea
+.github
+package-lock.json
 .travis.yml
+.gitignore
 appveyor.yml

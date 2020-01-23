@@ -1,11 +1,11 @@
-var expect = require('chai').expect;
-var setup  = require(__dirname + '/lib/setup');
+const expect = require('chai').expect;
+const setup  = require('./lib/setup');
 
-var objects = null;
-var states  = null;
-var onStateChanged = null;
-var onObjectChanged = null;
-var hostname = require('os').hostname();
+let objects = null;
+let states  = null;
+let onStateChanged = null;
+const onObjectChanged = null;
+const hostname = require('os').hostname();
 
 function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
@@ -14,14 +14,12 @@ function checkConnectionOfAdapter(cb, counter) {
         return;
     }
 
-    states.getState('system.adapter.ping.0.alive', function (err, state) {
+    states.getState('system.adapter.ping.0.alive', (err, state) => {
         if (err) console.error(err);
         if (state && state.val) {
             cb && cb();
         } else {
-            setTimeout(function () {
-                checkConnectionOfAdapter(cb, counter + 1);
-            }, 1000);
+            setTimeout(() => checkConnectionOfAdapter(cb, counter + 1), 1000);
         }
     });
 }
@@ -33,7 +31,7 @@ function checkValueOfState(id, value, cb, counter) {
         return;
     }
 
-    states.getState(id, function (err, state) {
+    states.getState(id, (err, state) => {
         if (err) console.error(err);
         if (value === null && !state) {
             cb && cb();
@@ -41,19 +39,17 @@ function checkValueOfState(id, value, cb, counter) {
         if (state && (value === undefined || state.val === value)) {
             cb && cb();
         } else {
-            setTimeout(function () {
-                checkValueOfState(id, value, cb, counter + 1);
-            }, 500);
+            setTimeout(() => checkValueOfState(id, value, cb, counter + 1), 500);
         }
     });
 }
 
-describe('Test PING', function() {
+describe('Test PING', function () {
     before('Test PING: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
 
-        setup.setupController(function () {
-            var config = setup.getAdapterConfig();
+        setup.setupController(() => {
+            const config = setup.getAdapterConfig();
             // enable adapter
             config.common.enabled  = true;
             config.common.loglevel = 'debug';
@@ -78,12 +74,11 @@ describe('Test PING', function() {
 
             setup.setAdapterConfig(config.common, config.native);
 
-            setup.startController(true, function (id, obj) {
-                    if (onObjectChanged) onObjectChanged(id, obj);
-                }, function (id, state) {
-                    if (onStateChanged) onStateChanged(id, state);
-            },
-            function (_objects, _states) {
+            setup.startController(
+                true,
+                (id, obj) => onObjectChanged && onObjectChanged(id, obj),
+                (id, state) => onStateChanged && onStateChanged(id, state),
+            (_objects, _states) => {
                 objects = _objects;
                 states  = _states;
                 states.subscribe('*');
@@ -92,22 +87,20 @@ describe('Test PING', function() {
         });
     });
 
-    it('Test PING: Check if adapter started', function (done) {
-        this.timeout(5000);
+    it('Test PING: Check if adapter started', done => {
         checkConnectionOfAdapter(done);
-    });
+    }).timeout(5000);
 
-    it('Test PING: check creation of state', function (done) {
-        this.timeout(10000);
-        setTimeout(function () {
+    it('Test PING: check creation of state', done => {
+        setTimeout(() => {
             // if object exists
-            objects.getObject('ping.0.' + hostname + '.192_168_168_168', function (err, obj) {
+            objects.getObject('ping.0.' + hostname + '.192_168_168_168', (err, obj) => {
                 expect(err).to.be.not.ok;
                 expect(obj).to.be.ok;
-                objects.getObject('ping.0.' + hostname + '.google_com', function (err, obj) {
+                objects.getObject('ping.0.' + hostname + '.google_com', (err, obj) => {
                     expect(err).to.be.not.ok;
                     expect(obj).to.be.ok;
-                    objects.getObject('ping.0.' + hostname + '.127_0_0_1', function (err, obj) {
+                    objects.getObject('ping.0.' + hostname + '.127_0_0_1', (err, obj) => {
                         expect(err).to.be.not.ok;
                         expect(obj).to.be.ok;
                         setTimeout(done, 5000);
@@ -115,13 +108,12 @@ describe('Test PING', function() {
                 });
             });
         }, 2000);
-    });
+    }).timeout(10000);
 
-    it('Test PING: if localhost alive', function (done) {
-        this.timeout(8000);
-        var sID = 'ping.0.' + hostname + '.127_0_0_1';
+    it('Test PING: if localhost alive', done => {
+        const sID = 'ping.0.' + hostname + '.127_0_0_1';
 
-        states.getState(sID, function (err, state) {
+        states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
@@ -137,13 +129,12 @@ describe('Test PING', function() {
                 done();
             }
         });
-    });
+    }).timeout(8000);
 
-    it('Test PING: if google alive', function (done) {
-        this.timeout(1000);
-        var sID = 'ping.0.' + hostname + '.google_com';
+    it('Test PING: if google alive', done => {
+        const sID = 'ping.0.' + hostname + '.google_com';
 
-        states.getState(sID, function (err, state) {
+        states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
@@ -159,13 +150,12 @@ describe('Test PING', function() {
                 done();
             }
         });
-    });
+    }).timeout(1000);
 
-    it('Test PING: if not_exist not alive', function (done) {
-        this.timeout(3000);
-        var sID = 'ping.0.' + hostname + '.192_168_168_168';
+    it('Test PING: if not_exist not alive', done => {
+        const sID = 'ping.0.' + hostname + '.192_168_168_168';
 
-        states.getState(sID, function (err, state) {
+        states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
@@ -181,12 +171,12 @@ describe('Test PING', function() {
                 done();
             }
         });
-    });
+    }).timeout(3000);
 
     after('Test PING: Stop js-controller', function (done) {
         this.timeout(6000);
 
-        setup.stopController(function (normalTerminated) {
+        setup.stopController(normalTerminated => {
             console.log('Adapter normal terminated: ' + normalTerminated);
             done();
         });
