@@ -33,11 +33,11 @@ function startAdapter(options) {
 
     adapter.on('unload', () => {
         if (timer) {
-            clearInterval(timer);
+            clearTimeout(timer);
             timer = null;
         }
         if (stopTimer) {
-            clearInterval(stopTimer);
+            clearTimeout(stopTimer);
             stopTimer = null;
         }
         isStopping = true;
@@ -71,7 +71,7 @@ function stop() {
     if (adapter.common && adapter.common.mode === 'schedule') {
         stopTimer = setTimeout(() => {
             stopTimer = null;
-            timer &&  clearInterval(timer);
+            timer &&  clearTimeout(timer);
             timer = null;
             isStopping = true;
             adapter.stop();
@@ -112,8 +112,7 @@ function pingAll(taskList, index) {
             }
         }
 
-        !isStopping && setTimeout(() =>
-            pingAll(taskList, index), 0);
+        !isStopping && setImmediate(() => pingAll(taskList, index));
     });
 }
 
