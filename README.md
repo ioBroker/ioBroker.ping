@@ -14,6 +14,9 @@ Pings specified IP addresses in defined interval and monitors the results.
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## Changelog
+### 1.4.4 (2020-04-17)
+* (bluefox) Added support of Admin3 
+
 ### 1.4.3 (2020-04-17)
 * (Apollon77) Add Sentry for js-controller 3.0
 * (Apollon77) update dependencies

@@ -7,8 +7,10 @@
  *      MIT License
  *
  */
-/* jshint -W097 */// jshint strict:false
-/*jslint node: true */
+/* jshint -W097 */
+/* jshint strict: false */
+/* jslint node: true */
+
 'use strict';
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
 const ping        = require('./lib/ping');
@@ -368,8 +370,7 @@ function prepareTasks(preparedObjects, old_objects) {
     const channelsToDelete = oldEntries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({ type: 'delete_channel', id: id }));
     const stateToDelete    = oldEntries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({ type: 'delete_state', id: id }));
 
-    const tasks = stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
-    return tasks;
+    return stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
 }
 
 function prepareObjectsForHost(hostDevice, config) {
@@ -482,7 +483,7 @@ function prepareObjectsForHost(hostDevice, config) {
     }
 }
 
-function prepare_objects_by_config() {
+function prepareObjectsByConfig() {
     const result = {};
     const hostDeviceName = adapter.host;
     let hostDevice = '';
@@ -500,14 +501,19 @@ function prepare_objects_by_config() {
             }
         };
     }
+    
     const pingTaskList = [];
     const channels = [];
     let   states = [];
     const usedIDs = {};
 
-    for (let k = 0; k < adapter.config.devices.length; k++) {
-        const device = adapter.config.devices[k];
+    adapter.config.devices.forEach(device => {
+        if (device.enabled === false) {
+            return;
+        }
+
         const config = prepareObjectsForHost(hostDevice, device);
+
         if (config.channel) {
             const fullID = buildId(config.channel.id);
             if (usedIDs[fullID]) {
@@ -529,18 +535,19 @@ function prepare_objects_by_config() {
 
         states = states.concat(config.states);
         pingTaskList.push(config.ping_task);
-    }
+    });
 
     result.pingTaskList = pingTaskList;
-    result.channels = channels;
-    result.states = states;
+    result.channels     = channels;
+    result.states       = states;
     return result;
 }
 
 function syncConfig(callback) {
     adapter.log.debug('Prepare objects');
-    const preparedObjects = prepare_objects_by_config();
+    const preparedObjects = prepareObjectsByConfig();
     adapter.log.debug('Get existing objects');
+
     adapter.getAdapterObjects(_objects => {
         adapter.log.debug('Prepare tasks of objects update');
         const tasks = prepareTasks(preparedObjects, _objects);

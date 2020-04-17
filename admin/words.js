@@ -13,5 +13,29 @@ systemDictionary = {
     "IP Address": {                                  "en": "IP Address",                                      "de": "IP Adresse",                                      "ru": "IP Адрес",                                        "pt": "IP Address",                                      "nl": "IP Address",                                      "fr": "IP Address",                                      "it": "IP Address",                                      "es": "IP Address",                                      "pl": "IP Address",                                      "zh-cn": "IP地址"},
     "No host name in state name:": {                 "en": "No host name in state name:",                     "de": "Kein Hostnamen im Zustandsnamen:",                "ru": "Имена состояний без имени хоста:",                "pt": "No host name in state name:",                     "nl": "No host name in state name:",                     "fr": "No host name in state name:",                     "it": "No host name in state name:",                     "es": "No host name in state name:",                     "pl": "No host name in state name:",                     "zh-cn": "状态名称中没有主机名："},
     "tooltip_interval": {                            "en": "Polling interval in ms",                          "de": "Abfrage Intervall in ms",                         "ru": "Интервал опроса в миллисекундах",                 "pt": "Polling interval in ms",                          "nl": "Polling interval in ms",                          "fr": "Polling interval in ms",                          "it": "Polling interval in ms",                          "es": "Polling interval in ms",                          "pl": "Polling interval in ms",                          "zh-cn": "轮询间隔（毫秒）"},
-    "tooltip_noHostname": {                          "en": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "de": "Inkludiere kein Hostnamen in die Zustandsnamen:  ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "ru": "Убрать имя хоста из имён состояний: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "pt": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "nl": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "fr": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "it": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "es": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "pl": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "zh-cn": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1"}
+    "tooltip_noHostname": {                          "en": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "de": "Inkludiere kein Hostnamen in die Zustandsnamen:  ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "ru": "Убрать имя хоста из имён состояний: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "pt": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "nl": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "fr": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "it": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "es": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "pl": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1", "zh-cn": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1"},
+    "Enabled": {
+        "en": "Enabled",
+        "de": "Aktiviert",
+        "ru": "Активированно",
+        "pt": "Ativado",
+        "nl": "Geactiveerd",
+        "fr": "Activé",
+        "it": "attivato",
+        "es": "Activado",
+        "pl": "Aktywowany",
+        "zh-cn": "活性"
+    },
+    "Devices": {
+        "en": "Devices",
+        "de": "Geräte",
+        "ru": "Устройства",
+        "pt": "Aparelhos",
+        "nl": "Apparaten",
+        "fr": "Dispositifs",
+        "it": "dispositivi",
+        "es": "Dispositivos",
+        "pl": "Urządzenia",
+        "zh-cn": "设备"
+    }
 };

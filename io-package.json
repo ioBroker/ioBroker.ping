@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.3",
+        "version": "1.4.4",
         "news": {
+            "1.4.4": {
+                "en": "Added support of Admin3 ",
+                "de": "Unterstützung von Admin3 hinzugefügt",
+                "ru": "Добавлена поддержка Admin3",
+                "pt": "Adicionado suporte ao Admin3",
+                "nl": "Ondersteuning toegevoegd van Admin3",
+                "fr": "Ajout de la prise en charge d'Admin3",
+                "it": "Aggiunto supporto di Admin3",
+                "es": "Soporte agregado de Admin3",
+                "pl": "Dodano obsługę Admin3",
+                "zh-cn": "增加了对Admin3的支持"
+            },
             "1.4.3": {
                 "en": "Sentry added for error tracking with js-controller 3.0",
                 "de": "Sentry zur Fehlerverfolgung mit js-controller 3.0 hinzugefügt",
@@ -96,7 +108,8 @@
             "sentry": {
                 "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
             }
-        }
+        },
+        "materialize": true
     },
     "native": {
         "devices": [],
