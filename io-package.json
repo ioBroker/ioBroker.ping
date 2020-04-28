@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.5",
+        "version": "1.4.6",
         "news": {
+            "1.4.6": {
+                "en": "Make sure adapter do not crash if ping command can not be executed (Sentry)",
+                "de": "Stellen Sie sicher, dass der Adapter nicht abstürzt, wenn der Ping-Befehl nicht ausgeführt werden kann (Sentry).",
+                "ru": "Убедитесь, что адаптер не падает, если команда ping не может быть выполнена (Sentry)",
+                "pt": "Verifique se o adaptador não falha se o comando ping não puder ser executado (Sentry)",
+                "nl": "Zorg ervoor dat de adapter niet crasht als het ping-commando niet kan worden uitgevoerd (Sentry)",
+                "fr": "Assurez-vous que l'adaptateur ne plante pas si la commande ping ne peut pas être exécutée (Sentry)",
+                "it": "Assicurarsi che l'adattatore non si blocchi se il comando ping non può essere eseguito (Sentry)",
+                "es": "Asegúrese de que el adaptador no se bloquee si el comando ping no se puede ejecutar (Centinela)",
+                "pl": "Upewnij się, że adapter nie ulega awarii, jeśli nie można wykonać polecenia ping (Sentry)",
+                "zh-cn": "如果无法执行ping命令，请确保适配器不会崩溃（Sentry）"
+            },
             "1.4.5": {
                 "en": "potential crash case fixed",
                 "de": "Möglicher Crash-Fall behoben",
