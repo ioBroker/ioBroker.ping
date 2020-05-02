@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.6",
+        "version": "1.4.7",
         "news": {
+            "1.4.7": {
+                "en": "finally try to catch spawn errors (Sentry IOBROKER-PING-2)",
+                "de": "Versuche endlich, Spawn-Fehler zu fangen (Sentry IOBROKER-PING-2)",
+                "ru": "наконец, попытайтесь отловить ошибки появления (Sentry IOBROKER-PING-2)",
+                "pt": "finalmente tente detectar erros de desova (Sentry IOBROKER-PING-2)",
+                "nl": "probeer eindelijk spawn-fouten te vangen (Sentry IOBROKER-PING-2)",
+                "fr": "enfin essayer d'attraper les erreurs d'apparition (Sentry IOBROKER-PING-2)",
+                "it": "finalmente prova a rilevare gli errori di spawn (Sentry IOBROKER-PING-2)",
+                "es": "finalmente trate de atrapar errores de generación (Sentry IOBROKER-PING-2)",
+                "pl": "w końcu spróbuj złapać błędy odradzania (Sentry IOBROKER-PING-2)",
+                "zh-cn": "最终尝试捕获生成错误（Sentry IOBROKER-PING-2）"
+            },
             "1.4.6": {
                 "en": "Make sure adapter do not crash if ping command can not be executed (Sentry)",
                 "de": "Stellen Sie sicher, dass der Adapter nicht abstürzt, wenn der Ping-Befehl nicht ausgeführt werden kann (Sentry).",
