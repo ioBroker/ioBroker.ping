@@ -501,7 +501,7 @@ function prepareObjectsByConfig() {
             }
         };
     }
-    
+
     const pingTaskList = [];
     const channels = [];
     let   states = [];
