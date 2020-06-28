@@ -129,34 +129,25 @@ function processTasks(tasks, callback) {
         const task = tasks.shift();
         adapter.log.debug('Task' + JSON.stringify(task));
 
-        // Workaround because of this fixed bug: https://github.com/ioBroker/ioBroker.js-controller/commit/d8d7cf2f34f24e0723a18a1cbd3f8ea23037692d
-        let timeout = setTimeout(() => {
-            adapter.log.warn('please update js-controller to at least 1.2.0');
-            timeout = null;
-            processTasks(tasks, callback);
-        }, 1000);
-
         if (task.type === 'create_device') {
             adapter.log.debug('Create device id=' + buildId(task.id));
-            adapter.createDevice(task.id.device, task.data.common, task.data.native, (err, obj) => {
-                err && adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
+            try {
+                adapter.createDevice(task.id.device, task.data.common, task.data.native, (err, obj) => {
+                    err && adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
                     setImmediate(processTasks, tasks, callback);
-                }
-            });
+                });
+            } catch (err) {
+                adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
+
+                setImmediate(processTasks, tasks, callback);
+            }
         } else if (task.type === 'update_device') {
             adapter.log.debug('Update device id=' + buildId(task.id));
             adapter.extendObject(task.id, task.data, err => {
                 err && adapter.log.error('Cannot update device: ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else if (task.type === 'delete_device') {
             adapter.log.debug('Delete device id=' + task.id);
@@ -165,35 +156,29 @@ function processTasks(tasks, callback) {
                 if (err) {
                     adapter.log.error('Cannot delete device : ' + task.id + ' Error: ' + err);
                 }
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else if (task.type === 'create_channel') {
             adapter.log.debug('Create channel id=' + buildId(task.id));
 
-            adapter.createChannel(task.id.device, task.id.channel, task.data.common, task.data.native, err =>  {
-                err && adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
+            try {
+                adapter.createChannel(task.id.device, task.id.channel, task.data.common, task.data.native, err => {
+                    err && adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
                     setImmediate(processTasks, tasks, callback);
-                }
-            });
+                });
+            } catch (err) {
+                adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
+
+                return setImmediate(processTasks, tasks, callback);
+            }
         } else if (task.type === 'update_channel') {
             adapter.log.debug('Update channel id=' + buildId(task.id));
 
             adapter.extendObject(task.id, task.data, err => {
                 err && adapter.log.error('Cannot update channel : ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else if (task.type === 'delete_channel') {
             adapter.log.debug('Delete channel id=' + task.id);
@@ -201,35 +186,29 @@ function processTasks(tasks, callback) {
             adapter.delObject(task.id, err => {
                 err && adapter.log.error('Cannot delete channel : ' + task.id + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else if (task.type === 'create_state') {
             adapter.log.debug('Create state id=' + buildId(task.id));
 
-            adapter.createState(task.id.device, task.id.channel, task.id.state, task.data.common, task.data.native, err => {
-                err && adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
+            try {
+                adapter.createState(task.id.device, task.id.channel, task.id.state, task.data.common, task.data.native, err => {
+                    err && adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
                     setImmediate(processTasks, tasks, callback);
-                }
-            });
+                });
+            } catch (err) {
+                adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
+
+                return setImmediate(processTasks, tasks, callback);
+            }
         } else if (task.type === 'update_state') {
             adapter.log.debug('Update state id=' + buildId(task.id));
 
             adapter.extendObject(task.id, task.data, err => {
                 err && adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else if (task.type === 'delete_state') {
             adapter.log.debug('Delete state id=' + task.id);
@@ -237,20 +216,12 @@ function processTasks(tasks, callback) {
             adapter.delObject(task.id, err => {
                 err && adapter.log.error('Cannot delete state : ' + buildId(task.id) + ' Error: ' + err);
 
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    setImmediate(processTasks, tasks, callback);
-                }
+                setImmediate(processTasks, tasks, callback);
             });
         } else {
             adapter.log.error('Unknown task type: ' + JSON.stringify(task));
 
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-                setImmediate(processTasks, tasks, callback);
-            }
+            setImmediate(processTasks, tasks, callback);
         }
     }
 }
