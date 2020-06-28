@@ -125,7 +125,7 @@ describe('Test PING', function () {
                     }
                 };
             } else {
-                console.log(id + ': ' + JSON.stringify(state));
+                console.log(sID + ': ' + JSON.stringify(state));
                 expect(state.val).to.be.true;
                 done();
             }
@@ -148,7 +148,7 @@ describe('Test PING', function () {
                     }
                 };
             } else {
-                console.log(id + ': ' + JSON.stringify(state));
+                console.log(sID + ': ' + JSON.stringify(state));
                 expect(state.val).to.equal(expectedResult);
                 done();
             }
@@ -170,7 +170,7 @@ describe('Test PING', function () {
                     }
                 };
             } else {
-                console.log(id + ': ' + JSON.stringify(state));
+                console.log(sID + ': ' + JSON.stringify(state));
                 expect(state.val).to.be.false;
                 done();
             }
