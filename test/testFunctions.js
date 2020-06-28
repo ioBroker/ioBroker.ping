@@ -134,6 +134,7 @@ describe('Test PING', function () {
     it('Test PING: if google alive', done => {
         const sID = 'ping.0.' + hostname + '.google_com';
 
+        let expectedResult = (process.env.APPVEYOR && process.env.APPVEYOR==='True' || process.env.TRAVIS && process.env.TRAVIS==='true');
         states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
@@ -141,12 +142,12 @@ describe('Test PING', function () {
                     console.log(id + ': ' + JSON.stringify(state));
                     if (id === sID) {
                         onStateChanged = null;
-                        expect(state.val).to.be.true;
+                        expect(state.val).to.equal(expectedResult);
                         done();
                     }
                 };
             } else {
-                expect(state.val).to.be.true;
+                expect(state.val).to.equal(expectedResult);
                 done();
             }
         });
