@@ -107,7 +107,7 @@ describe('Test PING', function () {
                     });
                 });
             });
-        }, 5000);
+        }, 10000);
     }).timeout(15000);
 
     it('Test PING: if localhost alive', done => {
