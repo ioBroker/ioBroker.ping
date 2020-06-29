@@ -108,7 +108,7 @@ describe('Test PING', function () {
                 });
             });
         }, 10000);
-    }).timeout(15000);
+    }).timeout(20000);
 
     it('Test PING: if localhost alive', done => {
         const sID = 'ping.0.' + hostname + '.127_0_0_1';
