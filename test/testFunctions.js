@@ -107,8 +107,8 @@ describe('Test PING', function () {
                     });
                 });
             });
-        }, 2000);
-    }).timeout(10000);
+        }, 5000);
+    }).timeout(15000);
 
     it('Test PING: if localhost alive', done => {
         const sID = 'ping.0.' + hostname + '.127_0_0_1';
@@ -135,7 +135,11 @@ describe('Test PING', function () {
     it('Test PING: if google alive', done => {
         const sID = 'ping.0.' + hostname + '.google_com';
 
-        const expectedResult = !!((process.env.APPVEYOR && process.env.APPVEYOR === 'True') || (process.env.TRAVIS && process.env.TRAVIS === 'true'));
+        if (!((process.env.APPVEYOR && process.env.APPVEYOR === 'True') || (process.env.TRAVIS && process.env.TRAVIS === 'true'))) {
+            done();
+            return;
+        }
+
         states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
             if (!state || !state.ack) {
@@ -143,13 +147,13 @@ describe('Test PING', function () {
                     console.log(id + ': ' + JSON.stringify(state));
                     if (id === sID) {
                         onStateChanged = null;
-                        expect(state.val).to.equal(expectedResult);
+                        expect(state.val).to.be.true;
                         done();
                     }
                 };
             } else {
                 console.log(sID + ': ' + JSON.stringify(state));
-                expect(state.val).to.equal(expectedResult);
+                expect(state.val).to.be.true;
                 done();
             }
         });
@@ -157,6 +161,11 @@ describe('Test PING', function () {
 
     it('Test PING: if not_exist not alive', done => {
         const sID = 'ping.0.' + hostname + '.192_168_168_168';
+
+        if (!((process.env.APPVEYOR && process.env.APPVEYOR === 'True') || (process.env.TRAVIS && process.env.TRAVIS === 'true'))) {
+            done();
+            return;
+        }
 
         states.getState(sID, (err, state) => {
             expect(err).to.be.not.ok;
