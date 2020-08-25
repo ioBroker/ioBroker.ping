@@ -15,7 +15,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
 
-### 1.4.9 (2020-08-26)
+### __WORK IN PROGRESS__
 * (Apollon77) update js-controller dependency to correct version (1.5.8)
 
 ### 1.4.8 (2020-06-29)
