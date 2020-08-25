@@ -159,7 +159,7 @@
         },
         "materialize": true,
         "dependencies": {
-            "js-controller": ">=1.2.0"
+            "js-controller": ">=1.5.8"
         }
     },
     "native": {
