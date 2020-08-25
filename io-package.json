@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.9",
+        "version": "1.4.10",
         "news": {
+            "1.4.10": {
+                "en": "update js-controller dependency to correct version (1.5.8)",
+                "de": "Aktualisieren Sie die Abhängigkeit von js-controller auf die richtige Version (1.5.8).",
+                "ru": "обновить зависимость js-контроллера до правильной версии (1.5.8)",
+                "pt": "atualize a dependência do js-controller para a versão correta (1.5.8)",
+                "nl": "update js-controller afhankelijkheid naar correcte versie (1.5.8)",
+                "fr": "mettre à jour la dépendance js-controller pour corriger la version (1.5.8)",
+                "it": "aggiorna la dipendenza js-controller alla versione corretta (1.5.8)",
+                "es": "actualizar la dependencia del controlador js a la versión correcta (1.5.8)",
+                "pl": "zaktualizuj zależność kontrolera js do poprawnej wersji (1.5.8)",
+                "zh-cn": "将js-controller依赖关系更新为正确的版本（1.5.8）"
+            },
             "1.4.8": {
                 "en": "Prevent adapter crashes with invalid state/channel names, see error log! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
                 "de": "Verhindern Sie Adapterabstürze mit ungültigen Status- / Kanalnamen, siehe Fehlerprotokoll! (Wachposten IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
