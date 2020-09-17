@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ping",
-        "version": "1.4.11",
+        "version": "1.4.12",
         "news": {
+            "1.4.12": {
+                "en": "Prevent crash case when no devices are defined (Sentry IOBROKER-PING-R)",
+                "de": "Verhindern Sie einen Absturz, wenn keine Geräte definiert sind (Sentry IOBROKER-PING-R).",
+                "ru": "Предотвращение сбоя при отсутствии определенных устройств (Sentry IOBROKER-PING-R)",
+                "pt": "Previna caso de falha quando nenhum dispositivo é definido (Sentry IOBROKER-PING-R)",
+                "nl": "Voorkom een crash als er geen apparaten zijn gedefinieerd (Sentry IOBROKER-PING-R)",
+                "fr": "Prévenir les cas de crash lorsqu'aucun appareil n'est défini (Sentry IOBROKER-PING-R)",
+                "it": "Previeni casi di crash quando non sono definiti dispositivi (Sentry IOBROKER-PING-R)",
+                "es": "Evitar casos de accidentes cuando no se definen dispositivos (Sentry IOBROKER-PING-R)",
+                "pl": "Zapobiegaj awariom, gdy nie zdefiniowano żadnych urządzeń (Sentry IOBROKER-PING-R)",
+                "zh-cn": "未定义任何设备时防止崩溃（Sentry IOBROKER-PING-R）"
+            },
             "1.4.11": {
                 "en": "update js-controller dependency to correct version (1.5.8)",
                 "de": "Aktualisieren Sie die Abhängigkeit von js-controller auf die richtige Version (1.5.8).",
