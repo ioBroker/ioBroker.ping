@@ -532,7 +532,7 @@ function syncConfig(callback) {
 }
 
 function main(adapter) {
-    if (!adapter.config.devices.length) {
+    if (!adapter.config.devices || !adapter.config.devices.length) {
         adapter.log.warn('No one host configured for ping');
         return stop();
     }
