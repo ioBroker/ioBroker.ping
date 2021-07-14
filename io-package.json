@@ -114,34 +114,89 @@
             "1.4.1": {
                 "en": "Add support compact mode",
                 "de": "Support-Kompaktmodus hinzugefügt",
-                "ru": "Добавить поддержку компактного режима"
+                "ru": "Добавить поддержку компактного режима",
+                "pt": "Adicionar suporte ao modo compacto",
+                "nl": "Ondersteuning voor compacte modus toevoegen",
+                "fr": "Ajouter la prise en charge du mode compact",
+                "it": "Aggiungi supporto modalità compatta",
+                "es": "Agregar soporte en modo compacto",
+                "pl": "Dodaj obsługę trybu kompaktowego",
+                "zh-cn": "添加支持紧凑模式"
             },
             "1.4.0": {
                 "en": "Add states with ping time to hosts",
-                "ru": "Добавлены состояния со временем пинга до каждого хоста"
+                "ru": "Добавлены состояния со временем пинга до каждого хоста",
+                "de": "Zustände mit Ping-Zeit zu Hosts hinzufügen",
+                "pt": "Adicionar estados com tempo de ping para hosts",
+                "nl": "Statussen met pingtijd toevoegen aan hosts",
+                "fr": "Ajouter des états avec un temps de ping aux hôtes",
+                "it": "Aggiungi stati con tempo di ping agli host",
+                "es": "Agregar estados con tiempo de ping a los hosts",
+                "pl": "Dodaj stany z czasem pingowania do hostów",
+                "zh-cn": "将具有 ping 时间的状态添加到主机"
             },
             "1.3.2": {
                 "en": "object values are converted to the valid type",
                 "de": "Objektwerte werden in den gültigen Typ konvertiert",
-                "ru": "значения объекта преобразованы в допустимый тип"
+                "ru": "значения объекта преобразованы в допустимый тип",
+                "pt": "os valores do objeto são convertidos para o tipo válido",
+                "nl": "objectwaarden worden geconverteerd naar het geldige type",
+                "fr": "les valeurs d'objet sont converties dans le type valide",
+                "it": "i valori degli oggetti vengono convertiti nel tipo valido",
+                "es": "los valores del objeto se convierten al tipo válido",
+                "pl": "wartości obiektów są konwertowane na poprawny typ",
+                "zh-cn": "对象值被转换为有效类型"
             },
             "1.3.0": {
                 "en": "allow to remove host name from state name",
                 "de": "Es ist möglich Hostname aus dem Zustandsname zu entfernen",
-                "ru": "Можно убрать имя хоста из имён состояний"
+                "ru": "Можно убрать имя хоста из имён состояний",
+                "pt": "permite remover o nome do host do nome do estado",
+                "nl": "toestaan ​​om hostnaam uit staatsnaam te verwijderen",
+                "fr": "autoriser la suppression du nom d'hôte du nom de l'état",
+                "it": "consenti di rimuovere il nome host dal nome dello stato",
+                "es": "permitir eliminar el nombre de host del nombre del estado",
+                "pl": "zezwól na usunięcie nazwy hosta z nazwy stanu",
+                "zh-cn": "允许从状态名中删除主机名"
             },
             "1.2.0": {
                 "en": "change configuration dialog",
                 "de": "Konfigurationstabelle geändert",
-                "ru": "Улучшено редактирование адресов"
+                "ru": "Улучшено редактирование адресов",
+                "pt": "diálogo de mudança de configuração",
+                "nl": "dialoogvenster configuratie wijzigen",
+                "fr": "changer la boîte de dialogue de configuration",
+                "it": "finestra di dialogo cambia configurazione",
+                "es": "cambiar el diálogo de configuración",
+                "pl": "okno dialogowe zmiany konfiguracji",
+                "zh-cn": "更改配置对话框"
             },
             "1.1.3": {
                 "en": "catch error if no IP defined",
                 "de": "Bearbeite den Fehler, falls kein IP definiert",
-                "ru": "Ловит ошибку, если нет IP адреса"
+                "ru": "Ловит ошибку, если нет IP адреса",
+                "pt": "captura o erro se nenhum IP definido",
+                "nl": "vangfout als er geen IP is gedefinieerd",
+                "fr": "intercepter l'erreur si aucune IP définie",
+                "it": "cattura errore se nessun IP definito",
+                "es": "error de captura si no hay una IP definida",
+                "pl": "złap błąd, jeśli nie zdefiniowano adresu IP",
+                "zh-cn": "如果未定义 IP，则捕获错误"
             }
         },
         "title": "PING",
+        "titleLang": {
+            "en": "PING",
+            "de": "PING",
+            "ru": "PING",
+            "pt": "PING",
+            "nl": "PING",
+            "fr": "PING",
+            "it": "PING",
+            "es": "PING",
+            "pl": "PING",
+            "zh-cn": "PING"
+        },
         "desc": {
             "en": "This adapter cyclic polls configured IPs.",
             "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
@@ -182,9 +237,14 @@
             }
         },
         "materialize": true,
-        "dependencies": {
-            "js-controller": ">=1.5.8"
-        }
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ],
+        "connectionType": "local",
+        "dataSource": "poll",
+        "tier": 2
     },
     "native": {
         "devices": [],

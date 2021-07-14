@@ -1,0 +1,15 @@
+{
+    "Devices": "Urządzenia",
+    "Enabled": "Aktywowany",
+    "Extended Info": "Extended Info",
+    "IP Address": "IP Address",
+    "Interval[ms]:": "Ping interval[ms]",
+    "Name": "Name",
+    "No host name in state name:": "No host name in state name:",
+    "PING adapter settings": "PING adapter settings",
+    "Ping addresses": "IP addresses to ping",
+    "Ping settings": "Ping settings",
+    "Use name": "Use name",
+    "tooltip_interval": "Polling interval in ms",
+    "tooltip_noHostname": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1"
+}

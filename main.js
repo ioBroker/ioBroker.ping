@@ -102,7 +102,7 @@ function pingAll(taskList, index) {
 
             if (task.extendedInfo) {
                 adapter.setState(task.stateAlive, {val: result.alive, ack: true});
-                adapter.setState(task.stateTime, {val: result.ms === null ? '-' : result.ms / 1000, ack: true});
+                adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
 
                 let rps = 0;
                 if (result.alive && result.ms !== null && result.ms > 0) {

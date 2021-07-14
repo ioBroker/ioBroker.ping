@@ -1,0 +1,15 @@
+{
+    "Devices": "设备",
+    "Enabled": "活性",
+    "Extended Info": "扩展信息",
+    "IP Address": "IP地址",
+    "Interval[ms]:": "ping间隔[ms]",
+    "Name": "名称",
+    "No host name in state name:": "状态名称中没有主机名：",
+    "PING adapter settings": "PING适配器设置",
+    "Ping addresses": "ping IP地址",
+    "Ping settings": "ping设置",
+    "Use name": "使用名称",
+    "tooltip_interval": "轮询间隔（毫秒）",
+    "tooltip_noHostname": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1"
+}

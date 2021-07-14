@@ -1,0 +1,15 @@
+{
+    "Devices": "Устройства",
+    "Enabled": "Активированно",
+    "Extended Info": "Расширенная информация",
+    "IP Address": "IP Адрес",
+    "Interval[ms]:": "Интервал опроса[мс]:",
+    "Name": "Имя",
+    "No host name in state name:": "Имена состояний без имени хоста:",
+    "PING adapter settings": "Настройки драйвера PING",
+    "Ping addresses": "Список IP адресов для мониторинга",
+    "Ping settings": "Настройки PING",
+    "Use name": "Использовать Имя",
+    "tooltip_interval": "Интервал опроса в миллисекундах",
+    "tooltip_noHostname": "Убрать имя хоста из имён состояний: ping.0.127_0_0_1 / ping.0.host.127_0_0_1"
+}

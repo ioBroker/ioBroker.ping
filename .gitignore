@@ -1,5 +1,4 @@
 node_modules
 .idea
 tmp
-/admin/i18n
 package-lock.json
