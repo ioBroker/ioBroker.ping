@@ -20,7 +20,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 
 ## Changelog
 
-### __WORK IN PROGRESS__
+### 1.5.0 (2021-07-14)
 * js-controller 2.0 required at least
 * (Apollon77) optimize for js-controller 3.3
 
