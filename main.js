@@ -15,6 +15,7 @@
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
 const ping        = require('./lib/ping');
 const adapterName = require('./package.json').name.split('.').pop();
+const dns = require('dns');
 let adapter;
 
 let timer      = null;
@@ -94,28 +95,40 @@ function pingAll(taskList, index) {
     index++;
     adapter.log.debug('Pinging ' + task.host);
 
-    ping.probe(task.host, {log: adapter.log.debug}, (err, result) => {
-        err && adapter.log.error(err);
-
-        if (result) {
-            adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
-
-            if (task.extendedInfo) {
-                adapter.setState(task.stateAlive, {val: result.alive, ack: true});
-                adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
-
-                let rps = 0;
-                if (result.alive && result.ms !== null && result.ms > 0) {
-                    rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
-                }
-                adapter.setState(task.stateRps, { val: rps, ack: true });
+    if (task.nslookup) {
+        dns.reverse(task.host, (err, result) => {
+            err && adapter.log.error(err);
+    
+            if (result.length > 0) {   
+                adapter.setState(task.stateAlive, {val: true, ack: true});
             } else {
-                adapter.setState(task.stateAlive, { val: result.alive, ack: true });
+                adapter.setState(task.stateAlive, {val: false, ack: true});    
+            }           
+        });        
+    } else {
+        ping.probe(task.host, {log: adapter.log.debug}, (err, result) => {
+            err && adapter.log.error(err);
+    
+            if (result) {
+                adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
+    
+                if (task.extendedInfo) {
+                    adapter.setState(task.stateAlive, {val: result.alive, ack: true});
+                    adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
+    
+                    let rps = 0;
+                    if (result.alive && result.ms !== null && result.ms > 0) {
+                        rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
+                    }
+                    adapter.setState(task.stateRps, { val: rps, ack: true });
+                } else {
+                    adapter.setState(task.stateAlive, { val: result.alive, ack: true });
+                }
             }
-        }
-
-        !isStopping && setImmediate(() => pingAll(taskList, index));
-    });
+    
+            !isStopping && setImmediate(() => pingAll(taskList, index));
+        });
+    }
 }
 
 function buildId(id) {
@@ -432,6 +445,7 @@ function prepareObjectsForHost(hostDevice, config) {
                 host: config.ip,
                 extendedInfo: false,
                 stateAlive: stateID,
+                nslookup: config.reverse_dns_lookup,
             },
             states: [
                 {
