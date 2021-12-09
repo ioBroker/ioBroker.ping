@@ -11,7 +11,7 @@
 
 ## Pings configured IP addresses.
 
-Pings specified IP addresses in defined interval and monitors the results.
+Pings specified IP addresses in defined interval and monitors the results. Use "Reverse DNS Lookup" for devices blocking ping/ICMP. Does not work with extended info.
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 

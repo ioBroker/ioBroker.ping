@@ -11,5 +11,6 @@
     "Ping settings": "Ping Einstellungen",
     "Use name": "Name verwenden",
     "tooltip_interval": "Abfrage Intervall in ms",
-    "tooltip_noHostname": "Inkludiere kein Hostnamen in die Zustandsnamen:  ping.0.127_0_0_1 / ping.0.host.127_0_0_1"
+    "tooltip_noHostname": "Inkludiere kein Hostnamen in die Zustandsnamen:  ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
+    "reverse_dns_lookup": "Reversierte DNS Prüfung"
 }

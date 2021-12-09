@@ -11,5 +11,6 @@
     "Ping settings": "ping设置",
     "Use name": "使用名称",
     "tooltip_interval": "轮询间隔（毫秒）",
-    "tooltip_noHostname": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1"
+    "tooltip_noHostname": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
+    "reverse_dns_lookup": "反向 DNS 查找"
 }
