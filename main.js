@@ -12,13 +12,13 @@
 /* jslint node: true */
 
 'use strict';
-const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
-const ping        = require('./lib/ping');
+const utils = require('@iobroker/adapter-core'); // Get common adapter utils
+const ping = require('./lib/ping');
 const adapterName = require('./package.json').name.split('.').pop();
 let adapter;
 
-let timer      = null;
-let stopTimer  = null;
+let timer = null;
+let stopTimer = null;
 let isStopping = false;
 
 const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
@@ -73,7 +73,7 @@ function stop() {
     if (adapter.common && adapter.common.mode === 'schedule') {
         stopTimer = setTimeout(() => {
             stopTimer = null;
-            timer &&  clearTimeout(timer);
+            timer && clearTimeout(timer);
             timer = null;
             isStopping = true;
             adapter.stop();
@@ -94,28 +94,50 @@ function pingAll(taskList, index) {
     index++;
     adapter.log.debug('Pinging ' + task.host);
 
+    pingSingleDevice(task, taskList, index);
+}
+
+function pingSingleDevice(task, taskList, index, retryCounter = 1) {
     ping.probe(task.host, {log: adapter.log.debug}, (err, result) => {
         err && adapter.log.error(err);
 
         if (result) {
-            adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms');
+            let numberOfRetries = parseInt(adapter.config.numberOfRetries);
 
-            if (task.extendedInfo) {
-                adapter.setState(task.stateAlive, {val: result.alive, ack: true});
-                adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
+            adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms (Tried ' + retryCounter + '/' + numberOfRetries + ' times)');
 
-                let rps = 0;
-                if (result.alive && result.ms !== null && result.ms > 0) {
-                    rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
-                }
-                adapter.setState(task.stateRps, { val: rps, ack: true });
-            } else {
-                adapter.setState(task.stateAlive, { val: result.alive, ack: true });
+            if (result.alive === false && retryCounter < numberOfRetries) {
+                /* When the ping failed it also could be a device problem.
+                   Some Android Handys sometimes dont answer to an ping, but do in fact answer for the following ping.
+                   So we are giving the device some more attempts until it finally fails.
+                 */
+                retryCounter += 1;
+                pingSingleDevice(task, taskList, index, retryCounter);
+            } else if (result.alive === false && retryCounter === numberOfRetries) {
+                setDeviceStates(task, result);
+                !isStopping && setImmediate(() => pingAll(taskList, index));
+            } else if (result.alive === true) {
+                setDeviceStates(task, result);
+                !isStopping && setImmediate(() => pingAll(taskList, index));
             }
-        }
 
-        !isStopping && setImmediate(() => pingAll(taskList, index));
+        }
     });
+}
+
+function setDeviceStates(task, result) {
+    if (task.extendedInfo) {
+        adapter.setState(task.stateAlive, {val: result.alive, ack: true});
+        adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
+
+        let rps = 0;
+        if (result.alive && result.ms !== null && result.ms > 0) {
+            rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
+        }
+        adapter.setState(task.stateRps, {val: rps, ack: true});
+    } else {
+        adapter.setState(task.stateAlive, {val: result.alive, ack: true});
+    }
 }
 
 function buildId(id) {
@@ -232,26 +254,26 @@ function isDevicesEqual(rhs, lhs) {
 
 function isChannelsEqual(rhs, lhs) {
     return rhs.common.name === lhs.common.name &&
-           rhs.native.host === lhs.native.host;
+        rhs.native.host === lhs.native.host;
 }
 
 function isStatesEqual(rhs, lhs) {
-    return (rhs.common.name  === lhs.common.name)
-        && (rhs.common.def   === lhs.common.def)
-        && (rhs.common.min   === lhs.common.min)
-        && (rhs.common.max   === lhs.common.max)
-        && (rhs.common.type  === lhs.common.type)
-        && (rhs.common.unit  === lhs.common.unit)
-        && (rhs.common.read  === lhs.common.read)
+    return (rhs.common.name === lhs.common.name)
+        && (rhs.common.def === lhs.common.def)
+        && (rhs.common.min === lhs.common.min)
+        && (rhs.common.max === lhs.common.max)
+        && (rhs.common.type === lhs.common.type)
+        && (rhs.common.unit === lhs.common.unit)
+        && (rhs.common.read === lhs.common.read)
         && (rhs.common.write === lhs.common.write)
-        && (rhs.common.role  === lhs.common.role)
-        && (rhs.native.host  === lhs.native.host);
+        && (rhs.common.role === lhs.common.role)
+        && (rhs.native.host === lhs.native.host);
 }
 
 function prepareTasks(preparedObjects, old_objects) {
-    const devicesToUpdate  = [];
+    const devicesToUpdate = [];
     const channelsToUpdate = [];
-    const statesToUpdate   = [];
+    const statesToUpdate = [];
 
     if (preparedObjects.device) {
         const fullID = buildId(preparedObjects.device.id);
@@ -335,11 +357,20 @@ function prepareTasks(preparedObjects, old_objects) {
         }
     });
 
-    const oldEntries       = Object.keys(old_objects).map(id => ([id, old_objects[id]])).filter(([id, object]) => object);
+    const oldEntries = Object.keys(old_objects).map(id => ([id, old_objects[id]])).filter(([id, object]) => object);
 
-    const devicesToDelete  = oldEntries.filter(([id, object]) => object.type === 'device').map(([id, object]) => ({ type: 'delete_device', id: id }));
-    const channelsToDelete = oldEntries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({ type: 'delete_channel', id: id }));
-    const stateToDelete    = oldEntries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({ type: 'delete_state', id: id }));
+    const devicesToDelete = oldEntries.filter(([id, object]) => object.type === 'device').map(([id, object]) => ({
+        type: 'delete_device',
+        id: id
+    }));
+    const channelsToDelete = oldEntries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({
+        type: 'delete_channel',
+        id: id
+    }));
+    const stateToDelete = oldEntries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({
+        type: 'delete_state',
+        id: id
+    }));
 
     return stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
 }
@@ -353,8 +384,8 @@ function prepareObjectsForHost(hostDevice, config) {
         const channelID = {device: hostDevice, channel: idName};
 
         const stateAliveID = {device: hostDevice, channel: idName, state: 'alive'};
-        const stateTimeID  = {device: hostDevice, channel: idName, state: 'time'};
-        const stateRpsID   = {device: hostDevice, channel: idName, state: 'rps'};
+        const stateTimeID = {device: hostDevice, channel: idName, state: 'time'};
+        const stateRpsID = {device: hostDevice, channel: idName, state: 'rps'};
         return {
             ping_task: {
                 host: config.ip,
@@ -475,7 +506,7 @@ function prepareObjectsByConfig() {
 
     const pingTaskList = [];
     const channels = [];
-    let   states = [];
+    let states = [];
     const usedIDs = {};
 
     adapter.config.devices.forEach(device => {
@@ -509,8 +540,8 @@ function prepareObjectsByConfig() {
     });
 
     result.pingTaskList = pingTaskList;
-    result.channels     = channels;
-    result.states       = states;
+    result.channels = channels;
+    result.states = states;
     return result;
 }
 
@@ -524,7 +555,7 @@ function syncConfig(callback) {
         const tasks = prepareTasks(preparedObjects, _objects);
 
         adapter.log.debug('Start tasks of objects update');
-        processTasks(tasks,  () => {
+        processTasks(tasks, () => {
             adapter.log.debug('Finished tasks of objects update');
             callback(preparedObjects.pingTaskList);
         });
@@ -542,6 +573,11 @@ function main(adapter) {
     if (adapter.config.interval < 5000) {
         adapter.log.warn('Poll interval is too short. Reset to 5000 ms.');
         adapter.config.interval = 5000;
+    }
+
+    if (adapter.config.numberOfRetries < 1 || !adapter.config.numberOfRetries) {
+        adapter.log.warn('Number of retries is to low. Reset to 1.');
+        adapter.config.numberOfRetries = 1;
     }
 
     syncConfig(pingTaskList =>
