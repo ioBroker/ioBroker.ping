@@ -1,10 +1,10 @@
 {
-    "Devices": "Urządzenia",
+    "Devices": "urządzenia",
     "Enabled": "Aktywowany",
     "Extended Info": "Extended Info",
     "IP Address": "IP Address",
     "Interval[ms]:": "Ping interval[ms]",
-    "Name": "Name",
+    "Name": "Imię",
     "No host name in state name:": "No host name in state name:",
     "PING adapter settings": "PING adapter settings",
     "Ping addresses": "IP addresses to ping",
