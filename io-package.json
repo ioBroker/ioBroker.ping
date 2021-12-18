@@ -256,6 +256,9 @@
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
         "type": "network",
         "plugins": {
+            "sentry": {
+                "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
+            }
         },
         "materialize": true,
         "dependencies": [
