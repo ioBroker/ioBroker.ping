@@ -24,7 +24,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.5.1 (2021-12-28)
 * (basti4557) Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.
 
 ### 1.5.0 (2021-07-14)
@@ -51,7 +51,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 * (Apollon77) Fixed potential crash case (Sentry)
 
 ### 1.4.4 (2020-04-17)
-* (bluefox) Added support of Admin3 
+* (bluefox) Added support of Admin3
 
 ### 1.4.3 (2020-04-17)
 * (Apollon77) Add Sentry for js-controller 3.0
