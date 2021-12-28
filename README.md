@@ -18,9 +18,13 @@ Pings specified IP addresses in defined interval and monitors the results.
 ## Known Issues
 * if it is not possible to ping your linux client, check if `iputils-ping` is correct installed on client
 
-## Changelog
+<!--
+	Placeholder for the next version (at the beginning of the line):
+	### __WORK IN PROGRESS__
+-->
 
-### WORK IN PROGRESS
+## Changelog
+### __WORK IN PROGRESS__
 * (basti4557) Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.
 
 ### 1.5.0 (2021-07-14)
