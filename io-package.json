@@ -261,6 +261,7 @@
     "native": {
         "devices": [],
         "interval": 60000,
+        "numberOfRetries": 1,
         "noHostname": false
     },
     "objects": []
