@@ -16,7 +16,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## Known Issues
-* if its not possible to ping your linux client, check if `iputils-ping` is correct installed on client
+* if it is not possible to ping your linux client, check if `iputils-ping` is correct installed on client
 
 ## Changelog
 

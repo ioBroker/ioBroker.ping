@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2020 bluefox<dogafox@gmail.com>
+ *      (c) 2014-2021 bluefox<dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -102,25 +102,19 @@ function pingSingleDevice(task, taskList, index, retryCounter = 1) {
         err && adapter.log.error(err);
 
         if (result) {
-            let numberOfRetries = parseInt(adapter.config.numberOfRetries);
+            adapter.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${numberOfRetries} times)`);
 
-            adapter.log.debug('Ping result for ' + result.host + ': ' + result.alive + ' in ' + (result.ms === null ? '-' : result.ms) + 'ms (Tried ' + retryCounter + '/' + numberOfRetries + ' times)');
-
-            if (result.alive === false && retryCounter < numberOfRetries) {
+            if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
                 /* When the ping failed it also could be a device problem.
                    Some Android Handys sometimes dont answer to an ping, but do in fact answer for the following ping.
                    So we are giving the device some more attempts until it finally fails.
                  */
-                retryCounter += 1;
-                pingSingleDevice(task, taskList, index, retryCounter);
-            } else if (result.alive === false && retryCounter === numberOfRetries) {
-                setDeviceStates(task, result);
-                !isStopping && setImmediate(() => pingAll(taskList, index));
-            } else if (result.alive === true) {
+                !isStopping && setImmediate(_retryCounter =>
+                    pingSingleDevice(task, taskList, index, retryCounter), retryCounter + 1);
+            } else {
                 setDeviceStates(task, result);
                 !isStopping && setImmediate(() => pingAll(taskList, index));
             }
-
         }
     });
 }
@@ -575,7 +569,9 @@ function main(adapter) {
         adapter.config.interval = 5000;
     }
 
-    if (adapter.config.numberOfRetries < 1 || !adapter.config.numberOfRetries) {
+    adapter.config.numberOfRetries = parseInt(adapter.config.numberOfRetries, 10) || 1;
+
+    if (adapter.config.numberOfRetries < 1) {
         adapter.log.warn('Number of retries is to low. Reset to 1.');
         adapter.config.numberOfRetries = 1;
     }
