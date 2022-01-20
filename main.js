@@ -102,7 +102,7 @@ function pingSingleDevice(task, taskList, index, retryCounter = 1) {
         err && adapter.log.error(err);
 
         if (result) {
-            adapter.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${numberOfRetries} times)`);
+            adapter.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`);
 
             if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
                 /* When the ping failed it also could be a device problem.
