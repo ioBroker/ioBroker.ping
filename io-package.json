@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "news": {
+      "1.5.2": {
+        "en": "Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.",
+        "de": "Anzahl der Wiederholungen kann definiert werden, wenn eine Ping-Anfrage fehlgeschlagen ist. Dies sollte eine falsche Offline-Erkennung minimieren.",
+        "ru": "Количество повторных попыток может быть определено, если запрос ping не удался. Это должно свести к минимуму неправильное обнаружение в автономном режиме.",
+        "pt": "O número de tentativas pode ser definido se uma solicitação de ping falhar. Isso deve minimizar a detecção offline incorreta.",
+        "nl": "Het aantal nieuwe pogingen kan worden gedefinieerd als een ping-verzoek is mislukt. Dit zou foutieve offline detectie moeten minimaliseren.",
+        "fr": "Le nombre de tentatives peut être défini si une requête ping a échoué. Cela devrait minimiser la mauvaise détection hors ligne.",
+        "it": "È possibile definire il numero di tentativi se una richiesta ping non è riuscita. Questo dovrebbe ridurre al minimo il rilevamento offline errato.",
+        "es": "Se puede definir el número de reintentos si falla una solicitud de ping. Esto debería minimizar la detección incorrecta fuera de línea.",
+        "pl": "W przypadku niepowodzenia żądania ping można określić liczbę ponownych prób. Powinno to zminimalizować błędne wykrywanie offline.",
+        "zh-cn": "如果 ping 请求失败，可以定义重试次数。这应该最大限度地减少错误的离线检测。"
+      },
       "1.5.0": {
         "en": "js-controller 2.0 required at least\noptimize for js-controller 3.3",
         "de": "js-controller 2.0 mindestens erforderlich\noptimieren für js-controller 3.3",
