@@ -48,7 +48,7 @@ describe('Test PING', function () {
     before('Test PING: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
 
-        setup.setupController(() => {
+        setup.setupController(async () => {
             const config = await setup.getAdapterConfig();
             // enable adapter
             config.common.enabled  = true;
