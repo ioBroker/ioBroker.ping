@@ -24,6 +24,10 @@ Pings specified IP addresses in defined interval and monitors the results.
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) Fix the ping retry logic
+
 ### 1.5.2 (2022-01-20)
 * (basti4557) Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.
 

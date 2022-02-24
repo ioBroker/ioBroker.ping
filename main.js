@@ -106,11 +106,11 @@ function pingSingleDevice(task, taskList, index, retryCounter = 1) {
 
             if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
                 /* When the ping failed it also could be a device problem.
-                   Some Android Handys sometimes dont answer to an ping, but do in fact answer for the following ping.
+                   Some Android Handys sometimes don't answer to a ping, but do in fact answer for the following ping.
                    So we are giving the device some more attempts until it finally fails.
                  */
                 !isStopping && setImmediate(_retryCounter =>
-                    pingSingleDevice(task, taskList, index, retryCounter), retryCounter + 1);
+                    pingSingleDevice(task, taskList, index, _retryCounter), retryCounter + 1);
             } else {
                 setDeviceStates(task, result);
                 !isStopping && setImmediate(() => pingAll(taskList, index));
