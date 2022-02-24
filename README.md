@@ -24,8 +24,7 @@ Pings specified IP addresses in defined interval and monitors the results.
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 1.5.3 (2022-02-24)
 * (Apollon77) Fix the ping retry logic
 
 ### 1.5.2 (2022-01-20)
