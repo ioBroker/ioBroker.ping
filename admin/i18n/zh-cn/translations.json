@@ -5,7 +5,7 @@
     "IP Address": "IP地址",
     "Interval[ms]:": "ping间隔[ms]",
     "Name": "名称",
-    "No host name in state name:": "状态名称中没有主机名：",
+    "No host name in state name:": "状态名称中没有主机名",
     "PING adapter settings": "PING适配器设置",
     "Ping addresses": "ping IP地址",
     "Ping settings": "Ping 设置",
