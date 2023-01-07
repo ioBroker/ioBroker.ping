@@ -5,7 +5,7 @@
     "IP Address": "IP Адрес",
     "Interval[ms]:": "Интервал опроса[мс]:",
     "Name": "Имя",
-    "No host name in state name:": "Имена состояний без имени хоста:",
+    "No host name in state name:": "Имена состояний без имени хоста",
     "PING adapter settings": "Настройки драйвера PING",
     "Ping addresses": "Список IP адресов для мониторинга",
     "Ping settings": "Настройки PING",
