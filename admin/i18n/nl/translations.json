@@ -5,7 +5,7 @@
     "IP Address": "IP Address",
     "Interval[ms]:": "Ping interval[ms]",
     "Name": "Name",
-    "No host name in state name:": "No host name in state name:",
+    "No host name in state name:": "No host name in state name",
     "PING adapter settings": "PING adapter settings",
     "Ping addresses": "IP addresses to ping",
     "Ping settings": "Ping settings",
