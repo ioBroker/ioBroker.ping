@@ -57,7 +57,8 @@ function processMessage(obj) {
             // Try to ping one IP or name
             if (obj.callback && obj.message) {
                 ping.probe(obj.message, {log: adapter.log.debug}, (err, result) =>
-                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback));
+                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback)
+                );
             }
             break;
         }
@@ -102,15 +103,19 @@ function pingSingleDevice(task, taskList, index, retryCounter = 1) {
         err && adapter.log.error(err);
 
         if (result) {
-            adapter.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`);
+            adapter.log.debug(
+                `Ping result for ${result.host}: ${result.alive} in ${
+                    result.ms === null ? '-' : result.ms
+                }ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`
+            );
 
             if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
                 /* When the ping failed it also could be a device problem.
                    Some Android Handys sometimes don't answer to a ping, but do in fact answer for the following ping.
                    So we are giving the device some more attempts until it finally fails.
                  */
-                !isStopping && setImmediate(_retryCounter =>
-                    pingSingleDevice(task, taskList, index, _retryCounter), retryCounter + 1);
+                !isStopping &&
+                    setImmediate(_retryCounter => pingSingleDevice(task, taskList, index, _retryCounter), retryCounter + 1);
             } else {
                 setDeviceStates(task, result);
                 !isStopping && setImmediate(() => pingAll(taskList, index));
@@ -135,7 +140,12 @@ function setDeviceStates(task, result) {
 }
 
 function buildId(id) {
-    return adapter.namespace + (id.device ? '.' + id.device : '') + (id.channel ? '.' + id.channel : '') + (id.state ? '.' + id.state : '');
+    return (
+        adapter.namespace +
+        (id.device ? '.' + id.device : '') +
+        (id.channel ? '.' + id.channel : '') +
+        (id.state ? '.' + id.state : '')
+    );
 }
 
 function processTasks(tasks, callback) {
@@ -160,7 +170,7 @@ function processTasks(tasks, callback) {
             }
         } else if (task.type === 'update_device') {
             adapter.log.debug('Update device id=' + buildId(task.id));
-            adapter.extendObject(task.id, task.data, err => {
+            adapter.extendObject(task.id.device, task.data, err => {
                 err && adapter.log.error('Cannot update device: ' + buildId(task.id) + ' Error: ' + err);
 
                 setImmediate(processTasks, tasks, callback);
@@ -191,7 +201,8 @@ function processTasks(tasks, callback) {
         } else if (task.type === 'update_channel') {
             adapter.log.debug('Update channel id=' + buildId(task.id));
 
-            adapter.extendObject(task.id, task.data, err => {
+            const id = (task.id.device ? task.id.device + '.' : '') + task.id.channel;
+            adapter.extendObject(id, task.data, err => {
                 err && adapter.log.error('Cannot update channel : ' + buildId(task.id) + ' Error: ' + err);
 
                 setImmediate(processTasks, tasks, callback);
@@ -221,7 +232,8 @@ function processTasks(tasks, callback) {
         } else if (task.type === 'update_state') {
             adapter.log.debug('Update state id=' + buildId(task.id));
 
-            adapter.extendObject(task.id, task.data, err => {
+            const id = (task.id.device ? task.id.device + '.' : '') + (id.channel ? id.channel + '.' : '') + id.state;
+            adapter.extendObject(id, task.data, err => {
                 err && adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
 
                 setImmediate(processTasks, tasks, callback);
@@ -247,21 +259,22 @@ function isDevicesEqual(rhs, lhs) {
 }
 
 function isChannelsEqual(rhs, lhs) {
-    return rhs.common.name === lhs.common.name &&
-        rhs.native.host === lhs.native.host;
+    return rhs.common.name === lhs.common.name && rhs.native.host === lhs.native.host;
 }
 
 function isStatesEqual(rhs, lhs) {
-    return (rhs.common.name === lhs.common.name)
-        && (rhs.common.def === lhs.common.def)
-        && (rhs.common.min === lhs.common.min)
-        && (rhs.common.max === lhs.common.max)
-        && (rhs.common.type === lhs.common.type)
-        && (rhs.common.unit === lhs.common.unit)
-        && (rhs.common.read === lhs.common.read)
-        && (rhs.common.write === lhs.common.write)
-        && (rhs.common.role === lhs.common.role)
-        && (rhs.native.host === lhs.native.host);
+    return (
+        rhs.common.name === lhs.common.name &&
+        rhs.common.def === lhs.common.def &&
+        rhs.common.min === lhs.common.min &&
+        rhs.common.max === lhs.common.max &&
+        rhs.common.type === lhs.common.type &&
+        rhs.common.unit === lhs.common.unit &&
+        rhs.common.read === lhs.common.read &&
+        rhs.common.write === lhs.common.write &&
+        rhs.common.role === lhs.common.role &&
+        rhs.native.host === lhs.native.host
+    );
 }
 
 function prepareTasks(preparedObjects, old_objects) {
@@ -351,20 +364,28 @@ function prepareTasks(preparedObjects, old_objects) {
         }
     });
 
-    const oldEntries = Object.keys(old_objects).map(id => ([id, old_objects[id]])).filter(([id, object]) => object);
+    const oldEntries = Object.keys(old_objects)
+        .map(id => [id, old_objects[id]])
+        .filter(([id, object]) => object);
 
-    const devicesToDelete = oldEntries.filter(([id, object]) => object.type === 'device').map(([id, object]) => ({
-        type: 'delete_device',
-        id: id
-    }));
-    const channelsToDelete = oldEntries.filter(([id, object]) => object.type === 'channel').map(([id, object]) => ({
-        type: 'delete_channel',
-        id: id
-    }));
-    const stateToDelete = oldEntries.filter(([id, object]) => object.type === 'state').map(([id, object]) => ({
-        type: 'delete_state',
-        id: id
-    }));
+    const devicesToDelete = oldEntries
+        .filter(([id, object]) => object.type === 'device')
+        .map(([id, object]) => ({
+            type: 'delete_device',
+            id: id
+        }));
+    const channelsToDelete = oldEntries
+        .filter(([id, object]) => object.type === 'channel')
+        .map(([id, object]) => ({
+            type: 'delete_channel',
+            id: id
+        }));
+    const stateToDelete = oldEntries
+        .filter(([id, object]) => object.type === 'state')
+        .map(([id, object]) => ({
+            type: 'delete_state',
+            id: id
+        }));
 
     return stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
 }
@@ -372,7 +393,7 @@ function prepareTasks(preparedObjects, old_objects) {
 function prepareObjectsForHost(hostDevice, config) {
     const host = config.ip;
     const name = config.name;
-    const idName = (config.use_name ? (name || host) : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
+    const idName = (config.use_name ? name || host : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
 
     if (config.extended_info) {
         const channelID = {device: hostDevice, channel: idName};
@@ -456,7 +477,7 @@ function prepareObjectsForHost(hostDevice, config) {
             ping_task: {
                 host: config.ip,
                 extendedInfo: false,
-                stateAlive: stateID,
+                stateAlive: stateID
             },
             states: [
                 {
@@ -513,7 +534,14 @@ function prepareObjectsByConfig() {
         if (config.channel) {
             const fullID = buildId(config.channel.id);
             if (usedIDs[fullID]) {
-                adapter.log.warn('Objects with same id = ' + fullID + ' created for two hosts ' + JSON.stringify(usedIDs[fullID]) + '  ' + JSON.stringify(device));
+                adapter.log.warn(
+                    'Objects with same id = ' +
+                        fullID +
+                        ' created for two hosts ' +
+                        JSON.stringify(usedIDs[fullID]) +
+                        '  ' +
+                        JSON.stringify(device)
+                );
             } else {
                 usedIDs[fullID] = device;
             }
@@ -523,7 +551,14 @@ function prepareObjectsByConfig() {
         config.states.forEach(state => {
             const fullID = buildId(state.id);
             if (usedIDs[fullID]) {
-                adapter.log.warn('Objects with same id = ' + fullID + ' created for two hosts ' + JSON.stringify(usedIDs[fullID]) + '  ' + JSON.stringify(device));
+                adapter.log.warn(
+                    'Objects with same id = ' +
+                        fullID +
+                        ' created for two hosts ' +
+                        JSON.stringify(usedIDs[fullID]) +
+                        '  ' +
+                        JSON.stringify(device)
+                );
             } else {
                 usedIDs[fullID] = device;
             }
@@ -576,8 +611,7 @@ function main(adapter) {
         adapter.config.numberOfRetries = 1;
     }
 
-    syncConfig(pingTaskList =>
-        pingAll(pingTaskList, 0));
+    syncConfig(pingTaskList => pingAll(pingTaskList, 0));
 }
 
 // If started as allInOne/compact mode => return function to create instance
