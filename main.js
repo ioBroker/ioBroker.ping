@@ -392,8 +392,8 @@ function prepareTasks(preparedObjects, old_objects) {
 }
 
 function prepareObjectsForHost(hostDevice, config) {
-    const host = config.ip;
-    const name = config.name;
+    const host = config.ip.trim();
+    const name = config.name.trim();
     const idName = (config.use_name ? name || host : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
 
     if (config.extended_info) {
@@ -404,7 +404,7 @@ function prepareObjectsForHost(hostDevice, config) {
         const stateRpsID = {device: hostDevice, channel: idName, state: 'rps'};
         return {
             ping_task: {
-                host: config.ip,
+                host: config.ip.trim(),
                 extendedInfo: true,
                 stateAlive: stateAliveID,
                 stateTime: stateTimeID,
@@ -476,7 +476,7 @@ function prepareObjectsForHost(hostDevice, config) {
         const stateID = {device: hostDevice, channel: '', state: idName};
         return {
             ping_task: {
-                host: config.ip,
+                host: config.ip.trim(),
                 extendedInfo: false,
                 stateAlive: stateID
             },
