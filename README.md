@@ -1,4 +1,5 @@
 ![Logo](admin/ping.png)
+
 # PING Adapter
 
 ![Number of Installations](http://iobroker.live/badges/ping-installed.svg)
@@ -16,7 +17,8 @@ Pings specified IP addresses in defined interval and monitors the results.
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## Known Issues
-* if it is not possible to ping your linux client, check if `iputils-ping` is correct installed on client
+
+-   if it is not possible to ping your linux client, check if `iputils-ping` is correct installed on client
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
@@ -24,96 +26,131 @@ Pings specified IP addresses in defined interval and monitors the results.
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+
+-   (McM1957) Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)
+-   (McM1957) Trailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)
+
 ### 1.5.3 (2022-02-24)
-* (Apollon77) Fix the ping retry logic
+
+-   (Apollon77) Fix the ping retry logic
 
 ### 1.5.2 (2022-01-20)
-* (basti4557) Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.
+
+-   (basti4557) Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.
 
 ### 1.5.0 (2021-07-14)
-* js-controller 2.0 required at least
-* (Apollon77) optimize for js-controller 3.3
+
+-   js-controller 2.0 required at least
+-   (Apollon77) optimize for js-controller 3.3
 
 ### 1.4.12 (2020-09-18)
-* (Apollon77) Prevent crash case when no devices are defined (Sentry IOBROKER-PING-R)
+
+-   (Apollon77) Prevent crash case when no devices are defined (Sentry IOBROKER-PING-R)
 
 ### 1.4.11 (2020-08-26)
-* (Apollon77) update js-controller dependency to correct version (1.5.8)
+
+-   (Apollon77) update js-controller dependency to correct version (1.5.8)
 
 ### 1.4.8 (2020-06-29)
-* (Apollon77) Prevent adapter crashes with invalid state/channel names, see error log! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)
+
+-   (Apollon77) Prevent adapter crashes with invalid state/channel names, see error log! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)
 
 ### 1.4.7 (2020-05-02)
-* (Apollon77) finally try to catch spawn errors (Sentry IOBROKER-PING-2)
+
+-   (Apollon77) finally try to catch spawn errors (Sentry IOBROKER-PING-2)
 
 ### 1.4.6 (2020-04-29)
-* (Apollon77) Make sure adapter do not crash if ping command can not be executed (Sentry)
-* (Apollon77) Catch error when ping.probe could not be started (Sentry IOBROKER-PING-2)
+
+-   (Apollon77) Make sure adapter do not crash if ping command can not be executed (Sentry)
+-   (Apollon77) Catch error when ping.probe could not be started (Sentry IOBROKER-PING-2)
 
 ### 1.4.5 (2020-04-23)
-* (Apollon77) Fixed potential crash case (Sentry)
+
+-   (Apollon77) Fixed potential crash case (Sentry)
 
 ### 1.4.4 (2020-04-17)
-* (bluefox) Added support of Admin3
+
+-   (bluefox) Added support of Admin3
 
 ### 1.4.3 (2020-04-17)
-* (Apollon77) Add Sentry for js-controller 3.0
-* (Apollon77) update dependencies
+
+-   (Apollon77) Add Sentry for js-controller 3.0
+-   (Apollon77) update dependencies
 
 ### 1.4.2 (2020-01-23)
-* (JayVee2) Sort the IP addresses
+
+-   (JayVee2) Sort the IP addresses
 
 ### 1.4.1 (2019-01-08)
-* (simatec) support compact mode
+
+-   (simatec) support compact mode
 
 ### 1.4.0 (2018-01-25)
-* (vdemidov) refactored, added ping time and roundtrips per second for every host
+
+-   (vdemidov) refactored, added ping time and roundtrips per second for every host
 
 ### 1.3.2 (2017-09-20)
-* (ldittmar) object values are converted to the valid type
+
+-   (ldittmar) object values are converted to the valid type
 
 ### 1.3.0 (2017-02-21)
-* (bluefox) allow to remove host name from state's name
+
+-   (bluefox) allow to remove host name from state's name
 
 ### 1.2.0 (2016-12-09)
-* (bluefox) change configuration dialog
+
+-   (bluefox) change configuration dialog
 
 ### 1.1.3 (2016-11-16)
-* (bluefox) catch error if no IP defined
+
+-   (bluefox) catch error if no IP defined
 
 ### 1.1.1 (2016-04-10)
-* (bluefox) remove ms
+
+-   (bluefox) remove ms
 
 ### 1.1.0 (2016-04-10)
-* (bluefox) rewrite ping for windows
+
+-   (bluefox) rewrite ping for windows
 
 ### 1.0.0 (2016-04-03)
-* (bluefox) support of freebsd and all windows languages
-* (bluefox) add tests
+
+-   (bluefox) support of freebsd and all windows languages
+-   (bluefox) add tests
 
 ### 0.1.3 (2015-01-26)
-* (bluefox) fix error if configuration changed
+
+-   (bluefox) fix error if configuration changed
 
 ### 0.1.2 (2015-01-14)
-* (bluefox) fix configuration page
+
+-   (bluefox) fix configuration page
 
 ### 0.1.1 (2015-01-03)
-* (bluefox) enable npm install
+
+-   (bluefox) enable npm install
 
 ### 0.1.0 (2014-11-26)
-* (bluefox) use ping npm module instead of static one
+
+-   (bluefox) use ping npm module instead of static one
 
 ### 0.0.5 (2014-11-21)
-* (bluefox) make possible to have shorter ping intervals (down to 5 seconds)
+
+-   (bluefox) make possible to have shorter ping intervals (down to 5 seconds)
 
 ### 0.0.4 (2014-11-07)
-* (bluefox) fix ping node
+
+-   (bluefox) fix ping node
 
 ### 0.0.3 (2014-11-03)
-* (bluefox) fix ping node (do not forget to remove package from git when the npm get the update)
+
+-   (bluefox) fix ping node (do not forget to remove package from git when the npm get the update)
 
 ### 0.0.1 (2014-11-02)
-* (bluefox) support of server (actual no authentication)
+
+-   (bluefox) support of server (actual no authentication)
 
 ## License
 
