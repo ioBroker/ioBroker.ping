@@ -232,7 +232,8 @@ function processTasks(tasks, callback) {
         } else if (task.type === 'update_state') {
             adapter.log.debug('Update state id=' + buildId(task.id));
 
-            const id = (task.id.device ? task.id.device + '.' : '') + (id.channel ? id.channel + '.' : '') + id.state;
+            const id =
+                (task.id.device ? task.id.device + '.' : '') + (task.id.channel ? task.id.channel + '.' : '') + task.id.state;
             adapter.extendObject(id, task.data, err => {
                 err && adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
 
