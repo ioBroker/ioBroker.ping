@@ -133,6 +133,9 @@
       "ping",
       "ip"
     ],
+    "adminUI": {
+      "config": "json"
+    },
     "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
     "type": "network",
     "plugins": {

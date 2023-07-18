@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2021 bluefox<dogafox@gmail.com>
+ *      (c) 2014-2023 bluefox <dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -57,8 +57,7 @@ function processMessage(obj) {
             // Try to ping one IP or name
             if (obj.callback && obj.message) {
                 ping.probe(obj.message, {log: adapter.log.debug}, (err, result) =>
-                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback)
-                );
+                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback));
             }
             break;
         }
@@ -93,7 +92,7 @@ function pingAll(taskList, index) {
 
     const task = taskList[index];
     index++;
-    adapter.log.debug('Pinging ' + task.host);
+    adapter.log.debug(`Pinging ${task.host}`);
 
     pingSingleDevice(task, taskList, index);
 }
@@ -140,119 +139,10 @@ function setDeviceStates(task, result) {
 }
 
 function buildId(id) {
-    return (
-        adapter.namespace +
-        (id.device ? '.' + id.device : '') +
-        (id.channel ? '.' + id.channel : '') +
-        (id.state ? '.' + id.state : '')
-    );
-}
-
-function processTasks(tasks, callback) {
-    if (!tasks || !tasks.length) {
-        callback && callback();
-    } else {
-        const task = tasks.shift();
-        adapter.log.debug('Task' + JSON.stringify(task));
-
-        if (task.type === 'create_device') {
-            adapter.log.debug('Create device id=' + buildId(task.id));
-            try {
-                adapter.createDevice(task.id.device, task.data.common, task.data.native, (err, obj) => {
-                    err && adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
-
-                    setImmediate(processTasks, tasks, callback);
-                });
-            } catch (err) {
-                adapter.log.error('Cannot create device: ' + buildId(task.id) + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            }
-        } else if (task.type === 'update_device') {
-            adapter.log.debug('Update device id=' + buildId(task.id));
-            adapter.extendObject(task.id.device, task.data, err => {
-                err && adapter.log.error('Cannot update device: ' + buildId(task.id) + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else if (task.type === 'delete_device') {
-            adapter.log.debug('Delete device id=' + task.id);
-
-            adapter.delObject(task.id, err => {
-                if (err) {
-                    adapter.log.error('Cannot delete device : ' + task.id + ' Error: ' + err);
-                }
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else if (task.type === 'create_channel') {
-            adapter.log.debug('Create channel id=' + buildId(task.id));
-
-            try {
-                adapter.createChannel(task.id.device, task.id.channel, task.data.common, task.data.native, err => {
-                    err && adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
-
-                    setImmediate(processTasks, tasks, callback);
-                });
-            } catch (err) {
-                adapter.log.error('Cannot create channel : ' + buildId(task.id) + ' Error: ' + err);
-
-                return setImmediate(processTasks, tasks, callback);
-            }
-        } else if (task.type === 'update_channel') {
-            adapter.log.debug('Update channel id=' + buildId(task.id));
-
-            const id = (task.id.device ? task.id.device + '.' : '') + task.id.channel;
-            adapter.extendObject(id, task.data, err => {
-                err && adapter.log.error('Cannot update channel : ' + buildId(task.id) + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else if (task.type === 'delete_channel') {
-            adapter.log.debug('Delete channel id=' + task.id);
-
-            adapter.delObject(task.id, err => {
-                err && adapter.log.error('Cannot delete channel : ' + task.id + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else if (task.type === 'create_state') {
-            adapter.log.debug('Create state id=' + buildId(task.id));
-
-            try {
-                adapter.createState(task.id.device, task.id.channel, task.id.state, task.data.common, task.data.native, err => {
-                    err && adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
-
-                    setImmediate(processTasks, tasks, callback);
-                });
-            } catch (err) {
-                adapter.log.error('Cannot create state : ' + buildId(task.id) + ' Error: ' + err);
-
-                return setImmediate(processTasks, tasks, callback);
-            }
-        } else if (task.type === 'update_state') {
-            adapter.log.debug('Update state id=' + buildId(task.id));
-
-            const id =
-                (task.id.device ? task.id.device + '.' : '') + (task.id.channel ? task.id.channel + '.' : '') + task.id.state;
-            adapter.extendObject(id, task.data, err => {
-                err && adapter.log.error('Cannot update state : ' + buildId(task.id) + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else if (task.type === 'delete_state') {
-            adapter.log.debug('Delete state id=' + task.id);
-
-            adapter.delObject(task.id, err => {
-                err && adapter.log.error('Cannot delete state : ' + buildId(task.id) + ' Error: ' + err);
-
-                setImmediate(processTasks, tasks, callback);
-            });
-        } else {
-            adapter.log.error('Unknown task type: ' + JSON.stringify(task));
-
-            setImmediate(processTasks, tasks, callback);
-        }
-    }
+    return adapter.namespace +
+        (id.device ? `.${id.device}` : '') +
+        (id.channel ? `.${id.channel}` : '') +
+        (id.state ? `.${id.state}` : '');
 }
 
 function isDevicesEqual(rhs, lhs) {
@@ -264,8 +154,7 @@ function isChannelsEqual(rhs, lhs) {
 }
 
 function isStatesEqual(rhs, lhs) {
-    return (
-        rhs.common.name === lhs.common.name &&
+    return rhs.common.name === lhs.common.name &&
         rhs.common.def === lhs.common.def &&
         rhs.common.min === lhs.common.min &&
         rhs.common.max === lhs.common.max &&
@@ -274,121 +163,88 @@ function isStatesEqual(rhs, lhs) {
         rhs.common.read === lhs.common.read &&
         rhs.common.write === lhs.common.write &&
         rhs.common.role === lhs.common.role &&
-        rhs.native.host === lhs.native.host
-    );
+        rhs.native.host === lhs.native.host;
 }
 
-function prepareTasks(preparedObjects, old_objects) {
-    const devicesToUpdate = [];
-    const channelsToUpdate = [];
-    const statesToUpdate = [];
-
+async function syncObjects(preparedObjects, oldObjects) {
     if (preparedObjects.device) {
         const fullID = buildId(preparedObjects.device.id);
-        const oldObj = old_objects[fullID];
+        const oldObj = oldObjects[fullID];
 
         if (oldObj && oldObj.type === 'device') {
             if (!isDevicesEqual(oldObj, preparedObjects.device)) {
-                devicesToUpdate.push({
-                    type: 'update_device',
-                    id: preparedObjects.device.id,
-                    data: {
-                        common: preparedObjects.device.common
-                    }
+                await adapter.extendObjectAsync(fullID, {
+                    common: preparedObjects.device.common
                 });
             }
-            old_objects[fullID] = undefined;
+            oldObjects[fullID] = undefined;
         } else {
-            devicesToUpdate.push({
-                type: 'create_device',
-                id: preparedObjects.device.id,
-                data: {
-                    common: preparedObjects.device.common
-                }
-            });
+            try {
+                await adapter.createDeviceAsync(fullID, preparedObjects.device.common, null);
+            } catch (err) {
+                adapter.log.error(`Cannot create device: ${fullID} Error: ${err}`);
+            }
         }
     }
 
-    preparedObjects.channels.forEach(channel => {
+    for (let c = 0; c < preparedObjects.channels.length; c++) {
+        const channel = preparedObjects.channels[c];
         const fullID = buildId(channel.id);
-        const oldObj = old_objects[fullID];
+        const oldObj = oldObjects[fullID];
 
         if (oldObj && oldObj.type === 'channel') {
             if (!isChannelsEqual(oldObj, channel)) {
-                channelsToUpdate.push({
-                    type: 'update_channel',
-                    id: channel.id,
-                    data: {
-                        common: channel.common,
-                        native: channel.native
-                    }
-                });
-            }
-            old_objects[fullID] = undefined;
-        } else {
-            channelsToUpdate.push({
-                type: 'create_channel',
-                id: channel.id,
-                data: {
+                adapter.log.debug(`Update channel id=${fullID}`);
+                await adapter.extendObjectAsync(fullID, {
                     common: channel.common,
                     native: channel.native
-                }
-            });
-        }
-    });
+                });
+            }
+            oldObjects[fullID] = undefined;
+        } else {
+            adapter.log.debug(`Create channel id=${fullID}`);
 
-    preparedObjects.states.forEach(state => {
+            try {
+                await adapter.createChannelAsync(channel.id.device, channel.id.channel, channel.common, channel.native);
+            } catch (err) {
+                adapter.log.error(`Cannot create channel: ${fullID} Error: ${err}`);
+            }
+        }
+    }
+
+    for (let s = 0; s < preparedObjects.states.length; s++) {
+        const state = preparedObjects.states[s];
         const fullID = buildId(state.id);
-        const oldObj = old_objects[fullID];
+        const oldObj = oldObjects[fullID];
 
         if (oldObj && oldObj.type === 'state') {
             if (!isStatesEqual(oldObj, state)) {
-                statesToUpdate.push({
-                    type: 'update_state',
-                    id: state.id,
-                    data: {
-                        common: state.common,
-                        native: state.native
-                    }
+                adapter.log.debug(`Update state id=${fullID}`);
+
+                await adapter.extendObjectAsync(fullID, {
+                    common: state.common,
+                    native: state.native,
                 });
             }
-            old_objects[fullID] = undefined;
+            oldObjects[fullID] = undefined;
         } else {
-            statesToUpdate.push({
-                type: 'create_state',
-                id: state.id,
-                data: {
-                    common: state.common,
-                    native: state.native
-                }
-            });
+            adapter.log.debug(`Create state id=${fullID}`);
+
+            try {
+                await adapter.createStateAsync(state.id.device, state.id.channel, state.id.state, state.common, state.native);
+            } catch (err) {
+                adapter.log.error(`Cannot create state: ${fullID} Error: ${err}`);
+            }
         }
-    });
+    }
 
-    const oldEntries = Object.keys(old_objects)
-        .map(id => [id, old_objects[id]])
-        .filter(([id, object]) => object);
-
-    const devicesToDelete = oldEntries
-        .filter(([id, object]) => object.type === 'device')
-        .map(([id, object]) => ({
-            type: 'delete_device',
-            id: id
-        }));
-    const channelsToDelete = oldEntries
-        .filter(([id, object]) => object.type === 'channel')
-        .map(([id, object]) => ({
-            type: 'delete_channel',
-            id: id
-        }));
-    const stateToDelete = oldEntries
-        .filter(([id, object]) => object.type === 'state')
-        .map(([id, object]) => ({
-            type: 'delete_state',
-            id: id
-        }));
-
-    return stateToDelete.concat(channelsToDelete, devicesToDelete, devicesToUpdate, channelsToUpdate, statesToUpdate);
+    const keys = Object.keys(oldObjects);
+    for (let d = 0; d < keys.length; d++) {
+        const id = keys[d];
+        if (oldObjects[id]) {
+            await adapter.delObjectAsync(id);
+        }
+    }
 }
 
 function prepareObjectsForHost(hostDevice, config) {
@@ -404,58 +260,58 @@ function prepareObjectsForHost(hostDevice, config) {
         const stateRpsID = {device: hostDevice, channel: idName, state: 'rps'};
         return {
             ping_task: {
-                host: config.ip.trim(),
+                host,
                 extendedInfo: true,
                 stateAlive: stateAliveID,
                 stateTime: stateTimeID,
-                stateRps: stateRpsID
+                stateRps: stateRpsID,
             },
             channel: {
                 id: channelID,
                 common: {
                     name: name || host,
-                    desc: 'Ping of ' + host
+                    desc: `Ping of ${host}`,
                 },
                 native: {
-                    host: host
+                    host,
                 }
             },
             states: [
                 {
                     id: stateAliveID,
                     common: {
-                        name: 'Alive ' + name || host,
+                        name: `Alive ${name}` || host,
                         def: false,
                         type: 'boolean',
                         read: true,
                         write: false,
                         role: 'indicator.reachable',
-                        desc: 'Ping state of ' + host
+                        desc: `Ping state of ${host}`,
                     },
                     native: {
-                        host: host
+                        host,
                     }
                 },
                 {
                     id: stateTimeID,
                     common: {
-                        name: 'Time ' + (name || host),
+                        name: `Time ${name || host}`,
                         def: 0,
                         type: 'number',
                         unit: 'sec',
                         read: true,
                         write: false,
                         role: 'value.interval',
-                        desc: 'Ping time to ' + host
+                        desc: `Ping time to ${host}`,
                     },
                     native: {
-                        host: host
+                        host,
                     }
                 },
                 {
                     id: stateRpsID,
                     common: {
-                        name: 'RPS ' + (name || host),
+                        name: `RPS ${name || host}`,
                         def: 0,
                         min: 0,
                         max: 1000,
@@ -464,13 +320,13 @@ function prepareObjectsForHost(hostDevice, config) {
                         read: true,
                         write: false,
                         role: 'value',
-                        desc: 'Ping round trips per second to ' + host
+                        desc: `Ping round trips per second to ${host}`,
                     },
                     native: {
-                        host: host
-                    }
-                }
-            ]
+                        host,
+                    },
+                },
+            ],
         };
     } else {
         const stateID = {device: hostDevice, channel: '', state: idName};
@@ -484,19 +340,19 @@ function prepareObjectsForHost(hostDevice, config) {
                 {
                     id: stateID,
                     common: {
-                        name: 'Alive ' + name || host,
+                        name: `Alive ${name}` || host,
                         def: false,
                         type: 'boolean',
                         read: true,
                         write: false,
                         role: 'indicator.reachable',
-                        desc: 'Ping state of ' + host
+                        desc: `Ping state of ${host}`,
                     },
                     native: {
-                        host: host
-                    }
-                }
-            ]
+                        host,
+                    },
+                },
+            ],
         };
     }
 }
@@ -506,17 +362,17 @@ function prepareObjectsByConfig() {
     const hostDeviceName = adapter.host;
     let hostDevice = '';
 
-    adapter.log.debug('Host=' + (hostDeviceName || ' no host name'));
+    adapter.log.debug(`Host=${hostDeviceName || ' no host name'}`);
 
     if (!adapter.config.noHostname) {
         hostDevice = hostDeviceName ? hostDeviceName.replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_') : '';
         result.device = {
             id: {
-                device: hostDevice
+                device: hostDevice,
             },
             common: {
-                name: hostDeviceName
-            }
+                name: hostDeviceName,
+            },
         };
     }
 
@@ -536,12 +392,7 @@ function prepareObjectsByConfig() {
             const fullID = buildId(config.channel.id);
             if (usedIDs[fullID]) {
                 adapter.log.warn(
-                    'Objects with same id = ' +
-                        fullID +
-                        ' created for two hosts ' +
-                        JSON.stringify(usedIDs[fullID]) +
-                        '  ' +
-                        JSON.stringify(device)
+                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`
                 );
             } else {
                 usedIDs[fullID] = device;
@@ -553,12 +404,7 @@ function prepareObjectsByConfig() {
             const fullID = buildId(state.id);
             if (usedIDs[fullID]) {
                 adapter.log.warn(
-                    'Objects with same id = ' +
-                        fullID +
-                        ' created for two hosts ' +
-                        JSON.stringify(usedIDs[fullID]) +
-                        '  ' +
-                        JSON.stringify(device)
+                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`
                 );
             } else {
                 usedIDs[fullID] = device;
@@ -575,21 +421,17 @@ function prepareObjectsByConfig() {
     return result;
 }
 
-function syncConfig(callback) {
+async function syncConfig() {
     adapter.log.debug('Prepare objects');
     const preparedObjects = prepareObjectsByConfig();
     adapter.log.debug('Get existing objects');
 
-    adapter.getAdapterObjects(_objects => {
-        adapter.log.debug('Prepare tasks of objects update');
-        const tasks = prepareTasks(preparedObjects, _objects);
+    const objects = await adapter.getAdapterObjectsAsync();
+    adapter.log.debug('Prepare tasks of objects update');
+    await syncObjects(preparedObjects, objects);
 
-        adapter.log.debug('Start tasks of objects update');
-        processTasks(tasks, () => {
-            adapter.log.debug('Finished tasks of objects update');
-            callback(preparedObjects.pingTaskList);
-        });
-    });
+    adapter.log.debug('Start tasks of objects update');
+    return preparedObjects.pingTaskList;
 }
 
 function main(adapter) {
@@ -612,7 +454,9 @@ function main(adapter) {
         adapter.config.numberOfRetries = 1;
     }
 
-    syncConfig(pingTaskList => pingAll(pingTaskList, 0));
+    syncConfig()
+        .then(pingTaskList => pingAll(pingTaskList, 0))
+        .catch(e => adapter.log.error(`Cannot sync config: ${e}`));
 }
 
 // If started as allInOne/compact mode => return function to create instance
