@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "news": {
+      "1.6.1": {
+        "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config\nAdded different intervals for online and offline devices",
+        "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config\nVerschiedene Intervalle für Online- und Offline-Geräte hinzugefügt",
+        "ru": "Исправлена обработка государственных обновлений, вызывающих сбои с js-controller 5. (Изображение #106)\nТрейлинговые пространства теперь удаляются с IP-адреса и имени. Трейлинговые пространства заблокированы корректной работы. (Изображение #98)\nДобавлено json config\nДобавлены различные интервалы для онлайн и оффлайн устройств",
+        "pt": "O manuseio de atualizações de estado causando falhas com js-controller 5 foi corrigido. (Inglês)\nOs espaços de reboque agora são removidos do endereço e nome do ip. Espaços de rastreamento bloqueado operação correta. (Issue #98)\nAdicionado json config\nAdicionados intervalos diferentes para dispositivos online e offline",
+        "nl": "De staatsinformaties veroorzaken crashes met Js-controller 5 is gecorrigeerd. (Issue #106)\nTrailing ruimtes worden nu verwijderd van IP-adres en naam. Trailing ruimtes blokkeerde de juiste operatie. (Issue 98)\n_\nVerschillende intervals voor online en offline apparaten",
+        "fr": "La manipulation des mises à jour de l'état causant des accidents avec js-controller 5 a été corrigée. (Issue #106)\nLes espaces de signalisation sont maintenant retirés de l'adresse et du nom de l'ip. Les espaces de signalisation ont bloqué le bon fonctionnement. (Issue #98)\nAjouté json config\nAjout de différents intervalles pour les appareils en ligne et hors ligne",
+        "it": "Gestione degli aggiornamenti di stato causando crash con js-controller 5 è stato corretto. (Essue #106)\nI percorsi sono ora rimossi dall'indirizzo e dal nome ip. Gli spazi trainanti hanno bloccato il corretto funzionamento. (Issue #98)\nAggiunto json config\nAggiunto diversi intervalli per dispositivi online e offline",
+        "es": "Se ha corregido el manejo de actualizaciones estatales que causan fallos con js-controller 5. (Isue #106)\nLos espacios de trailing ahora se eliminan de la dirección y el nombre de ip. Espacios de rastreo bloquearon la operación correcta. (Isue #98)\nAñadido json config\nAñadido diferentes intervalos para dispositivos en línea y sin conexión",
+        "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig\nDodawane są różne odstępy dla urządzeń online i offline",
+        "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config\nДодано різні інтервали для онлайн і офлайн пристроїв",
+        "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编\n增加在线和外线装置的不同间隔"
+      },
       "1.6.0": {
         "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config",
         "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config",
@@ -75,18 +88,6 @@
         "es": "actualizar la dependencia del controlador js a la versión correcta (1.5.8)",
         "pl": "zaktualizuj zależność kontrolera js do poprawnej wersji (1.5.8)",
         "zh-cn": "将js-controller依赖关系更新为正确的版本（1.5.8）"
-      },
-      "1.4.8": {
-        "en": "Prevent adapter crashes with invalid state/channel names, see error log! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "de": "Verhindern Sie Adapterabstürze mit ungültigen Status- / Kanalnamen, siehe Fehlerprotokoll! (Wachposten IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "ru": "Предотвратите сбои адаптера с недопустимыми именами состояний / каналов, см. Журнал ошибок! (Часовой ИОБРОКЕР-ПИНГ-Н, ИОБРОКЕР-ПИНГ-П, ИОБРОКЕР-ПИНГ-Б)",
-        "pt": "Evite falhas do adaptador com nomes de estado / canal inválidos, consulte o log de erros! (Sentinela IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "nl": "Voorkom adaptercrashes met ongeldige status- / kanaalnamen, zie foutenlogboek! (Wachtpost IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "fr": "Empêchez les plantages de l'adaptateur avec des noms d'état / de canal invalides, consultez le journal des erreurs (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "it": "Prevenire arresti anomali dell'adattatore con nomi di stato / canale non validi, consultare il registro degli errori! (Sentinella IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "es": "Evite fallas del adaptador con nombres de canales / estados no válidos, consulte el registro de errores. (Centinela IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "pl": "Zapobiegaj awariom adaptera z nieprawidłowymi nazwami stanów / kanałów, zobacz dziennik błędów! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
-        "zh-cn": "防止适配器使用无效的状态/通道名称崩溃，请参见错误日志！ （哨兵IOBROKER-PING-H，IOBROKER-PING-P，IOBROKER-PING-B）"
       }
     },
     "title": "PING",

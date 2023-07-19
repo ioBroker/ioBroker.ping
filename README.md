@@ -31,7 +31,7 @@ sendTo('ping.0', 'ping', '192.168.1.1', (res) => {
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.6.1 (2023-07-19)
 * (McM1957) Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)
 * (McM1957) Trailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)
 * (bluefox) Added json config
