@@ -28,6 +28,7 @@ Pings specified IP addresses in a defined interval and monitors the results.
 ### **WORK IN PROGRESS**
 * (McM1957) Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)
 * (McM1957) Trailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)
+* (bluefox) Added json config
 
 ### 1.5.3 (2022-02-24)
 * (Apollon77) Fix the ping retry logic

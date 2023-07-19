@@ -109,7 +109,7 @@ function pingSingleDevice(task, taskList, index, retryCounter = 1) {
             );
 
             if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
-                /* When the ping failed it also could be a device problem.
+                /* When the ping failed, it also could be a device problem.
                    Some Android Handys sometimes don't answer to a ping, but do in fact answer for the following ping.
                    So we are giving the device some more attempts until it finally fails.
                  */
@@ -180,7 +180,7 @@ async function syncObjects(preparedObjects, oldObjects) {
             oldObjects[fullID] = undefined;
         } else {
             try {
-                await adapter.createDeviceAsync(fullID, preparedObjects.device.common, null);
+                await adapter.setObjectAsync(fullID, {common: preparedObjects.device.common, type: 'device'});
             } catch (err) {
                 adapter.log.error(`Cannot create device: ${fullID} Error: ${err}`);
             }
