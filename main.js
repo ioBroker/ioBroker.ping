@@ -29,7 +29,7 @@ function startAdapter(options) {
 
     adapter = new utils.Adapter(options);
 
-    adapter.on('message', obj => obj && processMessage(obj));
+    adapter.on('message', obj => obj && obj.command && processMessage(obj));
 
     adapter.on('ready', () => main(adapter));
 
@@ -49,16 +49,12 @@ function startAdapter(options) {
 }
 
 function processMessage(obj) {
-    if (!obj || !obj.command) {
-        return;
-    }
-
     switch (obj.command) {
         case 'ping': {
             // Try to ping one IP or name
             if (obj.callback && obj.message) {
                 ping.probe(obj.message, {log: adapter.log.debug}, (err, result) =>
-                    adapter.sendTo(obj.from, obj.command, {result}, obj.callback));
+                    adapter.sendTo(obj.from, obj.command, {result, error: err}, obj.callback));
             }
             break;
         }

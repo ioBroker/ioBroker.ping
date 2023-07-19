@@ -10,10 +10,17 @@
 [![Downloads](https://img.shields.io/npm/dm/iobroker.ping.svg)](https://www.npmjs.com/package/iobroker.ping)
 
 ## Pings configured IP addresses.
-
 Pings specified IP addresses in a defined interval and monitors the results.
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
+
+## Ping from javascript adapter
+You can ping any IP address from the javascript adapter with command:
+```
+sendTo('ping.0', 'ping', '192.168.1.1', (res) => {
+    console.log('Result: ' + JSON.stringify(res)); // Result: {"result": {"host": "192.168.1.1", "alive": true, "ms": 250}} 
+});
+```
 
 ## Known Issues
 * if it is not possible to ping your linux client, check if `iputils-ping` is correctly installed on a client.
