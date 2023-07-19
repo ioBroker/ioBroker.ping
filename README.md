@@ -31,11 +31,12 @@ sendTo('ping.0', 'ping', '192.168.1.1', (res) => {
 -->
 
 ## Changelog
-### 1.6.1 (2023-07-19)
+### __WORK IN PROGRESS__
 * (McM1957) Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)
 * (McM1957) Trailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)
 * (bluefox) Added json config
 * (bluefox) Added different intervals for online and offline devices
+* (bluefox) implemented export/import of devices
 
 ### 1.5.3 (2022-02-24)
 * (Apollon77) Fix the ping retry logic
