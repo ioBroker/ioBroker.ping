@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.5.3",
+    "version": "1.6.0",
     "news": {
+      "1.6.0": {
+        "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config",
+        "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config",
+        "ru": "Исправлена обработка государственных обновлений, вызывающих сбои с js-controller 5. (Изображение #106)\nТрейлинговые пространства теперь удаляются с IP-адреса и имени. Трейлинговые пространства заблокированы корректной работы. (Изображение #98)\nДобавлено json config",
+        "pt": "O manuseio de atualizações de estado causando falhas com js-controller 5 foi corrigido. (Inglês)\nOs espaços de reboque agora são removidos do endereço e nome do ip. Espaços de rastreamento bloqueado operação correta. (Issue #98)\nAdicionado json config",
+        "nl": "De staatsinformaties veroorzaken crashes met Js-controller 5 is gecorrigeerd. (Issue #106)\nTrailing ruimtes worden nu verwijderd van IP-adres en naam. Trailing ruimtes blokkeerde de juiste operatie. (Issue 98)\n_",
+        "fr": "La manipulation des mises à jour de l'état causant des accidents avec js-controller 5 a été corrigée. (Issue #106)\nLes espaces de signalisation sont maintenant retirés de l'adresse et du nom de l'ip. Les espaces de signalisation ont bloqué le bon fonctionnement. (Issue #98)\nAjouté json config",
+        "it": "Gestione degli aggiornamenti di stato causando crash con js-controller 5 è stato corretto. (Essue #106)\nI percorsi sono ora rimossi dall'indirizzo e dal nome ip. Gli spazi trainanti hanno bloccato il corretto funzionamento. (Issue #98)\nAggiunto json config",
+        "es": "Se ha corregido el manejo de actualizaciones estatales que causan fallos con js-controller 5. (Isue #106)\nLos espacios de trailing ahora se eliminan de la dirección y el nombre de ip. Espacios de rastreo bloquearon la operación correcta. (Isue #98)\nAñadido json config",
+        "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig",
+        "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config",
+        "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编"
+      },
       "1.5.3": {
         "en": "Fix the ping retry logic",
         "de": "Korrigieren Sie die Ping-Wiederholungslogik",
@@ -74,18 +87,6 @@
         "es": "Evite fallas del adaptador con nombres de canales / estados no válidos, consulte el registro de errores. (Centinela IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
         "pl": "Zapobiegaj awariom adaptera z nieprawidłowymi nazwami stanów / kanałów, zobacz dziennik błędów! (Sentry IOBROKER-PING-H, IOBROKER-PING-P, IOBROKER-PING-B)",
         "zh-cn": "防止适配器使用无效的状态/通道名称崩溃，请参见错误日志！ （哨兵IOBROKER-PING-H，IOBROKER-PING-P，IOBROKER-PING-B）"
-      },
-      "1.4.7": {
-        "en": "finally try to catch spawn errors (Sentry IOBROKER-PING-2)",
-        "de": "Versuche endlich, Spawn-Fehler zu fangen (Sentry IOBROKER-PING-2)",
-        "ru": "наконец, попытайтесь отловить ошибки появления (Sentry IOBROKER-PING-2)",
-        "pt": "finalmente tente detectar erros de desova (Sentry IOBROKER-PING-2)",
-        "nl": "probeer eindelijk spawn-fouten te vangen (Sentry IOBROKER-PING-2)",
-        "fr": "enfin essayer d'attraper les erreurs d'apparition (Sentry IOBROKER-PING-2)",
-        "it": "finalmente prova a rilevare gli errori di spawn (Sentry IOBROKER-PING-2)",
-        "es": "finalmente trate de atrapar errores de generación (Sentry IOBROKER-PING-2)",
-        "pl": "w końcu spróbuj złapać błędy odradzania (Sentry IOBROKER-PING-2)",
-        "zh-cn": "最终尝试捕获生成错误（Sentry IOBROKER-PING-2）"
       }
     },
     "title": "PING",
