@@ -45,7 +45,9 @@
       "items": {
         "devices": {
           "type": "table",
-          "showSecondAddAt": true,
+          "showSecondAddAt": 10,
+          "export": true,
+          "import": true,
           "items": [
             {
               "type": "checkbox",
