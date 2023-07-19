@@ -13,5 +13,6 @@
   "No host name in state name": "Hostname bei Zustandsnamen nicht einfügen",
   "Interval": "Ping-Intervall",
   "ms": "Millisekunden",
-  "Number of retries": "Anzahl der Wiederholungsversuche"
+  "Number of retries": "Anzahl der Wiederholungsversuche",
+  "Interval if unreachable": "Intervall, wenn das Gerät ist nicht erreichbar"
 }

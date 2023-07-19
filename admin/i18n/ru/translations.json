@@ -13,5 +13,6 @@
   "No host name in state name": "Имена состояний без имени хоста",
   "Interval": "Интервал пинга",
   "ms": "миллисекунды",
-  "Number of retries": "Количество попыток"
+  "Number of retries": "Количество попыток",
+  "Interval if unreachable": "Интервал, если устройство недоступно"
 }

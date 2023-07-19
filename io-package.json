@@ -121,11 +121,6 @@
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "compact": true,
-    "availableModes": [
-      "daemon",
-      "schedule"
-    ],
-    "schedule": "*/1 * * * *",
     "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
     "loglevel": "info",
     "icon": "ping.png",
@@ -157,6 +152,7 @@
   "native": {
     "devices": [],
     "interval": 60000,
+    "intervalByUnreach": 30000,
     "numberOfRetries": 1,
     "noHostname": false
   },

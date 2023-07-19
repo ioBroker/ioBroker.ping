@@ -24,10 +24,11 @@ Pings specified IP addresses in a defined interval and monitors the results.
 -->
 
 ## Changelog
-### 1.6.0 (2023-07-19)
+### __WORK IN PROGRESS__
 * (McM1957) Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)
 * (McM1957) Trailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)
 * (bluefox) Added json config
+* (bluefox) Added different intervals for online and offline devices
 
 ### 1.5.3 (2022-02-24)
 * (Apollon77) Fix the ping retry logic
@@ -40,7 +41,7 @@ Pings specified IP addresses in a defined interval and monitors the results.
 * (Apollon77) optimize for js-controller 3.3
 
 ### 1.4.12 (2020-09-18)
-* (Apollon77) Prevent crash case when no devices are defined (Sentry IOBROKER-PING-R)
+* (Apollon77) Prevent a crash case when no devices are defined (Sentry IOBROKER-PING-R)
 
 ### 1.4.11 (2020-08-26)
 * (Apollon77) update js-controller dependency to correct version (1.5.8)
@@ -53,13 +54,13 @@ Pings specified IP addresses in a defined interval and monitors the results.
 
 ### 1.4.6 (2020-04-29)
 * (Apollon77) Make sure adapter does not crash if ping command can not be executed (Sentry)
-* (Apollon77) Catch error when ping.probe could not be started (Sentry IOBROKER-PING-2)
+* (Apollon77) Catch error when `ping.probe` could not be started (Sentry IOBROKER-PING-2)
 
 ### 1.4.5 (2020-04-23)
 * (Apollon77) Fixed potential crash case (Sentry)
 
 ### 1.4.4 (2020-04-17)
-* (bluefox) Added support of Admin3
+* (bluefox) Added support for Admin3
 
 ### 1.4.3 (2020-04-17)
 * (Apollon77) Add Sentry for js-controller 3.0
@@ -93,32 +94,32 @@ Pings specified IP addresses in a defined interval and monitors the results.
 * (bluefox) rewrite ping for windows
 
 ### 1.0.0 (2016-04-03)
-* (bluefox) support of freebsd and all windows languages
+* (bluefox) support for freebsd and all windows languages
 * (bluefox) add tests
 
 ### 0.1.3 (2015-01-26)
-* (bluefox) fix error if configuration changed
+* (bluefox) Fixed the error if configuration changed
 
 ### 0.1.2 (2015-01-14)
-* (bluefox) fix configuration page
+* (bluefox) Fixed the configuration page
 
 ### 0.1.1 (2015-01-03)
-* (bluefox) enable npm install
+* (bluefox) Enabled npm install
 
 ### 0.1.0 (2014-11-26)
-* (bluefox) use ping npm module instead of static one
+* (bluefox) Used ping npm module instead of static one
 
 ### 0.0.5 (2014-11-21)
-* (bluefox) make possible to have shorter ping intervals (down to 5 seconds)
+* (bluefox) Made possible to have shorter ping intervals (down to 5 seconds)
 
 ### 0.0.4 (2014-11-07)
 * (bluefox) fix ping node
 
 ### 0.0.3 (2014-11-03)
-* (bluefox) fix ping node (do not forget to remove package from git when the npm get the update)
+* (bluefox) fix ping node (do not forget to remove package from git when the npm gets the update)
 
 ### 0.0.1 (2014-11-02)
-* (bluefox) support of server (actual no authentication)
+* (bluefox) support of server (actually no authentication)
 
 ## License
 

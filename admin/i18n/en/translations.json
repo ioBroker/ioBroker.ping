@@ -13,5 +13,6 @@
   "No host name in state name": "No host name in state name",
   "Interval": "Ping interval",
   "ms": "milliseconds",
-  "Number of retries": "Number of retries"
+  "Number of retries": "Number of retries",
+  "Interval if unreachable": "Interval if unreachable"
 }

@@ -8,13 +8,22 @@
       "items": {
         "interval": {
           "type": "number",
-          "min": 0,
+          "min": 5000,
           "label": "Interval",
           "help": "ms",
           "sm": 12,
           "md": 2
         },
+        "intervalByUnreach": {
+          "type": "number",
+          "min": 5000,
+          "label": "Interval if unreachable",
+          "help": "ms",
+          "sm": 12,
+          "md": 2
+        },
         "numberOfRetries": {
+          "newLine": true,
           "type": "number",
           "min": 0,
           "label": "Number of retries",

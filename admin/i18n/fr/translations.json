@@ -13,5 +13,6 @@
   "No host name in state name": "No host name in state name",
   "Interval": "Intervalle de ping",
   "ms": "millisecondes",
-  "Number of retries": "Nombre de tentatives"
+  "Number of retries": "Nombre de tentatives",
+  "Interval if unreachable": "Intervalle si inaccessible"
 }

@@ -13,5 +13,6 @@
   "No host name in state name": "状态名称中没有主机名",
   "Interval": "Ping 间隔",
   "ms": "毫秒",
-  "Number of retries": "重试次数"
+  "Number of retries": "重试次数",
+  "Interval if unreachable": "无法到达时的间隔"
 }

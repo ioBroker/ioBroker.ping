@@ -18,7 +18,7 @@ const adapterName = require('./package.json').name.split('.').pop();
 let adapter;
 
 let timer = null;
-let stopTimer = null;
+let timerUnreach = null;
 let isStopping = false;
 
 const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
@@ -38,10 +38,11 @@ function startAdapter(options) {
             clearTimeout(timer);
             timer = null;
         }
-        if (stopTimer) {
-            clearTimeout(stopTimer);
-            stopTimer = null;
+        if (timerUnreach) {
+            clearTimeout(timerUnreach);
+            timerUnreach = null;
         }
+
         isStopping = true;
     });
     return adapter;
@@ -64,77 +65,88 @@ function processMessage(obj) {
     }
 }
 
-// Terminate adapter after 30 seconds idle
-function stop() {
-    stopTimer && clearTimeout(stopTimer);
-    stopTimer = null;
-
-    // Stop only if schedule mode
-    if (adapter.common && adapter.common.mode === 'schedule') {
-        stopTimer = setTimeout(() => {
-            stopTimer = null;
-            timer && clearTimeout(timer);
-            timer = null;
-            isStopping = true;
-            adapter.stop();
-        }, 30000);
-    }
-}
-
-function pingAll(taskList, index) {
-    stopTimer && clearTimeout(stopTimer);
-    stopTimer = null;
-
-    if (index >= taskList.length) {
-        timer = setTimeout(() => pingAll(taskList, 0), adapter.config.interval);
-        return;
-    }
-
-    const task = taskList[index];
-    index++;
-    adapter.log.debug(`Pinging ${task.host}`);
-
-    pingSingleDevice(task, taskList, index);
-}
-
-function pingSingleDevice(task, taskList, index, retryCounter = 1) {
-    ping.probe(task.host, {log: adapter.log.debug}, (err, result) => {
-        err && adapter.log.error(err);
-
-        if (result) {
-            adapter.log.debug(
-                `Ping result for ${result.host}: ${result.alive} in ${
-                    result.ms === null ? '-' : result.ms
-                }ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`
-            );
-
-            if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
-                /* When the ping failed, it also could be a device problem.
-                   Some Android Handys sometimes don't answer to a ping, but do in fact answer for the following ping.
-                   So we are giving the device some more attempts until it finally fails.
-                 */
-                !isStopping &&
-                    setImmediate(_retryCounter => pingSingleDevice(task, taskList, index, _retryCounter), retryCounter + 1);
-            } else {
-                setDeviceStates(task, result);
-                !isStopping && setImmediate(() => pingAll(taskList, index));
-            }
+async function pingAll(taskList, isUnreach) {
+    for (let t = 0; t < taskList.length; t++) {
+        const task = taskList[t];
+        if ((isUnreach && task.online) || (!isUnreach && !task.online)) {
+            continue;
         }
-    });
+
+        adapter.log.debug(`Pinging ${isUnreach ? 'offline' : 'alive'} ${task.host}`);
+
+        let counter = 0;
+        do {
+            const result = await pingSingleDevice(task, counter);
+            if (result || isStopping) {
+                break;
+            }
+            counter++;
+        } while (counter <= adapter.config.numberOfRetries);
+
+        if (isStopping) {
+            break;
+        }
+    }
+
+    // start next ping
+    if (!isStopping) {
+        if (isUnreach) {
+            timerUnreach = setTimeout(async () => {
+                timerUnreach = null;
+                await pingAll(taskList, true);
+            }, adapter.config.intervalByUnreach);
+        } else {
+            timer = setTimeout(async () => {
+                timer = null;
+                await pingAll(taskList);
+            }, adapter.config.interval);
+        }
+    }
 }
 
-function setDeviceStates(task, result) {
+function pingSingleDevice(task, retryCounter) {
+    return new Promise(resolve =>
+        ping.probe(task.host, {log: adapter.log.debug}, async (err, result) => {
+            err && adapter.log.error(`Error by pinging: ${err}`);
+
+            if (result) {
+                adapter.log.debug(
+                    `Ping result for ${result.host}: ${result.alive} in ${
+                        result.ms === null ? '-' : result.ms
+                    }ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`
+                );
+
+                if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
+                    /* When the ping failed, it also could be a device problem.
+                       Some Android Handys sometimes don't answer to a ping,
+                       but do in fact answer for the following ping.
+                       So we are giving the device some more attempts until it finally fails.
+                     */
+                    resolve(false);
+                    return;
+                } else {
+                    await setDeviceStates(task, result);
+                }
+            } else if (!err) {
+                adapter.log.warn(`No result by pinging of ${task.host}`);
+            }
+            resolve(true);
+        }));
+}
+
+async function setDeviceStates(task, result) {
+    task.online = result.alive;
     if (task.extendedInfo) {
-        adapter.setState(task.stateAlive, {val: result.alive, ack: true});
-        adapter.setState(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
+        await adapter.setStateAsync(task.stateAlive, {val: result.alive, ack: true});
+        await adapter.setStateAsync(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
 
         let rps = 0;
         if (result.alive && result.ms !== null && result.ms > 0) {
             rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
         }
-        adapter.setState(task.stateRps, {val: rps, ack: true});
+        await adapter.setStateAsync(task.stateRps, {val: rps, ack: true});
     } else {
-        adapter.setState(task.stateAlive, {val: result.alive, ack: true});
+        await adapter.setStateAsync(task.stateAlive, {val: result.alive, ack: true});
     }
 }
 
@@ -434,10 +446,10 @@ async function syncConfig() {
     return preparedObjects.pingTaskList;
 }
 
-function main(adapter) {
+async function main(adapter) {
     if (!adapter.config.devices || !adapter.config.devices.length) {
         adapter.log.warn('No one host configured for ping');
-        return stop();
+        return;
     }
 
     adapter.config.interval = parseInt(adapter.config.interval, 10);
@@ -445,6 +457,15 @@ function main(adapter) {
     if (adapter.config.interval < 5000) {
         adapter.log.warn('Poll interval is too short. Reset to 5000 ms.');
         adapter.config.interval = 5000;
+    }
+    if (!adapter.config.intervalByUnreach) {
+        adapter.config.intervalByUnreach = adapter.config.interval;
+    }
+
+    adapter.config.intervalByUnreach = parseInt(adapter.config.intervalByUnreach, 10);
+    if (adapter.config.intervalByUnreach < 5000) {
+        adapter.log.warn('Offline poll interval is too short. Reset to 5000 ms.');
+        adapter.config.intervalByUnreach = 5000;
     }
 
     adapter.config.numberOfRetries = parseInt(adapter.config.numberOfRetries, 10) || 1;
@@ -454,9 +475,9 @@ function main(adapter) {
         adapter.config.numberOfRetries = 1;
     }
 
-    syncConfig()
-        .then(pingTaskList => pingAll(pingTaskList, 0))
-        .catch(e => adapter.log.error(`Cannot sync config: ${e}`));
+    const pingTaskList = await syncConfig();
+    await pingAll(pingTaskList);
+    await pingAll(pingTaskList, true);
 }
 
 // If started as allInOne/compact mode => return function to create instance
