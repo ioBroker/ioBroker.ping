@@ -39,6 +39,7 @@
         "it": "Correggi la logica dei tentativi di ping",
         "es": "Arreglar la lógica de reintento de ping",
         "pl": "Napraw logikę ponawiania pingów",
+        "uk": "Виправте логіку повторної спроби пінгу",
         "zh-cn": "修复 ping 重试逻辑"
       },
       "1.5.2": {
@@ -51,6 +52,7 @@
         "it": "È possibile definire il numero di tentativi se una richiesta ping non è riuscita. Questo dovrebbe ridurre al minimo il rilevamento offline errato.",
         "es": "Se puede definir el número de reintentos si falla una solicitud de ping. Esto debería minimizar la detección incorrecta fuera de línea.",
         "pl": "W przypadku niepowodzenia żądania ping można określić liczbę ponownych prób. Powinno to zminimalizować błędne wykrywanie offline.",
+        "uk": "Кількість повторних спроб може бути визначена, якщо запит ping не вдалося. Це повинно мінімізувати неправильне виявлення автономного режиму.",
         "zh-cn": "如果 ping 请求失败，可以定义重试次数。这应该最大限度地减少错误的离线检测。"
       },
       "1.5.0": {
@@ -63,6 +65,7 @@
         "it": "js-controller 2.0 richiesto almeno\nottimizza per js-controller 3.3",
         "es": "js-controller 2.0 requiere al menos\noptimizar para js-controller 3.3",
         "pl": "Wymagany przynajmniej js-controller 2.0\noptymalizacja dla kontrolera js 3.3",
+        "uk": "js-controller 2.0 потрібний як мінімум\nоптимізувати для js-controller 3.3",
         "zh-cn": "至少需要 js-controller 2.0\n针对 js-controller 3.3 进行优化"
       },
       "1.4.12": {
@@ -75,6 +78,7 @@
         "it": "Previeni casi di crash quando non sono definiti dispositivi (Sentry IOBROKER-PING-R)",
         "es": "Evitar casos de accidentes cuando no se definen dispositivos (Sentry IOBROKER-PING-R)",
         "pl": "Zapobiegaj awariom, gdy nie zdefiniowano żadnych urządzeń (Sentry IOBROKER-PING-R)",
+        "uk": "Запобігти випадку аварії, коли не визначено жодних пристроїв (Sentry IOBROKER-PING-R)",
         "zh-cn": "未定义任何设备时防止崩溃（Sentry IOBROKER-PING-R）"
       },
       "1.4.11": {
@@ -87,10 +91,10 @@
         "it": "aggiorna la dipendenza js-controller alla versione corretta (1.5.8)",
         "es": "actualizar la dependencia del controlador js a la versión correcta (1.5.8)",
         "pl": "zaktualizuj zależność kontrolera js do poprawnej wersji (1.5.8)",
+        "uk": "оновіть залежність від js-controller до правильної версії (1.5.8)",
         "zh-cn": "将js-controller依赖关系更新为正确的版本（1.5.8）"
       }
     },
-    "title": "PING",
     "titleLang": {
       "en": "PING",
       "de": "PING",
@@ -101,6 +105,7 @@
       "it": "PING",
       "es": "PING",
       "pl": "PING",
+      "uk": "PING",
       "zh-cn": "PING"
     },
     "desc": {
@@ -113,6 +118,7 @@
       "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
       "es": "Este adaptador sondea cíclicamente las IP configuradas.",
       "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
+      "uk": "Цей адаптер циклічно опитує налаштовані IP-адреси.",
       "zh-cn": "该适配器循环轮询配置的IP。"
     },
     "authors": [
@@ -140,7 +146,10 @@
         "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
       }
     },
-    "materialize": true,
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "dependencies": [
       {
         "js-controller": ">=2.0.0"
