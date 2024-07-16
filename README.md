@@ -39,7 +39,7 @@ Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` co
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.6.3 (2024-07-16)
 * (bluefox) Updated the packages
 
 ### 1.6.2 (2023-07-19)

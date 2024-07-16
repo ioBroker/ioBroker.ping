@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "news": {
+      "1.6.3": {
+        "en": "Updated the packages",
+        "de": "Aktualisiert die Pakete",
+        "ru": "Обновление пакетов",
+        "pt": "Atualizado os pacotes",
+        "nl": "De pakketten bijgewerkt",
+        "fr": "Mise à jour des paquets",
+        "it": "Aggiornato i pacchetti",
+        "es": "Actualización de los paquetes",
+        "pl": "Aktualizacja pakietów",
+        "uk": "Оновлено пакети",
+        "zh-cn": "更新软件包"
+      },
       "1.6.2": {
         "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config\nAdded different intervals for online and offline devices\nimplemented export/import of devices",
         "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config\nVerschiedene Intervalle für Online- und Offline-Geräte hinzugefügt\nexport/import von geräten",
@@ -80,19 +93,6 @@
         "pl": "Zapobiegaj awariom, gdy nie zdefiniowano żadnych urządzeń (Sentry IOBROKER-PING-R)",
         "uk": "Запобігти випадку аварії, коли не визначено жодних пристроїв (Sentry IOBROKER-PING-R)",
         "zh-cn": "未定义任何设备时防止崩溃（Sentry IOBROKER-PING-R）"
-      },
-      "1.4.11": {
-        "en": "update js-controller dependency to correct version (1.5.8)",
-        "de": "Aktualisieren Sie die Abhängigkeit von js-controller auf die richtige Version (1.5.8).",
-        "ru": "обновить зависимость js-контроллера до правильной версии (1.5.8)",
-        "pt": "atualize a dependência do js-controller para a versão correta (1.5.8)",
-        "nl": "update js-controller afhankelijkheid naar correcte versie (1.5.8)",
-        "fr": "mettre à jour la dépendance js-controller pour corriger la version (1.5.8)",
-        "it": "aggiorna la dipendenza js-controller alla versione corretta (1.5.8)",
-        "es": "actualizar la dependencia del controlador js a la versión correcta (1.5.8)",
-        "pl": "zaktualizuj zależność kontrolera js do poprawnej wersji (1.5.8)",
-        "uk": "оновіть залежність від js-controller до правильної версії (1.5.8)",
-        "zh-cn": "将js-controller依赖关系更新为正确的版本（1.5.8）"
       }
     },
     "titleLang": {
