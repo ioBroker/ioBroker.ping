@@ -131,6 +131,7 @@
     "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
     "loglevel": "info",
     "icon": "ping.png",
+    "messagebox": true,
     "keywords": [
       "poll",
       "ping",

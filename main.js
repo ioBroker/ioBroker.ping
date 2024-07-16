@@ -53,8 +53,8 @@ function processMessage(obj) {
         case 'ping': {
             // Try to ping one IP or name
             if (obj.callback && obj.message) {
-                ping.probe(obj.message, {log: adapter.log.debug}, (err, result) =>
-                    adapter.sendTo(obj.from, obj.command, {result, error: err}, obj.callback));
+                ping.probe(obj.message, { log: adapter.log.debug }, (err, result) =>
+                    adapter.sendTo(obj.from, obj.command, { result, error: err }, obj.callback));
             }
             break;
         }
