@@ -24,9 +24,15 @@ sendTo('ping.0', 'ping', '192.168.1.1', (res) => {
 
 ## Known Issues
 * if it is not possible to ping your linux client, check if `iputils-ping` is correctly installed on a client.
+
 * `ping` command under linux requires root permissions.
+
 You can give the adapter the rights to execute the `ping` command as root.
-For this, you need to add the following line to the `/etc/sudoers` file: `iobroker ALL=(ALL) NOPASSWD: /bin/ping`. Replace `iobroker` with the user under which the ioBroker is running.
+
+For this, you need to add the following line to the `/etc/sudoers` file with `sudo visudo` command: `iobroker ALL=(ALL) NOPASSWD: /bin/ping`.
+
+Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` command
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
