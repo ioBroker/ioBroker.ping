@@ -41,7 +41,7 @@ You must install setcap with `sudo apt-get install libcap2-bin` before if `setcu
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.6.4 (2024-07-17)
 * (bluefox) Added possibility to execute `setcap` command to allow ping without root rights
 
 ### 1.6.3 (2024-07-16)

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "news": {
+      "1.6.4": {
+        "en": "Added possibility to execute `setcap` command to allow ping without root rights",
+        "de": "Zusätzliche Möglichkeit, `setcap` Befehl auszuführen, um Ping ohne Root-Rechte zu ermöglichen",
+        "ru": "Добавлена возможность выполнения команды `setcap', чтобы разрешить пинг без корневых прав",
+        "pt": "Adicionado possibilidade de executar o comando `setcap` para permitir ping sem direitos root",
+        "nl": "Toegevoegde mogelijkheid om het commando \"setcap\" uit te voeren om ping zonder rootrechten mogelijk te maken",
+        "fr": "Ajout de la possibilité d'exécuter la commande `setcap` pour permettre ping sans droits root",
+        "it": "Aggiunta possibilità di eseguire `setcap` comando per consentire ping senza diritti di root",
+        "es": "Se agregó la posibilidad de ejecutar el comando 'setcap' para permitir el ping sin derechos de raíz",
+        "pl": "Dodano możliwość wykonania polecenia 'setcap', aby umożliwić ping bez praw roota",
+        "uk": "Додана можливість виконувати команду `setcap`, щоб дозволити пінг без прав кореневих прав",
+        "zh-cn": "添加执行“ setcap” 命令以允许无根权限的 ping 的可能性"
+      },
       "1.6.3": {
         "en": "Updated the packages",
         "de": "Aktualisiert die Pakete",
@@ -80,19 +93,6 @@
         "pl": "Wymagany przynajmniej js-controller 2.0\noptymalizacja dla kontrolera js 3.3",
         "uk": "js-controller 2.0 потрібний як мінімум\nоптимізувати для js-controller 3.3",
         "zh-cn": "至少需要 js-controller 2.0\n针对 js-controller 3.3 进行优化"
-      },
-      "1.4.12": {
-        "en": "Prevent crash case when no devices are defined (Sentry IOBROKER-PING-R)",
-        "de": "Verhindern Sie einen Absturz, wenn keine Geräte definiert sind (Sentry IOBROKER-PING-R).",
-        "ru": "Предотвращение сбоя при отсутствии определенных устройств (Sentry IOBROKER-PING-R)",
-        "pt": "Previna caso de falha quando nenhum dispositivo é definido (Sentry IOBROKER-PING-R)",
-        "nl": "Voorkom een crash als er geen apparaten zijn gedefinieerd (Sentry IOBROKER-PING-R)",
-        "fr": "Prévenir les cas de crash lorsqu'aucun appareil n'est défini (Sentry IOBROKER-PING-R)",
-        "it": "Previeni casi di crash quando non sono definiti dispositivi (Sentry IOBROKER-PING-R)",
-        "es": "Evitar casos de accidentes cuando no se definen dispositivos (Sentry IOBROKER-PING-R)",
-        "pl": "Zapobiegaj awariom, gdy nie zdefiniowano żadnych urządzeń (Sentry IOBROKER-PING-R)",
-        "uk": "Запобігти випадку аварії, коли не визначено жодних пристроїв (Sentry IOBROKER-PING-R)",
-        "zh-cn": "未定义任何设备时防止崩溃（Sentry IOBROKER-PING-R）"
       }
     },
     "titleLang": {
