@@ -31,7 +31,9 @@ You can give the adapter the rights to execute the `ping` command as root.
 
 For this, you need to add the following line to the `/etc/sudoers` file with `sudo visudo` command: `iobroker ALL=(ALL) NOPASSWD: /bin/ping`.
 
-Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` command
+Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` command.
+
+You must install setcap with `sudo apt-get install libcap2-bin` before if `setcup` not found.
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
@@ -39,6 +41,9 @@ Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` co
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added possibility to execute `setcap` command to allow ping without root rights
+
 ### 1.6.3 (2024-07-16)
 * (bluefox) Updated the packages
 

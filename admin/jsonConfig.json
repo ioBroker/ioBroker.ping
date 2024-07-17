@@ -36,6 +36,14 @@
           "label": "No host name in state name",
           "sm": 12,
           "md": 4
+        },
+        "setcap": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Allow with setcap the required rights for ping",
+            "sm": 12,
+            "md": 4,
+            "help": "This allows to run ping without root rights"
         }
       }
     },

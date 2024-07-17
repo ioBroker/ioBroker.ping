@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2023 bluefox <dogafox@gmail.com>
+ *      (c) 2014-2024 bluefox <dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -14,6 +14,7 @@
 'use strict';
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 const ping = require('./lib/ping');
+const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
 let adapter;
 
@@ -469,6 +470,14 @@ async function main(adapter) {
     if (adapter.config.numberOfRetries < 1) {
         adapter.log.warn('Number of retries is to low. Reset to 1.');
         adapter.config.numberOfRetries = 1;
+    }
+
+    if (adapter.config.setcap) {
+        try {
+            await allowPing();
+        } catch (e) {
+            adapter.log.warn(`Cannot allow setcap for ping: ${e}`);
+        }
     }
 
     const pingTaskList = await syncConfig();
