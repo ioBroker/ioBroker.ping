@@ -124,7 +124,6 @@
     "authors": [
       "bluefox <dogafox@gmail.com>"
     ],
-    "license": "MIT",
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "compact": true,
@@ -153,7 +152,7 @@
     },
     "dependencies": [
       {
-        "js-controller": ">=2.0.0"
+        "js-controller": ">=4.0.24"
       }
     ],
     "connectionType": "local",

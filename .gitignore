@@ -2,3 +2,6 @@ node_modules
 .idea
 tmp
 package-lock.json
+
+# ioBroker dev-server
+.dev-server/
