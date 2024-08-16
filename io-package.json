@@ -132,7 +132,6 @@
     "icon": "ping.png",
     "messagebox": true,
     "keywords": [
-      "ioBroker",
       "poll",
       "ping",
       "ip"
