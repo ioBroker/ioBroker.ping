@@ -78,6 +78,14 @@ jobs:
 #        if: startsWith(runner.OS, 'windows')
 #        run: set DEBUG=testing:* & npm run test:integration
 
+      - name: Archive screenshots
+        if: always()
+        # if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          path: packages/admin/tmp/screenshots/**/*.png
+          retention-days: 3
+
   # Deploys the final package to NPM
   deploy:
     needs: [adapter-tests]
