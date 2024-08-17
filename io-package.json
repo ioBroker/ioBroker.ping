@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.6.4",
+    "version": "1.7.0",
     "news": {
+      "1.7.0": {
+        "en": "Added possibility to browse the IP ranges",
+        "de": "Zusätzliche Möglichkeit, die IP-Bereiche zu durchsuchen",
+        "ru": "Добавлена возможность просматривать диапазоны IP",
+        "pt": "Adicionada possibilidade de navegar nos intervalos IP",
+        "nl": "Toegevoegde mogelijkheid om door de IP-bereiken te bladeren",
+        "fr": "Ajout de la possibilité de parcourir les plages IP",
+        "it": "Aggiunta possibilità di sfogliare gli intervalli IP",
+        "es": "Mayor posibilidad de navegar por los rangos IP",
+        "pl": "Dodano możliwość przeglądania zakresów IP",
+        "uk": "Додана можливість переглядати діапазони IP",
+        "zh-cn": "添加浏览 IP 范围的可能性"
+      },
       "1.6.4": {
         "en": "Added possibility to execute `setcap` command to allow ping without root rights",
         "de": "Zusätzliche Möglichkeit, `setcap` Befehl auszuführen, um Ping ohne Root-Rechte zu ermöglichen",
@@ -80,19 +93,6 @@
         "pl": "W przypadku niepowodzenia żądania ping można określić liczbę ponownych prób. Powinno to zminimalizować błędne wykrywanie offline.",
         "uk": "Кількість повторних спроб може бути визначена, якщо запит ping не вдалося. Це повинно мінімізувати неправильне виявлення автономного режиму.",
         "zh-cn": "如果 ping 请求失败，可以定义重试次数。这应该最大限度地减少错误的离线检测。"
-      },
-      "1.5.0": {
-        "en": "js-controller 2.0 required at least\noptimize for js-controller 3.3",
-        "de": "js-controller 2.0 mindestens erforderlich\noptimieren für js-controller 3.3",
-        "ru": "js-controller 2.0 требуется как минимум\nоптимизировать под js-controller 3.3",
-        "pt": "js-controller 2.0 requer pelo menos\notimizar para js-controller 3.3",
-        "nl": "js-controller 2.0 minimaal vereist\noptimaliseren voor js-controller 3.3",
-        "fr": "js-controller 2.0 requis au moins\noptimiser pour js-controller 3.3",
-        "it": "js-controller 2.0 richiesto almeno\nottimizza per js-controller 3.3",
-        "es": "js-controller 2.0 requiere al menos\noptimizar para js-controller 3.3",
-        "pl": "Wymagany przynajmniej js-controller 2.0\noptymalizacja dla kontrolera js 3.3",
-        "uk": "js-controller 2.0 потрібний як мінімум\nоптимізувати для js-controller 3.3",
-        "zh-cn": "至少需要 js-controller 2.0\n针对 js-controller 3.3 进行优化"
       }
     },
     "titleLang": {
@@ -171,8 +171,8 @@
     {
       "_id": "browse",
       "type": "channel",
-        "common": {
-            "name": "Browse"
+      "common": {
+        "name": "Browse"
       },
       "native": {}
     },

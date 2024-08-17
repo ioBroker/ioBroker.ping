@@ -41,7 +41,7 @@ You must install setcap with `sudo apt-get install libcap2-bin` before if `setcu
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.7.0 (2024-08-17)
 * (bluefox) Added possibility to browse the IP ranges
 
 ### 1.6.4 (2024-07-17)
