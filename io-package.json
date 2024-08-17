@@ -16,32 +16,6 @@
         "uk": "Додана можливість переглядати діапазони IP",
         "zh-cn": "添加浏览 IP 范围的可能性"
       },
-      "1.6.4": {
-        "en": "Added possibility to execute `setcap` command to allow ping without root rights",
-        "de": "Zusätzliche Möglichkeit, `setcap` Befehl auszuführen, um Ping ohne Root-Rechte zu ermöglichen",
-        "ru": "Добавлена возможность выполнения команды `setcap', чтобы разрешить пинг без корневых прав",
-        "pt": "Adicionado possibilidade de executar o comando `setcap` para permitir ping sem direitos root",
-        "nl": "Toegevoegde mogelijkheid om het commando \"setcap\" uit te voeren om ping zonder rootrechten mogelijk te maken",
-        "fr": "Ajout de la possibilité d'exécuter la commande `setcap` pour permettre ping sans droits root",
-        "it": "Aggiunta possibilità di eseguire `setcap` comando per consentire ping senza diritti di root",
-        "es": "Se agregó la posibilidad de ejecutar el comando 'setcap' para permitir el ping sin derechos de raíz",
-        "pl": "Dodano możliwość wykonania polecenia 'setcap', aby umożliwić ping bez praw roota",
-        "uk": "Додана можливість виконувати команду `setcap`, щоб дозволити пінг без прав кореневих прав",
-        "zh-cn": "添加执行“ setcap” 命令以允许无根权限的 ping 的可能性"
-      },
-      "1.6.3": {
-        "en": "Updated the packages",
-        "de": "Aktualisiert die Pakete",
-        "ru": "Обновление пакетов",
-        "pt": "Atualizado os pacotes",
-        "nl": "De pakketten bijgewerkt",
-        "fr": "Mise à jour des paquets",
-        "it": "Aggiornato i pacchetti",
-        "es": "Actualización de los paquetes",
-        "pl": "Aktualizacja pakietów",
-        "uk": "Оновлено пакети",
-        "zh-cn": "更新软件包"
-      },
       "1.6.2": {
         "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config\nAdded different intervals for online and offline devices\nimplemented export/import of devices",
         "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config\nVerschiedene Intervalle für Online- und Offline-Geräte hinzugefügt\nexport/import von geräten",
