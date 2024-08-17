@@ -241,16 +241,17 @@ describe('Test PING', function () {
     it('Test GUI', async () => {
         await gPage.goto(`http://127.0.0.1:18081/#tab-instances/config/system.adapter.ping.0`, { waitUntil: 'domcontentloaded' });
         await gPage.waitForSelector('button.MuiTab-root', { timeout: 20_000 });
-        // if slow connection dialog is opened, close it
+        // if the slow connection dialog is opened, close it
         const cancel = await gPage.$$('#ar_dialog_confirm_cancel_');
         if (cancel.length) {
             await cancel[0].click();
         }
         const buttons = await gPage.$$('button.MuiTab-root');
         buttons[2].click();
+        buttons[2].click();
         await gPage.waitForSelector('.ping_custom', { timeout: 20_000 });
         await screenshot(gPage, '01_instance');
-    }).timeout(60000);
+    }).timeout(60_000);
 
     after('Test PING: Stop js-controller', function (done) {
         this.timeout(6000);
