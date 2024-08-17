@@ -138,7 +138,7 @@ class PingBrowseComponent extends ConfigGeneric {
         const selectable = this.state.ips.filter(ip => !exists.find(item => item.ip === ip));
         const allSelected = selectable.length === this.state.selected.length;
 
-        return <div style={{ width: '100%'}}>
+        return <div style={{ width: '100%'}} className="ping_custom">
             <h4>{I18n.t('custom_ping_title')}</h4>
             <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <FormControl style={{ width: '100%', maxWidth: 600 }} variant="standard">
