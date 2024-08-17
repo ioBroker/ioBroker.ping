@@ -5,3 +5,4 @@ src-admin/build
 src-admin/node_modules
 package-lock.json
 src-admin/package-lock.json
+*.tgz
