@@ -4,21 +4,21 @@
   "items": {
     "_main": {
       "type": "panel",
-      "label": "Main settings",
+      "label": "MainSettings",
       "items": {
         "interval": {
           "type": "number",
           "min": 5000,
-          "label": "Interval",
-          "help": "ms",
+          "label": "InVal",
+          "help": "mS",
           "sm": 12,
           "md": 2
         },
         "intervalByUnreach": {
           "type": "number",
           "min": 5000,
-          "label": "Interval if unreachable",
-          "help": "ms",
+          "label": "InterIU",
+          "help": "mS",
           "sm": 12,
           "md": 2
         },
@@ -26,30 +26,30 @@
           "newLine": true,
           "type": "number",
           "min": 0,
-          "label": "Number of retries",
+          "label": "NumberOFretries",
           "sm": 12,
           "md": 2
         },
         "noHostname": {
           "newLine": true,
           "type": "checkbox",
-          "label": "No host name in state name",
+          "label": "NoHostname",
           "sm": 12,
           "md": 4
         },
         "setcap": {
             "newLine": true,
             "type": "checkbox",
-            "label": "Allow with setcap the required rights for ping",
+            "label": "SetCap",
             "sm": 12,
             "md": 4,
-            "help": "This allows to run ping without root rights"
+            "help": "help1"
         }
       }
     },
     "_devices": {
       "type": "panel",
-      "label": "Devices",
+      "label": "DeVices",
       "items": {
         "devices": {
           "type": "table",
@@ -60,29 +60,29 @@
             {
               "type": "checkbox",
               "attr": "enabled",
-              "title": "Enabled",
+              "title": "EnAbled",
               "width": 70
             },
             {
               "type": "text",
               "attr": "name",
-              "title": "Name"
+              "title": "NaMe"
             },
             {
               "type": "checkbox",
               "attr": "use_name",
-              "title": "Use name",
+              "title": "UName",
               "width": 70
             },
             {
               "type": "text",
               "attr": "ip",
-              "title": "IP Address"
+              "title": "IPaddress"
             },
             {
               "type": "checkbox",
               "attr": "extended_info",
-              "title": "Extended Info",
+              "title": "ExtendInfo",
               "width": 70
             }
           ]
@@ -91,7 +91,7 @@
     },
     "_browse": {
       "type": "panel",
-      "label": "Browse",
+      "label": "BroWse",
       "items": {
         "_browse1": {
           "newLine": true,
