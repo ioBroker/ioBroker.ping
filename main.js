@@ -13,6 +13,7 @@
 
 'use strict';
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
+const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
@@ -46,7 +47,73 @@ function startAdapter(options) {
 
         isStopping = true;
     });
+
+    adapter.on('stateChange', async (id, state) => {
+        if (state && !state.val && !state.ack && id.endsWith('.browse.running')) {
+            stopBrowsing = true;
+        }
+    });
+
     return adapter;
+}
+
+let runningTs = 0;
+let stopBrowsing = false;
+
+async function browse(iface) {
+    if (!iface) {
+        return [];
+    }
+
+    const now = Date.now();
+    runningTs = now;
+
+    const result = ip.subnet(iface.ip, iface.netmask);
+    if (result.length > 5000) {
+        return [];
+    }
+    const res = [];
+    let progress = 0;
+    await adapter.setStateAsync('browse.result', JSON.stringify(res), true);
+    await adapter.setStateAsync('browse.running', true, true);
+    await adapter.setStateAsync('browse.progress', 0, true);
+    await adapter.setStateAsync('browse.status', `0 / ${result.length}`, true);
+
+    stopBrowsing = false;
+    let addr = result.firstAddress;
+    for (let i = 0; i < result.length; i++) {
+        // ping addr
+        progress = Math.round((i / result.length) * 255);
+        await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, (_err, status) => {
+            if (status?.alive) {
+                console.log(`Found ${status.host}`);
+                res.push(status.host);
+                adapter.setState('browse.result', JSON.stringify(res), true);
+            } else {
+                console.log(`Progress ${progress} / 255`);
+            }
+            resolve();
+        }));
+
+        if (runningTs !== now) {
+            break;
+        }
+
+        if (stopBrowsing) {
+            break;
+        }
+
+        addr = ip.toLong(addr) + 1;
+        addr = ip.fromLong(addr);
+
+        await adapter.setStateAsync('browse.status', `${i} / ${result.length}`, true);
+        await adapter.setStateAsync('browse.progress', progress, true);
+    }
+    await adapter.setStateAsync('browse.running', false, true);
+    await adapter.setStateAsync('browse.progress', 0, true);
+    stopBrowsing = false;
+
+    return res;
 }
 
 function processMessage(obj) {
@@ -56,6 +123,15 @@ function processMessage(obj) {
             if (obj.callback && obj.message) {
                 ping.probe(obj.message, { log: adapter.log.debug }, (err, result) =>
                     adapter.sendTo(obj.from, obj.command, { result, error: err }, obj.callback));
+            }
+            break;
+        }
+
+        case 'browse': {
+            // Try to ping all IPs of the network
+            if (obj.callback && obj.message) {
+                browse(obj.message)
+                    .then(result => adapter.sendTo(obj.from, obj.command, { result }, obj.callback));
             }
             break;
         }
@@ -444,6 +520,12 @@ async function syncConfig() {
 }
 
 async function main(adapter) {
+    await adapter.setStateAsync('browse.running', false, true);
+    await adapter.setStateAsync('browse.progress', 0, true);
+    await adapter.setStateAsync('browse.status', '', true);
+
+    await adapter.subscribeStates('browse.running');
+
     if (!adapter.config.devices || !adapter.config.devices.length) {
         adapter.log.warn('No one host configured for ping');
         return;

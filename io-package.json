@@ -166,5 +166,69 @@
     "numberOfRetries": 1,
     "noHostname": false
   },
-  "objects": []
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "browse",
+      "type": "channel",
+        "common": {
+            "name": "Browse"
+      },
+      "native": {}
+    },
+    {
+      "_id": "browse.progress",
+      "type": "state",
+      "common": {
+        "name": "Progress",
+        "type": "number",
+        "role": "state",
+        "read": true,
+        "write": false,
+        "def": 0,
+        "min": 0,
+        "max": 255
+      },
+      "native": {}
+    },
+    {
+      "_id": "browse.result",
+      "type": "state",
+      "common": {
+        "name": "Browse result",
+        "type": "json",
+        "role": "state",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "browse.running",
+      "type": "state",
+      "common": {
+        "name": "Browse running",
+        "type": "boolean",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "browse.status",
+      "type": "state",
+      "common": {
+        "name": "Browse status",
+        "type": "string",
+        "role": "state",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    }
+  ]
 }

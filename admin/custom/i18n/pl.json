@@ -1,0 +1,11 @@
+{
+  "custom_ping_add": "Dodaj wybrane adresy IP",
+  "custom_ping_browse": "Przeglądać",
+  "custom_ping_interface": "Interfejs",
+  "custom_ping_ip": "Adres IP",
+  "custom_ping_not_alive": "Instancja ping nie jest aktywna",
+  "custom_ping_select_interface": "Wybierz interfejs",
+  "custom_ping_title": "Przeglądaj adresy IP jednego interfejsu",
+  "custom_ping_stop": "Zatrzymaj",
+  "custom_ping_ips": "Adresy IP"
+}

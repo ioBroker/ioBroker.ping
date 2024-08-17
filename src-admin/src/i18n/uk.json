@@ -1,0 +1,11 @@
+{
+  "custom_ping_add": "Додайте вибрані IP-адреси",
+  "custom_ping_browse": "переглядати",
+  "custom_ping_interface": "Інтерфейс",
+  "custom_ping_ip": "IP адреса",
+  "custom_ping_not_alive": "Примірник Ping не живий",
+  "custom_ping_select_interface": "Виберіть інтерфейс",
+  "custom_ping_title": "Перегляд IP-адрес одного інтерфейсу",
+  "custom_ping_stop": "Зупинити",
+  "custom_ping_ips": "IP-адреси"
+}

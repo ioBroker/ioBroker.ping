@@ -88,6 +88,22 @@
           ]
         }
       }
+    },
+    "_browse": {
+      "type": "panel",
+      "label": "Browse",
+      "items": {
+        "_browse1": {
+          "newLine": true,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "i18n": true,
+          "url": "custom/customComponents.js",
+          "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
+          "type": "custom"
+        }
+      }
     }
   }
 }

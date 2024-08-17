@@ -1,0 +1,11 @@
+{
+  "custom_ping_add": "添加选定的 IP 地址",
+  "custom_ping_browse": "浏览",
+  "custom_ping_interface": "界面",
+  "custom_ping_ip": "IP 地址",
+  "custom_ping_not_alive": "Ping 实例未处于活动状态",
+  "custom_ping_select_interface": "选择接口",
+  "custom_ping_title": "浏览一个接口的 IP 地址",
+  "custom_ping_stop": "停止浏览",
+  "custom_ping_ips": "IP 地址"
+}

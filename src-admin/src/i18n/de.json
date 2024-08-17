@@ -1,0 +1,11 @@
+{
+  "custom_ping_not_alive": "Ping-Instanz ist nicht am Leben",
+  "custom_ping_add": "Ausgewählte IP-Adressen hinzufügen",
+  "custom_ping_browse": "Durchsuchen",
+  "custom_ping_interface": "Schnittstelle",
+  "custom_ping_ip": "IP-Adresse",
+  "custom_ping_select_interface": "Schnittstelle auswählen",
+  "custom_ping_title": "Durchsuchen Sie die IP-Adressen einer Schnittstelle",
+  "custom_ping_stop": "Beenden",
+  "custom_ping_ips": "IP-Adressen"
+}
