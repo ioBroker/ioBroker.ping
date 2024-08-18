@@ -239,7 +239,7 @@ describe('Test PING', function () {
     });
 
     it('Test GUI', async () => {
-        await gPage.goto(`http://127.0.0.1:18081/#tab-instances/config/system.adapter.${adapterName}.0`, { waitUntil: 'domcontentloaded' });
+        await gPage.goto(`http://127.0.0.1:8081/#tab-instances/config/system.adapter.${adapterName}.0`, { waitUntil: 'domcontentloaded' });
         await gPage.waitForSelector('button.MuiTab-root', { timeout: 20_000 });
         // if the slow connection dialog is opened, close it
         const cancel = await gPage.$$('#ar_dialog_confirm_cancel_');
