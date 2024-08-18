@@ -124,7 +124,7 @@ describe('Test PING', function () {
                 const { page } = await guiHelper.startBrowser(
                     adapterName,
                     `${__dirname}/../`,
-                    false,
+                    process.env.CI === 'true',
                     '/'
                 );
                 gPage = page;
