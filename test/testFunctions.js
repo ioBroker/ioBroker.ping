@@ -78,10 +78,9 @@ describe('Test PING', function () {
             systemConfig.common.diag = 'none';
             await setup.setObject('system.config', systemConfig);
 
-            // lets the admin adapter start on port 18081
+            // lets the admin adapter start on port 8081
             const adminConfig = await setup.getAdapterConfig(0, 'admin');
             if (adminConfig?.common) {
-                adminConfig.native.port = 18081;
                 adminConfig.common.enabled = true;
                 await setup.setAdapterConfig(adminConfig.common, adminConfig.native, 0, 'admin');
             }
