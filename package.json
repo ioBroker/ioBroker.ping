@@ -45,8 +45,8 @@
   },
   "main": "main.js",
   "files": [
-    "admin/",
-    "!admin/I18n/",
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "lib/",
     "io-package.json",
     "LICENSE",
