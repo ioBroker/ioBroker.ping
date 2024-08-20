@@ -4,7 +4,7 @@
     "ms": "Millisekunden",
     "Interval if unreachable": "Intervall, wenn nicht erreichbar",
     "Number of retries": "Anzahl der Wiederholungsversuche",
-    "No host name in state name": "Kein Hostname im Staatsnamen",
+    "No host name in state name": "Hostname bei Zustandsnamen nicht einfügen",
     "Allow with setcap the required rights for ping": "Erlauben Sie mit setcap die erforderlichen Rechte für Ping",
     "This allows to run ping without root rights": "Dies ermöglicht die Ausführung von Ping ohne Root-Rechte",
     "Devices": "Geräte",
