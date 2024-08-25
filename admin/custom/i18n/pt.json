@@ -7,5 +7,7 @@
   "custom_ping_select_interface": "Selecione a interface",
   "custom_ping_title": "Navegar pelos endereços IP de uma interface",
   "custom_ping_stop": "Parar",
-  "custom_ping_ips": "Endereços IP"
+  "custom_ping_ips": "Endereços IP",
+  "custom_ping_mac": "Endereço MAC",
+  "custom_ping_vendor": "Fornecedor"
 }

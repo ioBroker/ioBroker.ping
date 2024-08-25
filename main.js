@@ -19,6 +19,8 @@ const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
 let adapter;
 
+let arp;
+let vendor;
 let timer = null;
 let timerUnreach = null;
 let isStopping = false;
@@ -61,8 +63,46 @@ let runningTs = 0;
 let stopBrowsing = false;
 
 async function browse(iface) {
-    if (!iface) {
-        return [];
+    if (!iface || typeof iface === 'string') {
+        if (!iface) {
+            // read last selected interface
+            const iState = await adapter.getStateAsync('browse.interface');
+            // if nothing selected, nothing to do
+            if (!iState || !iState.val) {
+                adapter.log.warn('No interface selected');
+                return [];
+            }
+            iface = iState.val;
+        }
+        // get the host where this instance is running
+        const config = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+        // read the host interfaces
+        const host = await this.getForeignObjectAsync(`system.host.${config.common.host}`);
+        if (host?.native?.hardware?.networkInterfaces) {
+            for (const iName of Object.keys(host.native.hardware.networkInterfaces)) {
+                const ifc = host.native.hardware.networkInterfaces[iName];
+                const _addr = ifc.find(addr => addr.address === iface);
+                if (_addr) {
+                    iface = { ip: _addr.address, netmask: _addr.netmask };
+                    break;
+                }
+            }
+        }
+        if (!iface) {
+            return [];
+        }
+    } else {
+        const iState = await adapter.getStateAsync('browse.interface');
+        if (!iState || iState.val !== iface.ip) {
+            await adapter.setStateAsync('browse.interface', iface.ip, true);
+        }
+    }
+
+    try {
+        vendor = vendor || require('@network-utils/vendor-lookup');
+        arp =  arp || require('@network-utils/arp-lookup');
+    } catch (e) {
+        adapter.log.warn('Cannot use module "arp-lookup"');
     }
 
     const now = Date.now();
@@ -84,10 +124,18 @@ async function browse(iface) {
     for (let i = 0; i < result.length; i++) {
         // ping addr
         progress = Math.round((i / result.length) * 255);
-        await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, (_err, status) => {
+        await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, async (_err, status) => {
             if (status?.alive) {
                 console.log(`Found ${status.host}`);
-                res.push(status.host);
+                let mac = undefined;
+                let vendorName = undefined;
+                if (arp) {
+                    mac = await arp.toMAC(status.host);
+                    if (mac && vendor) {
+                        vendorName = vendor.toVendor(mac);
+                    }
+                }
+                res.push({ ip: status.host, mac, vendor: vendorName });
                 adapter.setState('browse.result', JSON.stringify(res), true);
             } else {
                 console.log(`Progress ${progress} / 255`);
@@ -129,7 +177,7 @@ function processMessage(obj) {
 
         case 'browse': {
             // Try to ping all IPs of the network
-            if (obj.callback && obj.message) {
+            if (obj.callback) {
                 browse(obj.message)
                     .then(result => adapter.sendTo(obj.from, obj.command, { result }, obj.callback));
             }

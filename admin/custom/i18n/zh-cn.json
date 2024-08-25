@@ -7,5 +7,7 @@
   "custom_ping_select_interface": "选择接口",
   "custom_ping_title": "浏览一个接口的 IP 地址",
   "custom_ping_stop": "停止浏览",
-  "custom_ping_ips": "IP 地址"
+  "custom_ping_ips": "IP 地址",
+  "custom_ping_mac": "MAC 地址",
+  "custom_ping_vendor": "小贩"
 }

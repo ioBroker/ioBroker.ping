@@ -7,5 +7,7 @@
   "custom_ping_select_interface": "Wybierz interfejs",
   "custom_ping_title": "Przeglądaj adresy IP jednego interfejsu",
   "custom_ping_stop": "Zatrzymaj",
-  "custom_ping_ips": "Adresy IP"
+  "custom_ping_ips": "Adresy IP",
+  "custom_ping_mac": "Adres MAC",
+  "custom_ping_vendor": "Producent"
 }

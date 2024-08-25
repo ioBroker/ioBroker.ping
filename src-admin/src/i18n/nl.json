@@ -7,5 +7,7 @@
   "custom_ping_select_interface": "Selecteer interface",
   "custom_ping_title": "Blader door IP-adressen van één interface",
   "custom_ping_stop": "Stop",
-  "custom_ping_ips": "IP-adressen"
+  "custom_ping_ips": "IP-adressen",
+  "custom_ping_mac": "MAC-adres",
+  "custom_ping_vendor": "Fabrikant"
 }

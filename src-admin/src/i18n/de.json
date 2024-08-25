@@ -5,7 +5,9 @@
   "custom_ping_interface": "Schnittstelle",
   "custom_ping_ip": "IP-Adresse",
   "custom_ping_select_interface": "Schnittstelle auswählen",
-  "custom_ping_title": "Durchsuchen Sie die IP-Adressen einer Schnittstelle",
+  "custom_ping_title": "Die IP-Adressen einer Schnittstelle durchsuchen",
   "custom_ping_stop": "Beenden",
-  "custom_ping_ips": "IP-Adressen"
+  "custom_ping_ips": "IP-Adressen",
+  "custom_ping_mac": "MAC-Adresse",
+  "custom_ping_vendor": "Hersteller"
 }

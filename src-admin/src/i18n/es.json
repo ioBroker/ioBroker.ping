@@ -7,5 +7,7 @@
   "custom_ping_select_interface": "Seleccionar interfaz",
   "custom_ping_title": "Explorar direcciones IP de una interfaz",
   "custom_ping_stop": "Detener",
-  "custom_ping_ips": "Direcciones IP"
+  "custom_ping_ips": "Direcciones IP",
+  "custom_ping_mac": "Dirección MAC",
+  "custom_ping_vendor": "Fabricante"
 }

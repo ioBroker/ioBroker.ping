@@ -203,6 +203,19 @@
         "def": ""
       },
       "native": {}
+    },
+    {
+      "_id": "browse.interface",
+      "type": "state",
+      "common": {
+        "name": "Browse interface",
+        "type": "string",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
     }
   ]
 }
