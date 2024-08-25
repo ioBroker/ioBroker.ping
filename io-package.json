@@ -151,8 +151,75 @@
     "interval": 60000,
     "intervalByUnreach": 30000,
     "numberOfRetries": 1,
-    "noHostname": false
+    "noHostname": false,
+    "autoDetect": "0"
   },
+  "notifications": [
+    {
+      "scope": "ping",
+      "name": {
+        "en": "ping",
+        "de": "ping",
+        "ru": "ping",
+        "pt": "ping",
+        "nl": "ping",
+        "fr": "ping",
+        "it": "ping",
+        "es": "ping",
+        "pl": "ping",
+        "uk": "ping",
+        "zh-cn": "ping"
+      },
+      "description": {
+        "en": "These notifications inform about new found devices.",
+        "de": "Diese Benachrichtigungen informieren über neu gefundene Geräte.",
+        "ru": "Эти уведомления информируют о новых найденных устройствах.",
+        "pt": "Essas notificações informam sobre novos dispositivos encontrados.",
+        "nl": "Deze meldingen informeren over nieuw gevonden apparaten.",
+        "fr": "Ces notifications informent sur les nouveaux appareils trouvés.",
+        "it": "Queste notifiche informano sui nuovi dispositivi trovati.",
+        "es": "Estas notificaciones informan sobre los nuevos dispositivos encontrados.",
+        "pl": "Te powiadomienia informują o nowo znalezionych urządzeniach.",
+        "uk": "Ці сповіщення інформують про нові знайдені пристрої.",
+        "zh-cn": "这些通知通知您发现的新设备。"
+      },
+      "categories": [
+        {
+          "category": "newDevices",
+          "name": {
+            "en": "New IP addresses found",
+            "de": "Neue IP-Adressen gefunden",
+            "ru": "Найдены новые IP-адреса",
+            "pt": "Novos endereços IP encontrados",
+            "nl": "Nieuwe IP-adressen gevonden",
+            "fr": "Nouveaux adresses IP trouvées",
+            "it": "Nuovi indirizzi IP trovati",
+            "es": "Nuevas direcciones IP encontradas",
+            "pl": "Znaleziono nowe adresy IP",
+            "uk": "Знайдено нові IP-адреси",
+            "zh-cn": "找到新的 IP 地址"
+          },
+          "severity": "notify",
+          "description": {
+            "en": "New IP addresses could be added for monitoring.",
+            "de": "Neue IP-Adressen könnten zur Überwachung hinzugefügt werden.",
+            "ru": "Новые IP-адреса могут быть добавлены для мониторинга.",
+            "pt": "Novos endereços IP podem ser adicionados para monitoramento.",
+            "nl": "Nieuwe IP-adressen kunnen worden toegevoegd voor monitoring.",
+            "fr": "De nouvelles adresses IP pourraient être ajoutées pour la surveillance.",
+            "it": "Nuovi indirizzi IP potrebbero essere aggiunti per il monitoraggio.",
+            "es": "Se podrían agregar nuevas direcciones IP para su monitoreo.",
+            "pl": "Nowe adresy IP mogą być dodane do monitorowania.",
+            "uk": "Нові IP-адреси можуть бути додані для моніторингу.",
+            "zh-cn": "新的 IP 地址可以用于监控。"
+          },
+          "regex": [],
+          "link": "_browse",
+          "limit": 1
+        }
+      ]
+    }
+  ],
   "objects": [],
   "instanceObjects": [
     {

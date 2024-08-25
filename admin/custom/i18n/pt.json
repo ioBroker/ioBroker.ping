@@ -9,5 +9,6 @@
   "custom_ping_stop": "Parar",
   "custom_ping_ips": "Endereços IP",
   "custom_ping_mac": "Endereço MAC",
-  "custom_ping_vendor": "Fornecedor"
+  "custom_ping_vendor": "Fabricante",
+  "custom_ping_ignore": "Ignorar para notificações"
 }

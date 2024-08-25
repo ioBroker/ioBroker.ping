@@ -15,5 +15,15 @@
   "ms": "миллисекунды",
   "Number of retries": "Количество попыток",
   "Interval if unreachable": "Интервал, если устройство недоступно",
-  "Browse": "Просматривать"
+  "Browse": "Просматривать",
+  "Auto detect": "Автоматическое определение",
+  "disabled": "неполноценный",
+  "every hour": "каждый час",
+  "every 2 hours": "каждые 2 часа",
+  "every 3 hours": "каждые 3 часа",
+  "every 4 hours": "каждые 4 часа",
+  "every 6 hours": "каждые 6 часов",
+  "every 12 hours": "каждые 12 часов",
+  "every day": "один раз в день",
+  "Select interface for browsing to enable auto detect": "Выберите интерфейс для просмотра, чтобы включить автоматическое обнаружение"
 }

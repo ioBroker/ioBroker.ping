@@ -15,5 +15,15 @@
   "ms": "毫秒",
   "Number of retries": "重试次数",
   "Interval if unreachable": "无法到达时的间隔",
-  "Browse": "浏览"
+  "Browse": "浏览",
+  "Auto detect": "自动检测",
+  "disabled": "已禁用",
+  "every hour": "每小时",
+  "every 2 hours": "每 2 小时",
+  "every 3 hours": "每 3 小时",
+  "every 4 hours": "每 4 小时",
+  "every 6 hours": "每 6 小时",
+  "every 12 hours": "每 12 小时",
+  "every day": "每天一次",
+  "Select interface for browsing to enable auto detect": "选择浏览界面以启用自动检测"
 }

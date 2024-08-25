@@ -6,7 +6,7 @@ import {
     TableCell, TableContainer, TableHead,
     TableRow, Paper, Checkbox,
     FormControl, InputLabel, Select, MenuItem,
-    Button, CircularProgress,
+    Button,
 } from '@mui/material';
 import { I18n } from '@iobroker/adapter-react-v5';
 import { ConfigGeneric } from '@iobroker/json-config';
@@ -72,6 +72,7 @@ class PingBrowseComponent extends ConfigGeneric {
         const browse = await this.props.socket.getState(`ping.${this.props.instance}.browse.running`);
         const result = await this.props.socket.getState(`ping.${this.props.instance}.browse.result`);
         const status = await this.props.socket.getState(`ping.${this.props.instance}.browse.status`);
+
         newState.status = status?.val || '';
         newState.progress = progress?.val || 0;
         newState.running = !!browse?.val;
@@ -98,7 +99,7 @@ class PingBrowseComponent extends ConfigGeneric {
 
     browse() {
         this.props.socket.sendTo(`ping.${this.props.instance}`, 'browse', this.state.interfaces.find(item => item.ip === this.state.interface))
-            .then(result => this.setState({ ips: result?.result || [] }));
+            .catch(error => console.error(`Cannot ping: ${error}`));
     }
 
     async componentWillUnmount() {
@@ -132,9 +133,12 @@ class PingBrowseComponent extends ConfigGeneric {
             if (status !== this.state.status) {
                 this.setState({ status });
             }
-        } else if (id.endsWith('.browse.interface')) {
+        } else if (id.endsWith('.interface')) {
             const iface = state?.val || '';
-            if (iface && iface !== this.state.interface && this.state.interfaces.find(item => item.ip === iface)) {
+            if (iface &&
+                iface !== this.state.interface &&
+                this.state.interfaces.find(item => item.ip === iface)
+            ) {
                 this.setState({ interface: iface });
             }
         }
@@ -156,8 +160,11 @@ class PingBrowseComponent extends ConfigGeneric {
                     <InputLabel>{I18n.t('custom_ping_interface')}</InputLabel>
                     <Select
                         variant="standard"
+                        disabled={this.state.running}
                         value={this.state.interface}
-                        onChange={e => this.setState({ interface: e.target.value })}
+                        onChange={e =>
+                            this.setState({ interface: e.target.value }, () =>
+                                this.props.socket.setState(`ping.${this.props.instance}.browse.interface`, this.state.interface))}
                     >
                         <MenuItem value="">
                             <em>{I18n.t('custom_ping_select_interface')}</em>
@@ -243,6 +250,7 @@ class PingBrowseComponent extends ConfigGeneric {
                             </TableCell>
                             <TableCell>{I18n.t('custom_ping_mac')}</TableCell>
                             <TableCell>{I18n.t('custom_ping_vendor')}</TableCell>
+                            <TableCell>{I18n.t('custom_ping_ignore')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -253,9 +261,7 @@ class PingBrowseComponent extends ConfigGeneric {
                             <TableCell component="th" scope="row">
                                 {!exists.find(it => it.ip === item.ip) ? <Checkbox
                                     checked={this.state.selected.includes(item.ip)}
-                                    style={{
-                                        padding: '0 8px',
-                                    }}
+                                    style={{ padding: '0 8px' }}
                                     onChange={() => {
                                         const selected = this.state.selected;
                                         const pos = selected.indexOf(item.ip);
@@ -271,6 +277,21 @@ class PingBrowseComponent extends ConfigGeneric {
                             <TableCell>{item.ip}</TableCell>
                             <TableCell>{item.mac}</TableCell>
                             <TableCell>{item.vendor}</TableCell>
+                            <TableCell>
+                                {!exists.find(it => it.ip === item.ip) ? <Checkbox
+                                    checked={item.ignore}
+                                    style={{ padding: '0 8px' }}
+                                    onChange={() => {
+                                        const ips = [...this.state.ips];
+                                        const editedItem = ips.find(it => it.ip === item.ip);
+                                        if (editedItem) {
+                                            editedItem.ignore = !editedItem.ignore;
+                                            this.setState({ ips }, () =>
+                                                this.props.socket.setState(`ping.${this.props.instance}.browse.result`, JSON.stringify(ips), false));
+                                        }
+                                    }}
+                                /> : null}
+                            </TableCell>
                         </TableRow>)}
                     </TableBody>
                 </Table>

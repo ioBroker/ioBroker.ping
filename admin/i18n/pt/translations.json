@@ -15,5 +15,15 @@
   "ms": "milissegundos",
   "Number of retries": "Número de novas tentativas",
   "Interval if unreachable": "Intervalo se inacessível",
-  "Browse": "Navegar"
+  "Browse": "Navegar",
+  "Auto detect": "Detecção automática",
+  "disabled": "desabilitado",
+  "every hour": "toda hora",
+  "every 2 hours": "a cada 2 horas",
+  "every 3 hours": "a cada 3 horas",
+  "every 4 hours": "a cada 4 horas",
+  "every 6 hours": "a cada 6 horas",
+  "every 12 hours": "a cada 12 horas",
+  "every day": "uma vez por dia",
+  "Select interface for browsing to enable auto detect": "Selecione a interface de navegação para habilitar a detecção automática"
 }

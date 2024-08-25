@@ -15,5 +15,15 @@
   "ms": "Millisekunden",
   "Number of retries": "Anzahl der Wiederholungsversuche",
   "Interval if unreachable": "Intervall, wenn das Gerät ist nicht erreichbar",
-  "Browse": "Durchsuchen"
+  "Browse": "Durchsuchen",
+  "Auto detect": "Automatische Erkennung",
+  "disabled": "deaktiviert",
+  "every hour": "stündlich",
+  "every 2 hours": "alle 2 Stunden",
+  "every 3 hours": "alle 3 Stunden",
+  "every 4 hours": "alle 4 Stunden",
+  "every 6 hours": "alle 6 Stunden",
+  "every 12 hours": "alle 12 Stunden",
+  "every day": "einmal täglich",
+  "Select interface for browsing to enable auto detect": "Wählen Sie eine Schnittstelle zum Durchsuchen aus, um die automatische Erkennung zu aktivieren"
 }

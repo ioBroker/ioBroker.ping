@@ -15,5 +15,15 @@
   "ms": "мілісекунд",
   "Number of retries": "Кількість повторних спроб",
   "Interval if unreachable": "Інтервал, якщо недоступний",
-  "Browse": "переглядати"
+  "Browse": "переглядати",
+  "Auto detect": "Автоматичне визначення",
+  "disabled": "вимкнено",
+  "every hour": "щогодини",
+  "every 2 hours": "кожні 2 години",
+  "every 3 hours": "кожні 3 години",
+  "every 4 hours": "кожні 4 години",
+  "every 6 hours": "кожні 6 годин",
+  "every 12 hours": "кожні 12 годин",
+  "every day": "раз на день",
+  "Select interface for browsing to enable auto detect": "Виберіть інтерфейс для перегляду, щоб увімкнути автоматичне визначення"
 }

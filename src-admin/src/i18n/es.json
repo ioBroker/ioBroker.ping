@@ -9,5 +9,6 @@
   "custom_ping_stop": "Detener",
   "custom_ping_ips": "Direcciones IP",
   "custom_ping_mac": "Dirección MAC",
-  "custom_ping_vendor": "Fabricante"
+  "custom_ping_vendor": "Fabricante",
+  "custom_ping_ignore": "Ignorar notificaciones"
 }

@@ -9,5 +9,6 @@
   "custom_ping_stop": "Остановить",
   "custom_ping_ips": "IP-адреса",
   "custom_ping_mac": "MAC-адрес",
-  "custom_ping_vendor": "Производитель"
+  "custom_ping_vendor": "Производитель",
+  "custom_ping_ignore": "Игнорировать уведомления"
 }

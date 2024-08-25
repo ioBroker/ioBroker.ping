@@ -9,5 +9,6 @@
   "custom_ping_stop": "Stop browse",
   "custom_ping_ips": "IP addresses",
   "custom_ping_mac": "MAC address",
-  "custom_ping_vendor": "Vendor"
+  "custom_ping_vendor": "Manufacturer",
+  "custom_ping_ignore": "Ignore for notifications"
 }

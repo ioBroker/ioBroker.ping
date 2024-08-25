@@ -9,5 +9,6 @@
   "custom_ping_stop": "Interrompi",
   "custom_ping_ips": "Indirizzi IP",
   "custom_ping_mac": "Indirizzo MAC",
-  "custom_ping_vendor": "Venditore"
+  "custom_ping_vendor": "Produttore",
+  "custom_ping_ignore": "Ignora per le notifiche"
 }

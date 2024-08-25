@@ -15,5 +15,15 @@
   "ms": "milliseconds",
   "Number of retries": "Number of retries",
   "Interval if unreachable": "Interval if unreachable",
-  "Browse": "Browse"
+  "Browse": "Browse",
+  "Auto detect": "Auto detect",
+  "disabled": "disabled",
+  "every hour": "every hour",
+  "every 2 hours": "every 2 hours",
+  "every 3 hours": "every 3 hours",
+  "every 4 hours": "every 4 hours",
+  "every 6 hours": "every 6 hours",
+  "every 12 hours": "every 12 hours",
+  "every day": "once a day",
+  "Select interface for browsing to enable auto detect": "Select interface for browsing to enable auto detect"
 }

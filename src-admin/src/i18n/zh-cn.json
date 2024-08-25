@@ -9,5 +9,6 @@
   "custom_ping_stop": "停止浏览",
   "custom_ping_ips": "IP 地址",
   "custom_ping_mac": "MAC 地址",
-  "custom_ping_vendor": "制造商"
+  "custom_ping_vendor": "制造商",
+  "custom_ping_ignore": "忽略通知"
 }

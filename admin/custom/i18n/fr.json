@@ -9,5 +9,6 @@
   "custom_ping_stop": "Arrêter",
   "custom_ping_ips": "Adresses IP",
   "custom_ping_mac": "Adresse MAC",
-  "custom_ping_vendor": "Fournisseur"
+  "custom_ping_vendor": "Fabricant",
+  "custom_ping_ignore": "Ignorer les notifications"
 }
