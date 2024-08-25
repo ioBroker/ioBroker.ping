@@ -44,7 +44,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 - [ ] Implement the possibility to monitor TCP ports
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.7.1 (2024-08-25)
 * (bluefox) Added resolution of IP addresses to MAC addresses
 
 ### 1.7.0 (2024-08-17)
