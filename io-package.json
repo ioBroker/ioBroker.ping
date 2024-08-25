@@ -3,19 +3,6 @@
     "name": "ping",
     "version": "1.7.2",
     "news": {
-      "1.7.2": {
-        "en": "Added the functionality to poll the address range periodically",
-        "de": "Hinzugefügt die Funktionalität, um den Adressbereich periodisch abzufragen",
-        "ru": "Добавлена функциональность для периодического опроса адресного диапазона",
-        "pt": "Adicionado a funcionalidade para sondar o intervalo de endereços periodicamente",
-        "nl": "De functionaliteit toegevoegd om het adresbereik periodiek te peilen",
-        "fr": "Ajout de la fonctionnalité pour le sondage périodique de la plage d'adresses",
-        "it": "Aggiunta la funzionalità per sondare l'intervallo di indirizzi periodicamente",
-        "es": "Añadido la funcionalidad para encuestar el rango de dirección periódicamente",
-        "pl": "Dodano funkcjonalność badania zakresu adresów okresowo",
-        "uk": "Додано функціональність для опитування адресного діапазону періодично",
-        "zh-cn": "添加功能以定期对地址范围进行投票"
-      },
       "1.7.1": {
         "en": "Added resolution of IP addresses to MAC addresses",
         "de": "Zusätzliche Auflösung von IP-Adressen an MAC-Adressen",
@@ -227,7 +214,14 @@
             "zh-cn": "新的 IP 地址可以用于监控。"
           },
           "regex": [],
-          "link": "_browse",
+          "link": {
+            "url": "_browse",
+            "text": {
+              "en": "Open settings",
+              "de": "Zeige Einstellungen",
+              "ru": "Показать настройки"
+            }
+          },
           "limit": 1
         }
       ]
