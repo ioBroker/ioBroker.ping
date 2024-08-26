@@ -93,11 +93,63 @@
       "type": "panel",
       "label": "Browse",
       "items": {
+        "autoDetect": {
+          "newLine": true,
+          "type": "select",
+          "label": "Auto detect",
+          "options": [
+            {
+              "value": "0",
+              "label": "disabled"
+            },
+            {
+              "value": "60",
+              "label": "every hour"
+            },
+            {
+              "value": "120",
+              "label": "every 2 hours"
+            },
+            {
+              "value": "180",
+              "label": "every 3 hours"
+            },
+            {
+              "value": "240",
+              "label": "every 4 hours"
+            },
+            {
+              "value": "360",
+              "label": "every 6 hours"
+            },
+            {
+              "value": "360",
+              "label": "every 6 hours"
+            },
+            {
+              "value": "720",
+              "label": "every 12 hours"
+            },
+            {
+              "value": "1440",
+              "label": "every day"
+            }
+          ],
+          "sm": 12,
+          "lg": 3
+        },
+        "_info": {
+          "hidden": "!data.autoDetect || data.autoDetect === '0'",
+          "type": "staticText",
+          "text": "Select interface for browsing to enable auto detect",
+          "sm": 12,
+          "lg": 3
+        },
         "_browse1": {
           "newLine": true,
           "sm": 12,
-          "md": 6,
-          "lg": 6,
+          "md": 12,
+          "lg": 8,
           "i18n": true,
           "url": "custom/customComponents.js",
           "name": "ConfigCustomPingSet/Components/PingBrowseComponent",

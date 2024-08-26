@@ -7,5 +7,8 @@
   "custom_ping_select_interface": "Sélectionner l'interface",
   "custom_ping_title": "Parcourir les adresses IP d'une interface",
   "custom_ping_stop": "Arrêter",
-  "custom_ping_ips": "Adresses IP"
+  "custom_ping_ips": "Adresses IP",
+  "custom_ping_mac": "Adresse MAC",
+  "custom_ping_vendor": "Fabricant",
+  "custom_ping_ignore": "Ignorer les notifications"
 }

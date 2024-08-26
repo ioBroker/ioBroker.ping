@@ -19,9 +19,13 @@ const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
 let adapter;
 
+let arp;
+let vendor;
 let timer = null;
 let timerUnreach = null;
 let isStopping = false;
+let detectedIPs = [];
+let cyclicPingTimeout = null;
 
 const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
 
@@ -40,6 +44,10 @@ function startAdapter(options) {
             clearTimeout(timer);
             timer = null;
         }
+        if (cyclicPingTimeout) {
+            clearInterval(cyclicPingTimeout);
+            cyclicPingTimeout = null;
+        }
         if (timerUnreach) {
             clearTimeout(timerUnreach);
             timerUnreach = null;
@@ -51,30 +59,97 @@ function startAdapter(options) {
     adapter.on('stateChange', async (id, state) => {
         if (state && !state.val && !state.ack && id.endsWith('.browse.running')) {
             stopBrowsing = true;
+        } else if (state && state.val && !state.ack && id.endsWith('.browse.result')) {
+            // read ignore states of IP addresses
+            try {
+                const ips = JSON.parse(state.val);
+                ips.forEach(item => {
+                    if (item.ignore) {
+                        const it = detectedIPs.find(ip => ip.ip === item.ip);
+                        if (it) {
+                            it.ignore = true;
+                        }
+                    }
+                });
+            } catch (e) {
+                adapter.log.warn(`Cannot parse browse result: ${e}`);
+            }
         }
     });
 
     return adapter;
 }
 
-let runningTs = 0;
 let stopBrowsing = false;
+let runningBrowse = false;
 
 async function browse(iface) {
-    if (!iface) {
-        return [];
+    if (runningBrowse) {
+        adapter.log.warn(`Ignored browse command as already running`);
+        return;
     }
 
-    const now = Date.now();
-    runningTs = now;
+    runningBrowse = true;
+
+    let generateNotification = false;
+
+    if (!iface || typeof iface === 'string') {
+        if (!iface) {
+            // read last selected interface
+            const iState = await adapter.getStateAsync('browse.interface');
+            // if nothing selected, nothing to do
+            if (!iState || !iState.val) {
+                adapter.log.warn('No interface selected');
+                runningBrowse = false;
+                return;
+            }
+            iface = iState.val;
+        }
+        // get the host where this instance is running
+        const config = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
+        // read the host interfaces
+        const host = await adapter.getForeignObjectAsync(`system.host.${config.common.host}`);
+        if (host?.native?.hardware?.networkInterfaces) {
+            for (const iName of Object.keys(host.native.hardware.networkInterfaces)) {
+                const ifc = host.native.hardware.networkInterfaces[iName];
+                const _addr = ifc.find(addr => addr.address === iface);
+                if (_addr) {
+                    iface = { ip: _addr.address, netmask: _addr.netmask };
+                    break;
+                }
+            }
+        }
+        if (!iface) {
+            adapter.log.warn(`Defined interface "${iface}" does not exists on this host`);
+            runningBrowse = false;
+            return;
+        }
+        generateNotification = true;
+    } else {
+        const iState = await adapter.getStateAsync('browse.interface');
+        if (!iState || iState.val !== iface.ip) {
+            await adapter.setStateAsync('browse.interface', iface.ip, true);
+        }
+    }
+
+    detectedIPs = detectedIPs.filter(item => item.ignore);
+
+    try {
+        vendor = vendor || require('@network-utils/vendor-lookup');
+        arp =  arp || require('@network-utils/arp-lookup');
+    } catch (e) {
+        adapter.log.warn('Cannot use module "arp-lookup"');
+    }
 
     const result = ip.subnet(iface.ip, iface.netmask);
     if (result.length > 5000) {
-        return [];
+        adapter.log.warn(`Too many IPs to ping: ${result.length}. Maximum is 5000`);
+        runningBrowse = false;
+        return;
     }
-    const res = [];
+    runningBrowse = true;
     let progress = 0;
-    await adapter.setStateAsync('browse.result', JSON.stringify(res), true);
+    await adapter.setStateAsync('browse.result', JSON.stringify(detectedIPs), true);
     await adapter.setStateAsync('browse.running', true, true);
     await adapter.setStateAsync('browse.progress', 0, true);
     await adapter.setStateAsync('browse.status', `0 / ${result.length}`, true);
@@ -84,19 +159,41 @@ async function browse(iface) {
     for (let i = 0; i < result.length; i++) {
         // ping addr
         progress = Math.round((i / result.length) * 255);
-        await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, (_err, status) => {
-            if (status?.alive) {
-                console.log(`Found ${status.host}`);
-                res.push(status.host);
-                adapter.setState('browse.result', JSON.stringify(res), true);
-            } else {
-                console.log(`Progress ${progress} / 255`);
-            }
-            resolve();
-        }));
 
-        if (runningTs !== now) {
-            break;
+        // do not ping the already configured and ignored devices
+        if (!adapter.config.devices.find(dev => dev.ip === addr) && !detectedIPs.find(item => item.ip === addr)) {
+            await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, async (_err, status) => {
+                if (status?.alive) {
+                    console.log(`Found ${status.host}`);
+                    let mac = undefined;
+                    let vendorName = undefined;
+                    if (arp) {
+                        mac = await arp.toMAC(status.host);
+                        if (mac && vendor) {
+                            vendorName = vendor.toVendor(mac);
+                        }
+                    }
+                    const item = detectedIPs.find(item => item.ip === status.host);
+                    let changed = false;
+                    if (item) {
+                        if (item.mac !== mac || item.vendor !== vendorName) {
+                            changed = true;
+                            item.mac = mac || item.mac;
+                            item.vendor = vendorName || item.vendor;
+                        }
+                    } else {
+                        detectedIPs.push({ip: status.host, mac, vendor: vendorName, ignore: false});
+                        detectedIPs.sort((a, b) => a.ip > b.ip ? 1 : (a.ip < b.ip ? -1 : 0));
+                        changed = true;
+                    }
+                    if (changed) {
+                        adapter.setState('browse.result', JSON.stringify(detectedIPs), true);
+                    }
+                } else {
+                    console.log(`Progress ${progress} / 255`);
+                }
+                resolve();
+            }));
         }
 
         if (stopBrowsing) {
@@ -111,9 +208,14 @@ async function browse(iface) {
     }
     await adapter.setStateAsync('browse.running', false, true);
     await adapter.setStateAsync('browse.progress', 0, true);
+    runningBrowse = false;
     stopBrowsing = false;
 
-    return res;
+    const newDevices = detectedIPs.filter(item => !item.ignore && !adapter.config.devices.find(dev => dev.ip === item.ip));
+    if (generateNotification && newDevices.length) {
+        const devices = newDevices.map(item => `${item.ip}${item.vendor && item.vendor !== '<random MAC>' ? ` [${item.vendor}]` : ''}`).join('\n');
+        await adapter.registerNotification('ping', 'newDevices', devices);
+    }
 }
 
 function processMessage(obj) {
@@ -128,11 +230,15 @@ function processMessage(obj) {
         }
 
         case 'browse': {
-            // Try to ping all IPs of the network
-            if (obj.callback && obj.message) {
-                browse(obj.message)
-                    .then(result => adapter.sendTo(obj.from, obj.command, { result }, obj.callback));
+            const intr = obj.message;
+            if (obj.callback) {
+                adapter.sendTo(obj.from, obj.command, { result: 'started' }, obj.callback);
             }
+
+            // Try to ping all IPs of the network
+            browse(intr)
+                .catch(error => adapter.log.error(`Cannot browse: ${error}`));
+
             break;
         }
     }
@@ -506,6 +612,30 @@ function prepareObjectsByConfig() {
     return result;
 }
 
+async function pingOnTime() {
+    if (isStopping) {
+        return;
+    }
+    const started = Date.now();
+    try {
+        await browse();
+    } catch (e) {
+        adapter.log.error(`Cannot browse: ${e}`);
+    }
+
+    if (isStopping) {
+        return;
+    }
+
+    cyclicPingTimeout = setTimeout(() => {
+        cyclicPingTimeout = null;
+        if (isStopping) {
+            return;
+        }
+        pingOnTime();
+    }, adapter.config.autoDetect * 60000 - (Date.now() - started));
+}
+
 async function syncConfig() {
     adapter.log.debug('Prepare objects');
     const preparedObjects = prepareObjectsByConfig();
@@ -524,12 +654,19 @@ async function main(adapter) {
     await adapter.setStateAsync('browse.progress', 0, true);
     await adapter.setStateAsync('browse.status', '', true);
 
-    await adapter.subscribeStates('browse.running');
+    adapter.config.autoDetect = parseInt(adapter.config.autoDetect, 10) || 0;
 
-    if (!adapter.config.devices || !adapter.config.devices.length) {
-        adapter.log.warn('No one host configured for ping');
-        return;
+    const res = await adapter.getStateAsync('browse.result');
+    if (res?.val) {
+        try {
+            detectedIPs = JSON.parse(res.val.toString());
+        } catch (e) {
+            detectedIPs = [];
+        }
     }
+
+    await adapter.subscribeStates('browse.running');
+    await adapter.subscribeStates('browse.result');
 
     adapter.config.interval = parseInt(adapter.config.interval, 10);
 
@@ -560,6 +697,15 @@ async function main(adapter) {
         } catch (e) {
             adapter.log.warn(`Cannot allow setcap for ping: ${e}`);
         }
+    }
+
+    if (adapter.config.autoDetect) {
+        pingOnTime()
+            .catch(e => adapter.log.error(`Cannot start auto detect: ${e}`));
+    }
+    if (!adapter.config.devices || !adapter.config.devices.length) {
+        adapter.log.warn('No one host configured for ping');
+        return;
     }
 
     const pingTaskList = await syncConfig();

@@ -6,20 +6,10 @@ import {
     TableCell, TableContainer, TableHead,
     TableRow, Paper, Checkbox,
     FormControl, InputLabel, Select, MenuItem,
-    Button, CircularProgress,
+    Button,
 } from '@mui/material';
 import { I18n } from '@iobroker/adapter-react-v5';
 import { ConfigGeneric } from '@iobroker/json-config';
-
-const countCharOccurrences = (string , char) => string.split(char).length - 1;
-
-const decimalToBinary = dec => (dec >>> 0).toString(2);
-const getNetMaskParts = nmask => nmask.split('.').map(Number);
-const netmask2CIDR = netmask => countCharOccurrences(getNetMaskParts(netmask)
-    .map(part => decimalToBinary(part))
-    .join(''),
-'1'
-);
 
 function netMask2Count(netmask) {
      // Calculate the number of available IP addresses
@@ -47,33 +37,12 @@ class PingBrowseComponent extends ConfigGeneric {
         };
     }
 
-    async componentDidMount() {
-        await super.componentDidMount();
-        const newState = {};
-
-        const state = await this.props.socket.getState(`system.adapter.ping.${this.props.instance}.alive`);
-        newState.alive = !!state?.val;
-
-        const progress = await this.props.socket.getState(`ping.${this.props.instance}.browse.progress`);
-        const browse = await this.props.socket.getState(`ping.${this.props.instance}.browse.running`);
-        const result = await this.props.socket.getState(`ping.${this.props.instance}.browse.result`);
-        const status = await this.props.socket.getState(`ping.${this.props.instance}.browse.status`);
-        newState.status = status?.val || '';
-        newState.progress = progress?.val || 0;
-        newState.running = !!browse?.val;
-        try {
-            newState.ips = JSON.parse(result?.val) || [];
-        } catch {
-            newState.ips = [];
-        }
-
-        await this.props.socket.subscribeState(`system.adapter.ping.${this.props.instance}.alive`, this.onChangedState);
-        await this.props.socket.subscribeState(`ping.${this.props.instance}.browse.*`, this.onChangedState);
+    async getAllInterfaces() {
+        const interfaces = [];
         // read config of ping adapter
         const config = await this.props.socket.getObject(`system.adapter.ping.${this.props.instance}`);
         const host = await this.props.socket.getObject(`system.host.${config.common.host}`);
         if (host?.native?.hardware?.networkInterfaces) {
-            const interfaces = [];
             Object.keys(host.native.hardware.networkInterfaces).forEach(iface => {
                 const ifc = host.native.hardware.networkInterfaces[iface];
                 ifc.forEach(addr => {
@@ -86,13 +55,51 @@ class PingBrowseComponent extends ConfigGeneric {
                     }
                 });
             });
-            this.setState({ interfaces });
         }
+
+        return interfaces;
+    }
+
+    async componentDidMount() {
+        await super.componentDidMount();
+        const newState = {};
+
+        const state = await this.props.socket.getState(`system.adapter.ping.${this.props.instance}.alive`);
+        newState.alive = !!state?.val;
+
+        const ifaceLast = await this.props.socket.getState(`ping.${this.props.instance}.browse.interface`);
+        const progress = await this.props.socket.getState(`ping.${this.props.instance}.browse.progress`);
+        const browse = await this.props.socket.getState(`ping.${this.props.instance}.browse.running`);
+        const result = await this.props.socket.getState(`ping.${this.props.instance}.browse.result`);
+        const status = await this.props.socket.getState(`ping.${this.props.instance}.browse.status`);
+
+        newState.status = status?.val || '';
+        newState.progress = progress?.val || 0;
+        newState.running = !!browse?.val;
+
+        try {
+            newState.ips = JSON.parse(result?.val) || [];
+            // convert an old format to [{ip: 'address}]
+            if (newState.ips[0] && typeof newState.ips === 'string') {
+                newState.ips = newState.ips.map(ip => ({ ip }));
+            }
+        } catch {
+            newState.ips = [];
+        }
+
+        await this.props.socket.subscribeState(`system.adapter.ping.${this.props.instance}.alive`, this.onChangedState);
+        await this.props.socket.subscribeState(`ping.${this.props.instance}.browse.*`, this.onChangedState);
+        newState.interfaces = await this.getAllInterfaces();
+        if (newState.interfaces.find(item => item.ip === ifaceLast?.val)) {
+            newState.interface = ifaceLast?.val;
+        }
+
+        this.setState(newState);
     }
 
     browse() {
         this.props.socket.sendTo(`ping.${this.props.instance}`, 'browse', this.state.interfaces.find(item => item.ip === this.state.interface))
-            .then(result => this.setState({ ips: result?.result || [] }));
+            .catch(error => console.error(`Cannot ping: ${error}`));
     }
 
     async componentWillUnmount() {
@@ -126,6 +133,14 @@ class PingBrowseComponent extends ConfigGeneric {
             if (status !== this.state.status) {
                 this.setState({ status });
             }
+        } else if (id.endsWith('.interface')) {
+            const iface = state?.val || '';
+            if (iface &&
+                iface !== this.state.interface &&
+                this.state.interfaces.find(item => item.ip === iface)
+            ) {
+                this.setState({ interface: iface });
+            }
         }
     };
 
@@ -135,7 +150,7 @@ class PingBrowseComponent extends ConfigGeneric {
         }
 
         const exists = this.props.data.devices || [];
-        const selectable = this.state.ips.filter(ip => !exists.find(item => item.ip === ip));
+        const selectable = this.state.ips.filter(it => !exists.find(item => item.ip === it.ip));
         const allSelected = selectable.length === this.state.selected.length;
 
         return <div style={{ width: '100%'}} className="ping_custom">
@@ -145,8 +160,11 @@ class PingBrowseComponent extends ConfigGeneric {
                     <InputLabel>{I18n.t('custom_ping_interface')}</InputLabel>
                     <Select
                         variant="standard"
+                        disabled={this.state.running}
                         value={this.state.interface}
-                        onChange={e => this.setState({ interface: e.target.value })}
+                        onChange={e =>
+                            this.setState({ interface: e.target.value }, () =>
+                                this.props.socket.setState(`ping.${this.props.instance}.browse.interface`, this.state.interface))}
                     >
                         <MenuItem value="">
                             <em>{I18n.t('custom_ping_select_interface')}</em>
@@ -174,7 +192,6 @@ class PingBrowseComponent extends ConfigGeneric {
                         }
                     }}
                 >
-                    {this.state.running ? <CircularProgress /> : null}
                     <span style={{ marginLeft: 8 }}>{this.state.running ? `${this.state.status} ${I18n.t('custom_ping_stop')}` : I18n.t('custom_ping_browse')}</span>
                 </Button>
             </div>
@@ -182,6 +199,26 @@ class PingBrowseComponent extends ConfigGeneric {
                 value={this.state.progress / 255 * 100}
                 variant="determinate"
             /> : <div style={{ height: 4 }} />}
+            <Button
+                variant="contained"
+                style={{ marginTop: 10, marginBottom: 10 }}
+                disabled={!this.state.selected.length}
+                onClick={() => {
+                    const devices = [...this.props.data.devices];
+                    this.state.selected.forEach(ip => {
+                        if (!devices.find(item => item.ip === ip)) {
+                            devices.push({ ip, name: ip });
+                        }
+                    });
+                    const data = JSON.parse(JSON.stringify(this.props.data));
+                    data.devices = devices;
+                    devices.sort((a, b) => a.ip > b.ip ? 1 : (a.ip < b.ip ? -1 : 0));
+                    this.props.onChange(data);
+                    this.setState({ selected: [] });
+                }}
+            >
+                {I18n.t('custom_ping_add')}
+            </Button>
             <TableContainer component={Paper} style={{ width: '100%' }}>
                 <Table style={{ width: '100%' }} size="small">
                     <TableHead>
@@ -189,7 +226,7 @@ class PingBrowseComponent extends ConfigGeneric {
                             <TableCell style={{ height: 55 }}>
                                 {selectable.length ? <Checkbox
                                     title={I18n.t('custom_ping_select_all')}
-                                    disabled={!this.state.alive || this.state.running}
+                                    disabled={!selectable.length}
                                     indeterminate={!allSelected && this.state.selected.length}
                                     checked={allSelected}
                                     onClick={() => {
@@ -210,44 +247,26 @@ class PingBrowseComponent extends ConfigGeneric {
                                 }}
                             >
                                 {I18n.t('custom_ping_ip')}
-                                <Button
-                                    variant="contained"
-                                    disabled={!this.state.selected.length}
-                                    onClick={() => {
-                                        const devices = [...this.props.data.devices];
-                                        this.state.selected.forEach(ip => {
-                                            if (!devices.find(item => item.ip === ip)) {
-                                                devices.push({ ip, name: ip });
-                                            }
-                                        });
-                                        const data = JSON.parse(JSON.stringify(this.props.data));
-                                        data.devices = devices;
-                                        devices.sort((a, b) => a.ip > b.ip ? 1 : (a.ip < b.ip ? -1 : 0));
-                                        this.props.onChange(data);
-                                        this.setState({ selected: [] });
-                                    }}
-                                >
-                                    {I18n.t('custom_ping_add')}
-                                </Button>
                             </TableCell>
+                            <TableCell>{I18n.t('custom_ping_mac')}</TableCell>
+                            <TableCell>{I18n.t('custom_ping_vendor')}</TableCell>
+                            <TableCell>{I18n.t('custom_ping_ignore')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.state.ips.map(ip => <TableRow
-                            key={ip}
+                        {this.state.ips.map(item => <TableRow
+                            key={item.ip}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {!exists.find(item => item.ip === ip) ? <Checkbox
-                                    checked={this.state.selected.includes(ip)}
-                                    style={{
-                                        padding: '0 8px',
-                                    }}
+                                {!exists.find(it => it.ip === item.ip) ? <Checkbox
+                                    checked={this.state.selected.includes(item.ip)}
+                                    style={{ padding: '0 8px' }}
                                     onChange={() => {
                                         const selected = this.state.selected;
-                                        const pos = selected.indexOf(ip);
+                                        const pos = selected.indexOf(item.ip);
                                         if (pos === -1) {
-                                            selected.push(ip);
+                                            selected.push(item.ip);
                                         } else {
                                             selected.splice(pos, 1);
                                         }
@@ -255,7 +274,24 @@ class PingBrowseComponent extends ConfigGeneric {
                                     }}
                                 /> : null}
                             </TableCell>
-                            <TableCell>{ip}</TableCell>
+                            <TableCell>{item.ip}</TableCell>
+                            <TableCell>{item.mac}</TableCell>
+                            <TableCell>{item.vendor}</TableCell>
+                            <TableCell>
+                                {!exists.find(it => it.ip === item.ip) ? <Checkbox
+                                    checked={item.ignore}
+                                    style={{ padding: '0 8px' }}
+                                    onChange={() => {
+                                        const ips = [...this.state.ips];
+                                        const editedItem = ips.find(it => it.ip === item.ip);
+                                        if (editedItem) {
+                                            editedItem.ignore = !editedItem.ignore;
+                                            this.setState({ ips }, () =>
+                                                this.props.socket.setState(`ping.${this.props.instance}.browse.result`, JSON.stringify(ips), false));
+                                        }
+                                    }}
+                                /> : null}
+                            </TableCell>
                         </TableRow>)}
                     </TableBody>
                 </Table>
