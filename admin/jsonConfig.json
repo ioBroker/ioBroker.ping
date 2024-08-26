@@ -11,6 +11,7 @@
           "min": 5000,
           "label": "Interval",
           "help": "ms",
+          "xs": 12,
           "sm": 12,
           "md": 2
         },
@@ -19,6 +20,7 @@
           "min": 5000,
           "label": "Interval if unreachable",
           "help": "ms",
+          "xs": 12,
           "sm": 12,
           "md": 2
         },
@@ -27,6 +29,7 @@
           "type": "number",
           "min": 0,
           "label": "Number of retries",
+          "xs": 12,
           "sm": 12,
           "md": 2
         },
@@ -34,6 +37,7 @@
           "newLine": true,
           "type": "checkbox",
           "label": "No host name in state name",
+          "xs": 12,
           "sm": 12,
           "md": 4
         },
@@ -41,6 +45,7 @@
             "newLine": true,
             "type": "checkbox",
             "label": "Allow with setcap the required rights for ping",
+            "xs": 12,
             "sm": 12,
             "md": 4,
             "help": "This allows to run ping without root rights"
@@ -53,6 +58,10 @@
       "items": {
         "devices": {
           "type": "table",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
           "showSecondAddAt": 10,
           "export": true,
           "import": true,
@@ -147,6 +156,7 @@
         },
         "_browse1": {
           "newLine": true,
+          "xs": 12,
           "sm": 12,
           "md": 12,
           "lg": 8,
