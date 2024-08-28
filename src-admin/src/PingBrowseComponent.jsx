@@ -172,6 +172,7 @@ class PingBrowseComponent extends ConfigGeneric {
                         {this.state.interfaces.map(item => {
                             const len = netMask2Count(item.netmask);
                             return <MenuItem
+                                key={item.ip}
                                 disabled={len > 4096}
                                 value={item.ip}
                             >

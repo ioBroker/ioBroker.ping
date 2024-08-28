@@ -17,6 +17,8 @@ const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
+const { init, tt } = require('./lib/i18n');
+const {get} = require("axios");
 let adapter;
 
 let arp;
@@ -35,7 +37,7 @@ function startAdapter(options) {
 
     adapter = new utils.Adapter(options);
 
-    adapter.on('message', obj => obj && obj.command && processMessage(obj));
+    adapter.on('message', obj => obj?.command && processMessage(obj));
 
     adapter.on('ready', () => main(adapter));
 
@@ -119,8 +121,12 @@ async function browse(iface) {
                 }
             }
         }
-        if (!iface) {
-            adapter.log.warn(`Defined interface "${iface}" does not exists on this host`);
+        if (!iface || typeof iface === 'string') {
+            if (!iface) {
+                adapter.log.warn(`No interface selected`);
+            } else {
+                adapter.log.warn(`Defined interface "${iface}" does not exists on this host`);
+            }
             runningBrowse = false;
             return;
         }
@@ -214,11 +220,90 @@ async function browse(iface) {
     const newDevices = detectedIPs.filter(item => !item.ignore && !adapter.config.devices.find(dev => dev.ip === item.ip));
     if (generateNotification && newDevices.length) {
         const devices = newDevices.map(item => `${item.ip}${item.vendor && item.vendor !== '<random MAC>' ? ` [${item.vendor}]` : ''}`).join('\n');
-        await adapter.registerNotification('ping', 'newDevices', devices);
+        await adapter.registerNotification('ping', 'newDevices', devices, newDevices);
     }
 }
 
-function processMessage(obj) {
+let temporaryAddressesToAdd = [];
+
+function getGuiSchema(newDevices) {
+    const schema = {
+        type: 'panel',
+        items: {
+            _info: {
+                type: 'header',
+                size: 5,
+                text: tt('New devices found'),
+                sm: 12,
+            }
+        },
+    };
+
+    let added = 0;
+    newDevices?.forEach((device, i) => {
+        if (adapter.config.devices.find(dev => dev.ip === device.ip)) {
+            return;
+        }
+        added++;
+        schema.items[`_device_${i}_ip`] = {
+            newLine: true,
+            type: 'staticText',
+            noTranslation: true,
+            text: `${device.ip}${device.vendor || device.mac ? ` [${device.vendor || (device.mac || '').substring(0, 9)}]` : ''}`,
+            sm: 8,
+            style: {
+                marginTop: 5,
+            },
+        };
+        const included = !!temporaryAddressesToAdd.find(item => item.ip === device.ip);
+        schema.items[`_device_${i}_btn`] = {
+            type: 'sendto',
+            command: 'addIpAddress',
+            data: { ip: device.ip, vendor: device.vendor },
+            label: included ? '-' : '+',
+            noTranslation: true,
+            sm: 4,
+            variant: included ? 'text' : 'contained',
+            controlStyle: {
+                width: 30,
+                minWidth: 30,
+            },
+        };
+    });
+
+    if (!added) {
+        // delete info text
+        schema.items = {};
+        schema.items[`_noDevices`] = {
+            type: 'staticText',
+            text: tt('Notification is not actual. All found devices are already added.'),
+            sm: 12,
+        };
+    }
+
+    schema.items[`_open`] = {
+        newLine: true,
+        type: 'sendto',
+        command: 'openLink',
+        label: tt('Open settings'),
+        variant: 'contained',
+        icon: 'open',
+    };
+
+    if (temporaryAddressesToAdd.length) {
+        schema.items[`_save`] = {
+            type: 'sendto',
+            command: 'save',
+            label: tt('Save settings'),
+            variant: 'contained',
+            icon: 'save',
+        };
+    }
+
+    return schema;
+}
+
+async function processMessage(obj) {
     switch (obj.command) {
         case 'ping': {
             // Try to ping one IP or name
@@ -239,6 +324,66 @@ function processMessage(obj) {
             browse(intr)
                 .catch(error => adapter.log.error(`Cannot browse: ${error}`));
 
+            break;
+        }
+
+        case 'addIpAddress': {
+            if (obj.message?.ip) {
+                const index = temporaryAddressesToAdd.findIndex(item => item.ip === obj.message.ip);
+                if (index === -1) {
+                    temporaryAddressesToAdd.push({ ip: obj.message.ip, name: obj.message.vendor });
+                } else {
+                    temporaryAddressesToAdd.splice(index, 1);
+                }
+            }
+
+            adapter.sendTo(obj.from, obj.command, {
+                command: {
+                    command: 'nop',
+                    refresh: !!obj.message?.ip,
+                },
+            }, obj.callback);
+
+            break;
+        }
+
+        case 'openLink': {
+            adapter.sendTo(obj.from, obj.command, {
+                command: {
+                    command: 'link',
+                    url: '#tab-instances/config/system.adapter.ping.0/_browse',
+                    close: true,
+                },
+            }, obj.callback);
+            break;
+        }
+
+        case 'save': {
+            const config = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
+            let changed = false;
+            temporaryAddressesToAdd.forEach(item => {
+                if (!config.native.devices.find(dev => dev.ip === item.ip)) {
+                    config.native.devices.push({ enabled: true, ip: item.ip, name: item.name });
+                    changed = true;
+                }
+            });
+            temporaryAddressesToAdd = [];
+            // adapter will be restarted
+            if (changed) {
+                await adapter.setForeignObjectAsync(config._id, config);
+            }
+            adapter.sendTo(obj.from, obj.command, {
+                command: {
+                    command: 'message',
+                    message: tt('Saved'),
+                    refresh: true,
+                },
+            }, obj.callback);
+            break
+        }
+
+        case 'getNotificationSchema': {
+            adapter.sendTo(obj.from, obj.command, { schema: getGuiSchema(obj.message.actionData) }, obj.callback);
             break;
         }
     }
@@ -439,16 +584,16 @@ async function syncObjects(preparedObjects, oldObjects) {
 }
 
 function prepareObjectsForHost(hostDevice, config) {
-    const host = config.ip.trim();
-    const name = config.name.trim();
+    const host = (config.ip || '').trim();
+    const name = (config.name || '').trim();
     const idName = (config.use_name ? name || host : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
 
     if (config.extended_info) {
         const channelID = {device: hostDevice, channel: idName};
 
-        const stateAliveID = {device: hostDevice, channel: idName, state: 'alive'};
-        const stateTimeID = {device: hostDevice, channel: idName, state: 'time'};
-        const stateRpsID = {device: hostDevice, channel: idName, state: 'rps'};
+        const stateAliveID = { device: hostDevice, channel: idName, state: 'alive' };
+        const stateTimeID = { device: hostDevice, channel: idName, state: 'time' };
+        const stateRpsID = { device: hostDevice, channel: idName, state: 'rps' };
         return {
             ping_task: {
                 host,
@@ -653,6 +798,8 @@ async function main(adapter) {
     await adapter.setStateAsync('browse.running', false, true);
     await adapter.setStateAsync('browse.progress', 0, true);
     await adapter.setStateAsync('browse.status', '', true);
+
+    init();
 
     adapter.config.autoDetect = parseInt(adapter.config.autoDetect, 10) || 0;
 
