@@ -1,4 +1,5 @@
 {
+  "Main settings": "Paramètres principaux",
   "Devices": "Dispositifs",
   "Enabled": "Activé",
   "Extended Info": "Extended Info",
@@ -11,6 +12,8 @@
   "tooltip_interval": "Polling interval in ms",
   "tooltip_noHostname": "Do not include the host name into state's names: ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
   "No host name in state name": "No host name in state name",
+  "Allow with setcap the required rights for ping": "Permettre avec setcap les droits requis pour ping",
+  "This allows to run ping without root rights": "Cela permet de lancer ping sans droits root",
   "Interval": "Intervalle de ping",
   "ms": "millisecondes",
   "Number of retries": "Nombre de tentatives",

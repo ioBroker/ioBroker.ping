@@ -1,4 +1,5 @@
 {
+  "Main settings": "Основні налаштування",
   "Devices": "Пристрої",
   "Enabled": "Увімкнено",
   "Extended Info": "Розширена інформація",
@@ -11,6 +12,8 @@
   "tooltip_interval": "Інтервал опитування в мс",
   "tooltip_noHostname": "Не включайте ім’я хоста в назви станів: ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
   "No host name in state name": "У назві штату немає імені хоста",
+  "Allow with setcap the required rights for ping": "Дозволяє встановлювати необхідні права на пінг",
+  "This allows to run ping without root rights": "Це дозволяє здійснювати пінг без кореневих прав",
   "Interval": "Інтервал ping",
   "ms": "мілісекунд",
   "Number of retries": "Кількість повторних спроб",
