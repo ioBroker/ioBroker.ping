@@ -642,7 +642,7 @@ function prepareObjectsForHost(hostDevice, config) {
                     },
                     native: {
                         host,
-                    }
+                    },
                 },
                 {
                     id: stateRpsID,
@@ -670,7 +670,7 @@ function prepareObjectsForHost(hostDevice, config) {
             ping_task: {
                 host: config.ip.trim(),
                 extendedInfo: false,
-                stateAlive: stateID
+                stateAlive: stateID,
             },
             states: [
                 {

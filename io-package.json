@@ -227,14 +227,6 @@
             "zh-cn": "新的 IP 地址可以用于监控。"
           },
           "regex": [],
-          "link": {
-            "url": "_browse",
-            "text": {
-              "en": "Open settings",
-              "de": "Zeige Einstellungen",
-              "ru": "Показать настройки"
-            }
-          },
           "limit": 1
         }
       ]
