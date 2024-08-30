@@ -41,9 +41,7 @@
           "type": "checkbox",
           "label": "No host name in state name",
           "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 6
+          "sm": 12
         },
         "setcap": {
             "newLine": true,
@@ -51,8 +49,6 @@
             "label": "Allow with setcap the required rights for ping",
             "xs": 12,
             "sm": 12,
-            "md": 6,
-            "lg": 6,
             "help": "This allows to run ping without root rights"
         }
       }
@@ -167,8 +163,6 @@
           "newLine": true,
           "xs": 12,
           "sm": 12,
-          "md": 8,
-          "lg": 8,
           "i18n": true,
           "url": "custom/customComponents.js",
           "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
