@@ -17,8 +17,7 @@ const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
-const { init, tt } = require('./lib/i18n');
-const {get} = require("axios");
+const { init, tt, t } = require('./lib/i18n');
 let adapter;
 
 let arp;
@@ -219,8 +218,15 @@ async function browse(iface) {
 
     const newDevices = detectedIPs.filter(item => !item.ignore && !adapter.config.devices.find(dev => dev.ip === item.ip));
     if (generateNotification && newDevices.length) {
-        const devices = newDevices.map(item => `${item.ip}${item.vendor && item.vendor !== '<random MAC>' ? ` [${item.vendor}]` : ''}`).join('\n');
-        await adapter.registerNotification('ping', 'newDevices', devices, newDevices);
+        await adapter.registerNotification(
+            'ping',
+            'newDevices',
+            newDevices.length === 1 ? t('New device found') : t('%s new devices found', newDevices.length),
+            {
+                offlineMessage: tt('Instance is offline'),
+                newDevices,
+            },
+        );
     }
 }
 
@@ -283,10 +289,12 @@ function getGuiSchema(newDevices) {
 
     schema.items[`_open`] = {
         newLine: true,
-        type: 'sendto',
-        command: 'openLink',
+        type: 'staticLink',
+        href: '#tab-instances/config/system.adapter.ping.0/_browse',
+        close: true,
         label: tt('Open settings'),
         variant: 'contained',
+        button: true,
         icon: 'open',
     };
 
@@ -332,7 +340,9 @@ async function processMessage(obj) {
                 const index = temporaryAddressesToAdd.findIndex(item => item.ip === obj.message.ip);
                 if (index === -1) {
                     temporaryAddressesToAdd.push({ ip: obj.message.ip, name: obj.message.vendor });
+                    console.log(`Add ${obj.message.ip}`);
                 } else {
+                    console.log(`Remove ${obj.message.ip}`);
                     temporaryAddressesToAdd.splice(index, 1);
                 }
             }
@@ -344,17 +354,6 @@ async function processMessage(obj) {
                 },
             }, obj.callback);
 
-            break;
-        }
-
-        case 'openLink': {
-            adapter.sendTo(obj.from, obj.command, {
-                command: {
-                    command: 'link',
-                    url: '#tab-instances/config/system.adapter.ping.0/_browse',
-                    close: true,
-                },
-            }, obj.callback);
             break;
         }
 
@@ -383,7 +382,9 @@ async function processMessage(obj) {
         }
 
         case 'getNotificationSchema': {
-            adapter.sendTo(obj.from, obj.command, { schema: getGuiSchema(obj.message.actionData) }, obj.callback);
+            const schema = getGuiSchema(obj.message.newDevices);
+            console.log('Send schema: ' + schema.items._device_0_btn.label);
+            adapter.sendTo(obj.from, obj.command, { schema }, obj.callback);
             break;
         }
     }
@@ -799,7 +800,7 @@ async function main(adapter) {
     await adapter.setStateAsync('browse.progress', 0, true);
     await adapter.setStateAsync('browse.status', '', true);
 
-    init();
+    await init(adapter);
 
     adapter.config.autoDetect = parseInt(adapter.config.autoDetect, 10) || 0;
 

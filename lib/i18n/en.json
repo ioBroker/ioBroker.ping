@@ -3,5 +3,8 @@
   "Notification is not actual. All found devices are already added.": "Notification is not actual. All found devices are already added.",
   "Save settings": "Save settings",
   "Saved": "Saved",
-  "Open settings": "Open settings"
+  "Open settings": "Open settings",
+  "Instance is offline": "Instance is offline",
+  "%s new devices found": "%s new devices found",
+  "New device found": "New device found"
 }

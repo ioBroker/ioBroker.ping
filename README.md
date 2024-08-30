@@ -44,6 +44,9 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 - [ ] Implement the possibility to monitor TCP ports
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added support for dynamic notifications
+
 ### 1.7.3 (2024-08-25)
 * (bluefox) Added the functionality to poll the address range periodically
 
