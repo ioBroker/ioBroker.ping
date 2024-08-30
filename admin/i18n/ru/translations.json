@@ -1,4 +1,5 @@
 {
+  "Main settings": "Основные настройки",
   "Devices": "Устройства",
   "Enabled": "Активированно",
   "Extended Info": "Расширенная информация",
@@ -11,6 +12,8 @@
   "tooltip_interval": "Интервал опроса в миллисекундах",
   "tooltip_noHostname": "Убрать имя хоста из имён состояний: ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
   "No host name in state name": "Имена состояний без имени хоста",
+  "Allow with setcap the required rights for ping": "Разрешить с setcap необходимые права на пинг",
+  "This allows to run ping without root rights": "Это позволяет запускать пинг без корневых прав",
   "Interval": "Интервал пинга",
   "ms": "миллисекунды",
   "Number of retries": "Количество попыток",

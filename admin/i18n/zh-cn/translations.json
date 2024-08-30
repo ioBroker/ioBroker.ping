@@ -1,4 +1,5 @@
 {
+  "Main settings": "主要设置",
   "Devices": "设备",
   "Enabled": "活性",
   "Extended Info": "扩展信息",
@@ -11,6 +12,8 @@
   "tooltip_interval": "轮询间隔（毫秒）",
   "tooltip_noHostname": "不要将主机名包含在州名称中：ping.0.127_0_0_1 / ping.0.host.127_0_0_1",
   "No host name in state name": "状态名称中没有主机名",
+  "Allow with setcap the required rights for ping": "允许设定播放所需的权限",
+  "This allows to run ping without root rights": "这样可以运行没有根权利的 ping",
   "Interval": "Ping 间隔",
   "ms": "毫秒",
   "Number of retries": "重试次数",
