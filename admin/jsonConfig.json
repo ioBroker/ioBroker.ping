@@ -44,12 +44,12 @@
           "sm": 12
         },
         "setcap": {
-            "newLine": true,
-            "type": "checkbox",
-            "label": "Allow with setcap the required rights for ping",
-            "xs": 12,
-            "sm": 12,
-            "help": "This allows to run ping without root rights"
+          "newLine": true,
+          "type": "checkbox",
+          "label": "Allow with setcap the required rights for ping",
+          "xs": 12,
+          "sm": 12,
+          "help": "This allows to run ping without root rights"
         }
       }
     },
