@@ -163,6 +163,8 @@
           "newLine": true,
           "xs": 12,
           "sm": 12,
+          "md": 12,
+          "lg": 8,
           "i18n": true,
           "url": "custom/customComponents.js",
           "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
