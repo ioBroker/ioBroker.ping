@@ -276,7 +276,7 @@ function getGuiSchema(newDevices) {
         const included = !!temporaryAddressesToAdd.find(item => item.ip === device.ip);
         schema.items[`_device_${i}_btn`] = {
             type: 'sendto',
-            command: 'admin:addIpAddress',
+            command: 'ping:addIpAddress',
             data: { ip: device.ip, vendor: device.vendor },
             label: included ? '-' : '+',
             noTranslation: true,
@@ -313,7 +313,7 @@ function getGuiSchema(newDevices) {
     if (temporaryAddressesToAdd.length) {
         schema.items[`_save`] = {
             type: 'sendto',
-            command: 'admin:save',
+            command: 'ping:save',
             label: tt('Save settings'),
             variant: 'contained',
             icon: 'save',
@@ -334,7 +334,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'settings:browse': {
+        case 'ping:settings:browse': {
             const intr = obj.message;
             if (obj.callback) {
                 adapter.sendTo(obj.from, obj.command, { result: 'started' }, obj.callback);
@@ -347,7 +347,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'admin:addIpAddress': {
+        case 'ping:addIpAddress': {
             if (obj.message?.ip) {
                 const index = temporaryAddressesToAdd.findIndex(item => item.ip === obj.message.ip);
                 if (index === -1) {
@@ -369,7 +369,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'admin:save': {
+        case 'ping:save': {
             const config = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
             let changed = false;
             temporaryAddressesToAdd.forEach(item => {
@@ -393,6 +393,7 @@ async function processMessage(obj) {
             break
         }
 
+        case 'admin:getNotificationSchema':
         case 'getNotificationSchema': {
             const schema = getGuiSchema(obj.message.newDevices);
             adapter.sendTo(obj.from, obj.command, { schema }, obj.callback);

@@ -106,7 +106,7 @@ class PingBrowseComponent extends ConfigGeneric {
         const intr = this.state.interfaces.find(item => item.ip === this.state.interface);
         intr.rangeStart = this.state.rangeStart;
         intr.rangeLength = this.state.rangeLength;
-        this.props.socket.sendTo(`ping.${this.props.instance}`, 'settings:browse', intr)
+        this.props.socket.sendTo(`ping.${this.props.instance}`, 'ping:settings:browse', intr)
             .catch(error => console.error(`Cannot ping: ${error}`));
     }
 
