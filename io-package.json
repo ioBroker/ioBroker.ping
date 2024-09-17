@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.7.3",
+    "version": "1.7.4",
     "news": {
+      "1.7.4": {
+        "en": "Added support for dynamic notifications\nAdded custom range settings",
+        "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
+        "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
+        "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
+        "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
+        "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
+        "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
+        "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
+        "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
+        "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
+        "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
+      },
       "1.7.3": {
         "en": "Added the functionality to poll the address range periodically",
         "de": "Hinzugefügt die Funktionalität, um den Adressbereich periodisch abzufragen",
@@ -80,19 +93,6 @@
         "pl": "Napraw logikę ponawiania pingów",
         "uk": "Виправте логіку повторної спроби пінгу",
         "zh-cn": "修复 ping 重试逻辑"
-      },
-      "1.5.2": {
-        "en": "Number of retries can be defined if a ping request failed. This should minimize wrong offline detection.",
-        "de": "Anzahl der Wiederholungen kann definiert werden, wenn eine Ping-Anfrage fehlgeschlagen ist. Dies sollte eine falsche Offline-Erkennung minimieren.",
-        "ru": "Количество повторных попыток может быть определено, если запрос ping не удался. Это должно свести к минимуму неправильное обнаружение в автономном режиме.",
-        "pt": "O número de tentativas pode ser definido se uma solicitação de ping falhar. Isso deve minimizar a detecção offline incorreta.",
-        "nl": "Het aantal nieuwe pogingen kan worden gedefinieerd als een ping-verzoek is mislukt. Dit zou foutieve offline detectie moeten minimaliseren.",
-        "fr": "Le nombre de tentatives peut être défini si une requête ping a échoué. Cela devrait minimiser la mauvaise détection hors ligne.",
-        "it": "È possibile definire il numero di tentativi se una richiesta ping non è riuscita. Questo dovrebbe ridurre al minimo il rilevamento offline errato.",
-        "es": "Se puede definir el número de reintentos si falla una solicitud de ping. Esto debería minimizar la detección incorrecta fuera de línea.",
-        "pl": "W przypadku niepowodzenia żądania ping można określić liczbę ponownych prób. Powinno to zminimalizować błędne wykrywanie offline.",
-        "uk": "Кількість повторних спроб може бути визначена, якщо запит ping не вдалося. Це повинно мінімізувати неправильне виявлення автономного режиму.",
-        "zh-cn": "如果 ping 请求失败，可以定义重试次数。这应该最大限度地减少错误的离线检测。"
       }
     },
     "titleLang": {
