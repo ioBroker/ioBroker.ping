@@ -46,6 +46,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 ## Changelog
 ### **WORK IN PROGRESS**
 * (bluefox) Added support for dynamic notifications
+* (bluefox) Added custom range settings
 
 ### 1.7.3 (2024-08-25)
 * (bluefox) Added the functionality to poll the address range periodically

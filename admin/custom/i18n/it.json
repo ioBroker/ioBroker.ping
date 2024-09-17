@@ -10,5 +10,8 @@
   "custom_ping_ips": "Indirizzi IP",
   "custom_ping_mac": "Indirizzo MAC",
   "custom_ping_vendor": "Produttore",
-  "custom_ping_ignore": "Ignora per le notifiche"
+  "custom_ping_ignore": "Ignora per le notifiche",
+  "custom_ping_range_begin": "Inizio della gamma",
+  "custom_ping_range_end": "Fine della gamma",
+  "custom_ping_range_length": "Lunghezza della gamma"
 }

@@ -106,6 +106,8 @@ async function browse(iface) {
             }
             iface = iState.val;
         }
+        const rangeStart = await adapter.getStateAsync('browse.rangeStart');
+        const rangeLength = await adapter.getStateAsync('browse.rangeLength');
         // get the host where this instance is running
         const config = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
         // read the host interfaces
@@ -129,6 +131,9 @@ async function browse(iface) {
             runningBrowse = false;
             return;
         }
+        iface.rangeStart = rangeStart?.val;
+        iface.rangeLength = rangeLength?.val;
+
         generateNotification = true;
     } else {
         const iState = await adapter.getStateAsync('browse.interface');
@@ -136,6 +141,8 @@ async function browse(iface) {
             await adapter.setStateAsync('browse.interface', iface.ip, true);
         }
     }
+    iface.rangeStart = iface.rangeStart || '';
+    iface.rangeLength = parseInt(iface.rangeLength, 10) || 0;
 
     detectedIPs = detectedIPs.filter(item => item.ignore);
 
@@ -146,9 +153,12 @@ async function browse(iface) {
         adapter.log.warn('Cannot use module "arp-lookup"');
     }
 
-    const result = ip.subnet(iface.ip, iface.netmask);
-    if (result.length > 5000) {
-        adapter.log.warn(`Too many IPs to ping: ${result.length}. Maximum is 5000`);
+    const result = iface.rangeStart && iface.rangeLength ?
+        { firstAddress: iface.rangeStart, length: iface.rangeLength } :
+        ip.subnet(iface.ip, iface.netmask);
+
+    if (result.length > 1024) {
+        adapter.log.warn(`Too many IPs to ping: ${result.length}. Maximum is 1024`);
         runningBrowse = false;
         return;
     }
@@ -223,8 +233,10 @@ async function browse(iface) {
             'newDevices',
             newDevices.length === 1 ? t('New device found') : t('%s new devices found', newDevices.length),
             {
-                offlineMessage: tt('Instance is offline'),
-                newDevices,
+                contextData: {
+                    offlineMessage: tt('Instance is offline'),
+                    newDevices,
+                },
             },
         );
     }
@@ -264,7 +276,7 @@ function getGuiSchema(newDevices) {
         const included = !!temporaryAddressesToAdd.find(item => item.ip === device.ip);
         schema.items[`_device_${i}_btn`] = {
             type: 'sendto',
-            command: 'addIpAddress',
+            command: 'admin:addIpAddress',
             data: { ip: device.ip, vendor: device.vendor },
             label: included ? '-' : '+',
             noTranslation: true,
@@ -301,7 +313,7 @@ function getGuiSchema(newDevices) {
     if (temporaryAddressesToAdd.length) {
         schema.items[`_save`] = {
             type: 'sendto',
-            command: 'save',
+            command: 'admin:save',
             label: tt('Save settings'),
             variant: 'contained',
             icon: 'save',
@@ -322,7 +334,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'browse': {
+        case 'settings:browse': {
             const intr = obj.message;
             if (obj.callback) {
                 adapter.sendTo(obj.from, obj.command, { result: 'started' }, obj.callback);
@@ -335,7 +347,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'addIpAddress': {
+        case 'admin:addIpAddress': {
             if (obj.message?.ip) {
                 const index = temporaryAddressesToAdd.findIndex(item => item.ip === obj.message.ip);
                 if (index === -1) {
@@ -357,7 +369,7 @@ async function processMessage(obj) {
             break;
         }
 
-        case 'save': {
+        case 'admin:save': {
             const config = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
             let changed = false;
             temporaryAddressesToAdd.forEach(item => {
@@ -383,7 +395,6 @@ async function processMessage(obj) {
 
         case 'getNotificationSchema': {
             const schema = getGuiSchema(obj.message.newDevices);
-            console.log('Send schema: ' + schema.items._device_0_btn.label);
             adapter.sendTo(obj.from, obj.command, { schema }, obj.callback);
             break;
         }

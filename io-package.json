@@ -308,6 +308,32 @@
         "def": ""
       },
       "native": {}
+    },
+    {
+      "_id": "browse.rangeStart",
+      "type": "state",
+      "common": {
+        "name": "Browse IP range start",
+        "type": "string",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "browse.rangeLength",
+      "type": "state",
+      "common": {
+        "name": "Browse IP range length",
+        "type": "number",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
     }
   ]
 }

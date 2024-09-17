@@ -10,5 +10,8 @@
   "custom_ping_ips": "Adresy IP",
   "custom_ping_mac": "Adres MAC",
   "custom_ping_vendor": "Producent",
-  "custom_ping_ignore": "Ignoruj powiadomienia"
+  "custom_ping_ignore": "Ignoruj powiadomienia",
+  "custom_ping_range_begin": "Początek zasięgu",
+  "custom_ping_range_end": "Koniec zasięgu",
+  "custom_ping_range_length": "Długość zakresu"
 }

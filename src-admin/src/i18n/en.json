@@ -10,5 +10,8 @@
   "custom_ping_ips": "IP addresses",
   "custom_ping_mac": "MAC address",
   "custom_ping_vendor": "Manufacturer",
-  "custom_ping_ignore": "Ignore for notifications"
+  "custom_ping_ignore": "Ignore for notifications",
+  "custom_ping_range_begin": "Range start",
+  "custom_ping_range_end": "Range end",
+  "custom_ping_range_length": "Range length"
 }

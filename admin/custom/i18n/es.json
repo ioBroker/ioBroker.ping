@@ -10,5 +10,8 @@
   "custom_ping_ips": "Direcciones IP",
   "custom_ping_mac": "Dirección MAC",
   "custom_ping_vendor": "Fabricante",
-  "custom_ping_ignore": "Ignorar notificaciones"
+  "custom_ping_ignore": "Ignorar notificaciones",
+  "custom_ping_range_begin": "Inicio de rango",
+  "custom_ping_range_end": "Fin del rango",
+  "custom_ping_range_length": "Longitud del rango"
 }

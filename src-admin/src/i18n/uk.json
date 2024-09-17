@@ -10,5 +10,8 @@
   "custom_ping_ips": "IP-адреси",
   "custom_ping_mac": "MAC-адреса",
   "custom_ping_vendor": "Виробник",
-  "custom_ping_ignore": "Ігнорувати сповіщення"
+  "custom_ping_ignore": "Ігнорувати сповіщення",
+  "custom_ping_range_begin": "Початок діапазону",
+  "custom_ping_range_end": "Кінець діапазону",
+  "custom_ping_range_length": "Довжина діапазону"
 }

@@ -6,8 +6,9 @@ import {
     TableCell, TableContainer, TableHead,
     TableRow, Paper, Checkbox,
     FormControl, InputLabel, Select, MenuItem,
-    Button,
+    Button, TextField,
 } from '@mui/material';
+import { Search } from '@mui/icons-material';
 import { I18n } from '@iobroker/adapter-react-v5';
 import { ConfigGeneric } from '@iobroker/json-config';
 
@@ -72,10 +73,14 @@ class PingBrowseComponent extends ConfigGeneric {
         const browse = await this.props.socket.getState(`ping.${this.props.instance}.browse.running`);
         const result = await this.props.socket.getState(`ping.${this.props.instance}.browse.result`);
         const status = await this.props.socket.getState(`ping.${this.props.instance}.browse.status`);
+        const rangeStart = await this.props.socket.getState(`ping.${this.props.instance}.browse.rangeStart`);
+        const rangeLength = await this.props.socket.getState(`ping.${this.props.instance}.browse.rangeLength`);
 
         newState.status = status?.val || '';
         newState.progress = progress?.val || 0;
         newState.running = !!browse?.val;
+        newState.rangeStart = rangeStart?.val || '';
+        newState.rangeLength = rangeLength?.val || '';
 
         try {
             newState.ips = JSON.parse(result?.val) || [];
@@ -98,7 +103,10 @@ class PingBrowseComponent extends ConfigGeneric {
     }
 
     browse() {
-        this.props.socket.sendTo(`ping.${this.props.instance}`, 'browse', this.state.interfaces.find(item => item.ip === this.state.interface))
+        const intr = this.state.interfaces.find(item => item.ip === this.state.interface);
+        intr.rangeStart = this.state.rangeStart;
+        intr.rangeLength = this.state.rangeLength;
+        this.props.socket.sendTo(`ping.${this.props.instance}`, 'settings:browse', intr)
             .catch(error => console.error(`Cannot ping: ${error}`));
     }
 
@@ -133,6 +141,16 @@ class PingBrowseComponent extends ConfigGeneric {
             if (status !== this.state.status) {
                 this.setState({ status });
             }
+        } else if (id.endsWith('.rangeStart')) {
+            const rangeStart = state?.val || '';
+            if (rangeStart !== this.state.rangeStart) {
+                this.setState({ rangeStart });
+            }
+        } else if (id.endsWith('.rangeLength')) {
+            const rangeLength = state?.val || '';
+            if (rangeLength !== this.state.rangeLength) {
+                this.setState({ rangeLength });
+            }
         } else if (id.endsWith('.interface')) {
             const iface = state?.val || '';
             if (iface &&
@@ -146,12 +164,33 @@ class PingBrowseComponent extends ConfigGeneric {
 
     renderItem() {
         if (!this.state.interfaces) {
-            return <LinearProgress />;
+            return <LinearProgress/>;
         }
 
         const exists = this.props.data.devices || [];
         const selectable = this.state.ips.filter(it => !exists.find(item => item.ip === it.ip));
         const allSelected = selectable.length === this.state.selected.length;
+        const iface = this.state.interfaces.find(item => item.ip === this.state.interface);
+        let len = 0;
+        if (iface) {
+            len = netMask2Count(iface.netmask);
+        }
+
+        const button = <Button
+            style={{ marginLeft: len > 256 ? 0 : 16, whiteSpace: 'nowrap', width: 250 }}
+            variant="contained"
+            disabled={!this.state.alive || !this.state.interface}
+            onClick={() => {
+                if (this.state.running) {
+                    this.props.socket.setState(`ping.${this.props.instance}.browse.running`, false);
+                } else {
+                    this.browse();
+                }
+            }}
+            startIcon={<Search />}
+        >
+            <span style={{ marginLeft: 8 }}>{this.state.running ? `${this.state.status} ${I18n.t('custom_ping_stop')}` : I18n.t('custom_ping_browse')}</span>
+        </Button>;
 
         return <div style={{ width: '100%'}} className="ping_custom">
             <h4>{I18n.t('custom_ping_title')}</h4>
@@ -162,9 +201,23 @@ class PingBrowseComponent extends ConfigGeneric {
                         variant="standard"
                         disabled={this.state.running}
                         value={this.state.interface}
-                        onChange={e =>
-                            this.setState({ interface: e.target.value }, () =>
-                                this.props.socket.setState(`ping.${this.props.instance}.browse.interface`, this.state.interface))}
+                        onChange={e => {
+                            let rangeStart = '';
+                            let rangeLength = '';
+                            const _iface = this.state.interfaces.find(item => item.ip === e.target.value);
+                            if (_iface && netMask2Count(_iface.netmask) > 256) {
+                                // generate new ranges
+                                const parts = _iface.ip.split('.');
+                                parts[3] = '1';
+                                rangeStart = parts.join('.');
+                                rangeLength = 254;
+                            }
+                            this.setState({ interface: e.target.value, rangeStart, rangeLength }, async () => {
+                                await this.props.socket.setState(`ping.${this.props.instance}.browse.interface`, this.state.interface);
+                                await this.props.socket.setState(`ping.${this.props.instance}.browse.rangeStart`, this.state.rangeStart);
+                                await this.props.socket.setState(`ping.${this.props.instance}.browse.rangeLength`, this.state.rangeLength);
+                            });
+                        }}
                     >
                         <MenuItem value="">
                             <em>{I18n.t('custom_ping_select_interface')}</em>
@@ -173,7 +226,6 @@ class PingBrowseComponent extends ConfigGeneric {
                             const len = netMask2Count(item.netmask);
                             return <MenuItem
                                 key={item.ip}
-                                disabled={len > 4096}
                                 value={item.ip}
                             >
                                 {`${item.name} - ${item.ip} (${len} ${I18n.t('custom_ping_ips')})`}
@@ -181,21 +233,37 @@ class PingBrowseComponent extends ConfigGeneric {
                         })}
                     </Select>
                 </FormControl>
-                <Button
-                    style={{ marginLeft: 16, whiteSpace: 'nowrap' }}
-                    variant="contained"
-                    disabled={!this.state.alive || !this.state.interface}
-                    onClick={() => {
-                        if (this.state.running) {
-                            this.props.socket.setState(`ping.${this.props.instance}.browse.running`, false);
-                        } else {
-                            this.browse();
-                        }
+                {len > 256 ? <TextField
+                    variant="standard"
+                    style={{ marginLeft: 8, width: 300 }}
+                    label={I18n.t('custom_ping_range_begin')}
+                    value={this.state.rangeStart}
+                    onChange={e => {
+                        this.setState({ rangeStart: e.target.value }, async () => {
+                            await this.props.socket.setState(`ping.${this.props.instance}.browse.rangeStart`, this.state.rangeStart);
+                        });
                     }}
-                >
-                    <span style={{ marginLeft: 8 }}>{this.state.running ? `${this.state.status} ${I18n.t('custom_ping_stop')}` : I18n.t('custom_ping_browse')}</span>
-                </Button>
+                    disabled={this.state.running}
+                /> : null}
+                {len > 256 ? <TextField
+                    variant="standard"
+                    style={{ marginLeft: 8, width: 150 }}
+                    label={I18n.t('custom_ping_range_length')}
+                    value={this.state.rangeLength}
+                    onChange={e => {
+                        this.setState({ rangeLength: e.target.value }, async () => {
+                            await this.props.socket.setState(`ping.${this.props.instance}.browse.rangeLength`, this.state.rangeLength);
+                        });
+                    }}
+                    type="number"
+                    slotProps={{ htmlInput: { min: 1, max: 254 } }}
+                    disabled={this.state.running}
+                /> : null}
+                {len <= 256 ? button : null}
             </div>
+            {len > 256 ? <div style={{ width: '100%', marginTop: 10, margigBottom: 10 }}>
+                {button}
+            </div> : null}
             {this.state.running ? <LinearProgress
                 value={this.state.progress / 255 * 100}
                 variant="determinate"
