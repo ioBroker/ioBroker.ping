@@ -811,6 +811,11 @@ async function main(adapter) {
     await adapter.setStateAsync('browse.running', false, true);
     await adapter.setStateAsync('browse.progress', 0, true);
     await adapter.setStateAsync('browse.status', '', true);
+    // fix browse.rangeLength
+    const rangeLength = await adapter.getStateAsync('browse.rangeLength');
+    if (rangeLength && (rangeLength.val === '0' || rangeLength.val === '')) {
+        await adapter.setStateAsync('browse.rangeLength', 0, true);
+    }
 
     await init(adapter);
 
