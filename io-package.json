@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.7.4",
+    "version": "1.7.5",
     "news": {
+      "1.7.5": {
+        "en": "Corrected small error about range length",
+        "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
+        "ru": "Исправлена небольшая ошибка относительно длины диапазона",
+        "pt": "Erro pequeno corrigido sobre o comprimento do intervalo",
+        "nl": "Gecorrigeerde kleine fout over bereiklengte",
+        "fr": "Correction d'une petite erreur sur la longueur de la plage",
+        "it": "Corretto piccolo errore sulla lunghezza dell'intervallo",
+        "es": "Corregido pequeño error sobre la longitud del rango",
+        "pl": "Poprawiony mały błąd o długości zakresu",
+        "uk": "Виправлена невелика помилка про довжину діапазону",
+        "zh-cn": "修正范围长度的小错误"
+      },
       "1.7.4": {
         "en": "Added support for dynamic notifications\nAdded custom range settings",
         "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig",
         "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config",
         "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编"
-      },
-      "1.5.3": {
-        "en": "Fix the ping retry logic",
-        "de": "Korrigieren Sie die Ping-Wiederholungslogik",
-        "ru": "Исправьте логику повторной попытки пинга",
-        "pt": "Corrija a lógica de repetição de ping",
-        "nl": "Herstel de ping-logica voor opnieuw proberen",
-        "fr": "Correction de la logique de nouvelle tentative de ping",
-        "it": "Correggi la logica dei tentativi di ping",
-        "es": "Arreglar la lógica de reintento de ping",
-        "pl": "Napraw logikę ponawiania pingów",
-        "uk": "Виправте логіку повторної спроби пінгу",
-        "zh-cn": "修复 ping 重试逻辑"
       }
     },
     "titleLang": {
