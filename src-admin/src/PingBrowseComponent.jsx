@@ -261,13 +261,14 @@ class PingBrowseComponent extends ConfigGeneric {
                 /> : null}
                 {len <= 256 ? button : null}
             </div>
-            {len > 256 ? <div style={{ width: '100%', marginTop: 10, margigBottom: 10 }}>
+            {len > 256 ? <div style={{ width: '100%', marginTop: 10 }}>
                 {button}
             </div> : null}
             {this.state.running ? <LinearProgress
                 value={this.state.progress / 255 * 100}
                 variant="determinate"
-            /> : <div style={{ height: 4 }} />}
+                style={{ marginTop: 10 }}
+            /> : <div style={{ height: 4, marginTop: 10 }} />}
             <Button
                 variant="contained"
                 style={{ marginTop: 10, marginBottom: 10 }}

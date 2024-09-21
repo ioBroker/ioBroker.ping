@@ -238,6 +238,7 @@
       "_id": "browse",
       "type": "channel",
       "common": {
+        "expert": true,
         "name": "Browse"
       },
       "native": {}
@@ -251,6 +252,7 @@
         "role": "state",
         "read": true,
         "write": false,
+        "expert": true,
         "def": 0,
         "min": 0,
         "max": 255
@@ -264,6 +266,7 @@
         "name": "Browse result",
         "type": "json",
         "role": "state",
+        "expert": true,
         "read": true,
         "write": false,
         "def": ""
@@ -277,6 +280,7 @@
         "name": "Browse running",
         "type": "boolean",
         "role": "state",
+        "expert": true,
         "read": true,
         "write": true,
         "def": false
@@ -290,6 +294,7 @@
         "name": "Browse status",
         "type": "string",
         "role": "state",
+        "expert": true,
         "read": true,
         "write": false,
         "def": ""
@@ -303,6 +308,7 @@
         "name": "Browse interface",
         "type": "string",
         "role": "state",
+        "expert": true,
         "read": true,
         "write": true,
         "def": ""
@@ -316,6 +322,7 @@
         "name": "Browse IP range start",
         "type": "string",
         "role": "state",
+        "expert": true,
         "read": true,
         "write": true,
         "def": ""
@@ -330,6 +337,7 @@
         "type": "number",
         "role": "state",
         "read": true,
+        "expert": true,
         "write": true,
         "def": 0
       },

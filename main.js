@@ -522,14 +522,14 @@ async function syncObjects(preparedObjects, oldObjects) {
 
         if (oldObj && oldObj.type === 'device') {
             if (!isDevicesEqual(oldObj, preparedObjects.device)) {
-                await adapter.extendObjectAsync(fullID, {
+                await adapter.extendObject(fullID, {
                     common: preparedObjects.device.common
                 });
             }
             oldObjects[fullID] = undefined;
         } else {
             try {
-                await adapter.setObjectAsync(fullID, {common: preparedObjects.device.common, type: 'device'});
+                await adapter.setObjectAsync(fullID, { common: preparedObjects.device.common, type: 'device' });
             } catch (err) {
                 adapter.log.error(`Cannot create device: ${fullID} Error: ${err}`);
             }
@@ -800,6 +800,12 @@ async function syncConfig() {
     adapter.log.debug('Get existing objects');
 
     const objects = await adapter.getAdapterObjectsAsync();
+    Object.keys(objects).forEach(id => {
+        if (id.startsWith(`${adapter.namespace}.browse`)) {
+            delete objects[id];
+        }
+    })
+    // remove browse folder
     adapter.log.debug('Prepare tasks of objects update');
     await syncObjects(preparedObjects, objects);
 
