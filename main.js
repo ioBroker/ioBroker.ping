@@ -231,7 +231,7 @@ async function browse(iface) {
         await adapter.registerNotification(
             'ping',
             'newDevices',
-            newDevices.length === 1 ? t('New device found') : t('%s new devices found', newDevices.length),
+            newDevices.length === 1 ? t('New device found') : t('%s new devices found', null, newDevices.length),
             {
                 contextData: {
                     offlineMessage: tt('Instance is offline'),
