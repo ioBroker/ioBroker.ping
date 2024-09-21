@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.7.5",
+    "version": "1.7.6",
     "news": {
+      "1.7.6": {
+        "en": "Corrected notification message",
+        "de": "Korrigierte Meldung",
+        "ru": "Исправленное уведомление",
+        "pt": "Mensagem de notificação corrigida",
+        "nl": "Gecorrigeerde melding",
+        "fr": "Message de notification corrigé",
+        "it": "Messaggio di notifica corretto",
+        "es": "Mensaje de notificación corregido",
+        "pl": "Poprawiony komunikat notyfikacyjny",
+        "uk": "Виправлено повідомлення про повідомлення",
+        "zh-cn": "更正的通知信息"
+      },
       "1.7.5": {
         "en": "Corrected small error about range length",
         "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
@@ -80,19 +93,6 @@
         "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig\nDodawane są różne odstępy dla urządzeń online i offline\nzaimplementowany eksport i import urządzeń",
         "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config\nДодано різні інтервали для онлайн і офлайн пристроїв\nекспорт/імпорт приладів",
         "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编\n增加在线和外线装置的不同间隔\n执行的设备进出口"
-      },
-      "1.6.0": {
-        "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config",
-        "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config",
-        "ru": "Исправлена обработка государственных обновлений, вызывающих сбои с js-controller 5. (Изображение #106)\nТрейлинговые пространства теперь удаляются с IP-адреса и имени. Трейлинговые пространства заблокированы корректной работы. (Изображение #98)\nДобавлено json config",
-        "pt": "O manuseio de atualizações de estado causando falhas com js-controller 5 foi corrigido. (Inglês)\nOs espaços de reboque agora são removidos do endereço e nome do ip. Espaços de rastreamento bloqueado operação correta. (Issue #98)\nAdicionado json config",
-        "nl": "De staatsinformaties veroorzaken crashes met Js-controller 5 is gecorrigeerd. (Issue #106)\nTrailing ruimtes worden nu verwijderd van IP-adres en naam. Trailing ruimtes blokkeerde de juiste operatie. (Issue 98)\n_",
-        "fr": "La manipulation des mises à jour de l'état causant des accidents avec js-controller 5 a été corrigée. (Issue #106)\nLes espaces de signalisation sont maintenant retirés de l'adresse et du nom de l'ip. Les espaces de signalisation ont bloqué le bon fonctionnement. (Issue #98)\nAjouté json config",
-        "it": "Gestione degli aggiornamenti di stato causando crash con js-controller 5 è stato corretto. (Essue #106)\nI percorsi sono ora rimossi dall'indirizzo e dal nome ip. Gli spazi trainanti hanno bloccato il corretto funzionamento. (Issue #98)\nAggiunto json config",
-        "es": "Se ha corregido el manejo de actualizaciones estatales que causan fallos con js-controller 5. (Isue #106)\nLos espacios de trailing ahora se eliminan de la dirección y el nombre de ip. Espacios de rastreo bloquearon la operación correcta. (Isue #98)\nAñadido json config",
-        "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig",
-        "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config",
-        "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编"
       }
     },
     "titleLang": {
