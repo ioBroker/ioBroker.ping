@@ -1,347 +1,341 @@
 {
-  "common": {
-    "name": "ping",
-    "version": "1.7.6",
-    "news": {
-      "1.7.6": {
-        "en": "Corrected notification message",
-        "de": "Korrigierte Meldung",
-        "ru": "Исправленное уведомление",
-        "pt": "Mensagem de notificação corrigida",
-        "nl": "Gecorrigeerde melding",
-        "fr": "Message de notification corrigé",
-        "it": "Messaggio di notifica corretto",
-        "es": "Mensaje de notificación corregido",
-        "pl": "Poprawiony komunikat notyfikacyjny",
-        "uk": "Виправлено повідомлення про повідомлення",
-        "zh-cn": "更正的通知信息"
-      },
-      "1.7.5": {
-        "en": "Corrected small error about range length",
-        "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
-        "ru": "Исправлена небольшая ошибка относительно длины диапазона",
-        "pt": "Erro pequeno corrigido sobre o comprimento do intervalo",
-        "nl": "Gecorrigeerde kleine fout over bereiklengte",
-        "fr": "Correction d'une petite erreur sur la longueur de la plage",
-        "it": "Corretto piccolo errore sulla lunghezza dell'intervallo",
-        "es": "Corregido pequeño error sobre la longitud del rango",
-        "pl": "Poprawiony mały błąd o długości zakresu",
-        "uk": "Виправлена невелика помилка про довжину діапазону",
-        "zh-cn": "修正范围长度的小错误"
-      },
-      "1.7.4": {
-        "en": "Added support for dynamic notifications\nAdded custom range settings",
-        "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
-        "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
-        "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
-        "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
-        "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
-        "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
-        "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
-        "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
-        "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
-        "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
-      },
-      "1.7.3": {
-        "en": "Added the functionality to poll the address range periodically",
-        "de": "Hinzugefügt die Funktionalität, um den Adressbereich periodisch abzufragen",
-        "ru": "Добавлена функциональность для периодического опроса адресного диапазона",
-        "pt": "Adicionado a funcionalidade para sondar o intervalo de endereços periodicamente",
-        "nl": "De functionaliteit toegevoegd om het adresbereik periodiek te peilen",
-        "fr": "Ajout de la fonctionnalité pour le sondage périodique de la plage d'adresses",
-        "it": "Aggiunta la funzionalità per sondare l'intervallo di indirizzi periodicamente",
-        "es": "Añadido la funcionalidad para encuestar el rango de dirección periódicamente",
-        "pl": "Dodano funkcjonalność badania zakresu adresów okresowo",
-        "uk": "Додано функціональність для опитування адресного діапазону періодично",
-        "zh-cn": "添加功能以定期对地址范围进行投票"
-      },
-      "1.7.1": {
-        "en": "Added resolution of IP addresses to MAC addresses",
-        "de": "Zusätzliche Auflösung von IP-Adressen an MAC-Adressen",
-        "ru": "Добавлено разрешение IP-адресов на MAC-адреса",
-        "pt": "Resolução adicional de endereços IP para endereços MAC",
-        "nl": "Resolutie van IP-adressen toegevoegd aan MAC-adressen",
-        "fr": "Ajout de la résolution des adresses IP aux adresses MAC",
-        "it": "Risoluzione aggiuntiva degli indirizzi IP agli indirizzi MAC",
-        "es": "Resolución agregada de direcciones IP a direcciones MAC",
-        "pl": "Dodano rozdzielczość adresów IP do adresów MAC",
-        "uk": "Додано дозвіл IP-адрес в адрес MAC",
-        "zh-cn": "添加IP地址到 MAC 地址的分辨率"
-      },
-      "1.7.0": {
-        "en": "Added possibility to browse the IP ranges",
-        "de": "Zusätzliche Möglichkeit, die IP-Bereiche zu durchsuchen",
-        "ru": "Добавлена возможность просматривать диапазоны IP",
-        "pt": "Adicionada possibilidade de navegar nos intervalos IP",
-        "nl": "Toegevoegde mogelijkheid om door de IP-bereiken te bladeren",
-        "fr": "Ajout de la possibilité de parcourir les plages IP",
-        "it": "Aggiunta possibilità di sfogliare gli intervalli IP",
-        "es": "Mayor posibilidad de navegar por los rangos IP",
-        "pl": "Dodano możliwość przeglądania zakresów IP",
-        "uk": "Додана можливість переглядати діапазони IP",
-        "zh-cn": "添加浏览 IP 范围的可能性"
-      },
-      "1.6.2": {
-        "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config\nAdded different intervals for online and offline devices\nimplemented export/import of devices",
-        "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config\nVerschiedene Intervalle für Online- und Offline-Geräte hinzugefügt\nexport/import von geräten",
-        "ru": "Исправлена обработка государственных обновлений, вызывающих сбои с js-controller 5. (Изображение #106)\nТрейлинговые пространства теперь удаляются с IP-адреса и имени. Трейлинговые пространства заблокированы корректной работы. (Изображение #98)\nДобавлено json config\nДобавлены различные интервалы для онлайн и оффлайн устройств\nреализован экспорт/импорт устройств",
-        "pt": "O manuseio de atualizações de estado causando falhas com js-controller 5 foi corrigido. (Inglês)\nOs espaços de reboque agora são removidos do endereço e nome do ip. Espaços de rastreamento bloqueado operação correta. (Issue #98)\nAdicionado json config\nAdicionados intervalos diferentes para dispositivos online e offline\nexportação/importação implementada de dispositivos",
-        "nl": "De staatsinformaties veroorzaken crashes met Js-controller 5 is gecorrigeerd. (Issue #106)\nTrailing ruimtes worden nu verwijderd van IP-adres en naam. Trailing ruimtes blokkeerde de juiste operatie. (Issue 98)\n_\nVerschillende intervals voor online en offline apparaten\nvertaling:",
-        "fr": "La manipulation des mises à jour de l'état causant des accidents avec js-controller 5 a été corrigée. (Issue #106)\nLes espaces de signalisation sont maintenant retirés de l'adresse et du nom de l'ip. Les espaces de signalisation ont bloqué le bon fonctionnement. (Issue #98)\nAjouté json config\nAjout de différents intervalles pour les appareils en ligne et hors ligne\nl ' exportation et l ' importation de dispositifs",
-        "it": "Gestione degli aggiornamenti di stato causando crash con js-controller 5 è stato corretto. (Essue #106)\nI percorsi sono ora rimossi dall'indirizzo e dal nome ip. Gli spazi trainanti hanno bloccato il corretto funzionamento. (Issue #98)\nAggiunto json config\nAggiunto diversi intervalli per dispositivi online e offline\nesportazione/importazione implementata di dispositivi",
-        "es": "Se ha corregido el manejo de actualizaciones estatales que causan fallos con js-controller 5. (Isue #106)\nLos espacios de trailing ahora se eliminan de la dirección y el nombre de ip. Espacios de rastreo bloquearon la operación correcta. (Isue #98)\nAñadido json config\nAñadido diferentes intervalos para dispositivos en línea y sin conexión\nimplementado exportación/importación de dispositivos",
-        "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig\nDodawane są różne odstępy dla urządzeń online i offline\nzaimplementowany eksport i import urządzeń",
-        "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config\nДодано різні інтервали для онлайн і офлайн пристроїв\nекспорт/імпорт приладів",
-        "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编\n增加在线和外线装置的不同间隔\n执行的设备进出口"
-      }
+    "common": {
+        "name": "ping",
+        "version": "1.7.6",
+        "news": {
+            "1.7.6": {
+                "en": "Corrected notification message",
+                "de": "Korrigierte Meldung",
+                "ru": "Исправленное уведомление",
+                "pt": "Mensagem de notificação corrigida",
+                "nl": "Gecorrigeerde melding",
+                "fr": "Message de notification corrigé",
+                "it": "Messaggio di notifica corretto",
+                "es": "Mensaje de notificación corregido",
+                "pl": "Poprawiony komunikat notyfikacyjny",
+                "uk": "Виправлено повідомлення про повідомлення",
+                "zh-cn": "更正的通知信息"
+            },
+            "1.7.5": {
+                "en": "Corrected small error about range length",
+                "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
+                "ru": "Исправлена небольшая ошибка относительно длины диапазона",
+                "pt": "Erro pequeno corrigido sobre o comprimento do intervalo",
+                "nl": "Gecorrigeerde kleine fout over bereiklengte",
+                "fr": "Correction d'une petite erreur sur la longueur de la plage",
+                "it": "Corretto piccolo errore sulla lunghezza dell'intervallo",
+                "es": "Corregido pequeño error sobre la longitud del rango",
+                "pl": "Poprawiony mały błąd o długości zakresu",
+                "uk": "Виправлена невелика помилка про довжину діапазону",
+                "zh-cn": "修正范围长度的小错误"
+            },
+            "1.7.4": {
+                "en": "Added support for dynamic notifications\nAdded custom range settings",
+                "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
+                "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
+                "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
+                "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
+                "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
+                "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
+                "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
+                "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
+                "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
+                "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
+            },
+            "1.7.3": {
+                "en": "Added the functionality to poll the address range periodically",
+                "de": "Hinzugefügt die Funktionalität, um den Adressbereich periodisch abzufragen",
+                "ru": "Добавлена функциональность для периодического опроса адресного диапазона",
+                "pt": "Adicionado a funcionalidade para sondar o intervalo de endereços periodicamente",
+                "nl": "De functionaliteit toegevoegd om het adresbereik periodiek te peilen",
+                "fr": "Ajout de la fonctionnalité pour le sondage périodique de la plage d'adresses",
+                "it": "Aggiunta la funzionalità per sondare l'intervallo di indirizzi periodicamente",
+                "es": "Añadido la funcionalidad para encuestar el rango de dirección periódicamente",
+                "pl": "Dodano funkcjonalność badania zakresu adresów okresowo",
+                "uk": "Додано функціональність для опитування адресного діапазону періодично",
+                "zh-cn": "添加功能以定期对地址范围进行投票"
+            },
+            "1.7.1": {
+                "en": "Added resolution of IP addresses to MAC addresses",
+                "de": "Zusätzliche Auflösung von IP-Adressen an MAC-Adressen",
+                "ru": "Добавлено разрешение IP-адресов на MAC-адреса",
+                "pt": "Resolução adicional de endereços IP para endereços MAC",
+                "nl": "Resolutie van IP-adressen toegevoegd aan MAC-adressen",
+                "fr": "Ajout de la résolution des adresses IP aux adresses MAC",
+                "it": "Risoluzione aggiuntiva degli indirizzi IP agli indirizzi MAC",
+                "es": "Resolución agregada de direcciones IP a direcciones MAC",
+                "pl": "Dodano rozdzielczość adresów IP do adresów MAC",
+                "uk": "Додано дозвіл IP-адрес в адрес MAC",
+                "zh-cn": "添加IP地址到 MAC 地址的分辨率"
+            },
+            "1.7.0": {
+                "en": "Added possibility to browse the IP ranges",
+                "de": "Zusätzliche Möglichkeit, die IP-Bereiche zu durchsuchen",
+                "ru": "Добавлена возможность просматривать диапазоны IP",
+                "pt": "Adicionada possibilidade de navegar nos intervalos IP",
+                "nl": "Toegevoegde mogelijkheid om door de IP-bereiken te bladeren",
+                "fr": "Ajout de la possibilité de parcourir les plages IP",
+                "it": "Aggiunta possibilità di sfogliare gli intervalli IP",
+                "es": "Mayor posibilidad de navegar por los rangos IP",
+                "pl": "Dodano możliwość przeglądania zakresów IP",
+                "uk": "Додана можливість переглядати діапазони IP",
+                "zh-cn": "添加浏览 IP 范围的可能性"
+            },
+            "1.6.2": {
+                "en": "Handling of state updates causing crashes with js-controller 5 has been corrected. (Issue #106)\nTrailing spaces are now removed from ip address and name. Trailing spaces blocked correct operation. (Issue #98)\nAdded json config\nAdded different intervals for online and offline devices\nimplemented export/import of devices",
+                "de": "Die Handhabung von Zustandsaktualisierungen, die mit dem js-Controller 5 Abstürzen verursachen, wurde korrigiert. (Issue #106)\nTrailing Leerzeichen werden nun von ip Adresse und Namen entfernt. Trailing-Räume blockierten korrekten Betrieb. (Ausgabe Nr. 98)\nHinzugefügt json config\nVerschiedene Intervalle für Online- und Offline-Geräte hinzugefügt\nexport/import von geräten",
+                "ru": "Исправлена обработка государственных обновлений, вызывающих сбои с js-controller 5. (Изображение #106)\nТрейлинговые пространства теперь удаляются с IP-адреса и имени. Трейлинговые пространства заблокированы корректной работы. (Изображение #98)\nДобавлено json config\nДобавлены различные интервалы для онлайн и оффлайн устройств\nреализован экспорт/импорт устройств",
+                "pt": "O manuseio de atualizações de estado causando falhas com js-controller 5 foi corrigido. (Inglês)\nOs espaços de reboque agora são removidos do endereço e nome do ip. Espaços de rastreamento bloqueado operação correta. (Issue #98)\nAdicionado json config\nAdicionados intervalos diferentes para dispositivos online e offline\nexportação/importação implementada de dispositivos",
+                "nl": "De staatsinformaties veroorzaken crashes met Js-controller 5 is gecorrigeerd. (Issue #106)\nTrailing ruimtes worden nu verwijderd van IP-adres en naam. Trailing ruimtes blokkeerde de juiste operatie. (Issue 98)\n_\nVerschillende intervals voor online en offline apparaten\nvertaling:",
+                "fr": "La manipulation des mises à jour de l'état causant des accidents avec js-controller 5 a été corrigée. (Issue #106)\nLes espaces de signalisation sont maintenant retirés de l'adresse et du nom de l'ip. Les espaces de signalisation ont bloqué le bon fonctionnement. (Issue #98)\nAjouté json config\nAjout de différents intervalles pour les appareils en ligne et hors ligne\nl ' exportation et l ' importation de dispositifs",
+                "it": "Gestione degli aggiornamenti di stato causando crash con js-controller 5 è stato corretto. (Essue #106)\nI percorsi sono ora rimossi dall'indirizzo e dal nome ip. Gli spazi trainanti hanno bloccato il corretto funzionamento. (Issue #98)\nAggiunto json config\nAggiunto diversi intervalli per dispositivi online e offline\nesportazione/importazione implementata di dispositivi",
+                "es": "Se ha corregido el manejo de actualizaciones estatales que causan fallos con js-controller 5. (Isue #106)\nLos espacios de trailing ahora se eliminan de la dirección y el nombre de ip. Espacios de rastreo bloquearon la operación correcta. (Isue #98)\nAñadido json config\nAñadido diferentes intervalos para dispositivos en línea y sin conexión\nimplementado exportación/importación de dispositivos",
+                "pl": "Zmiana aktualizacji stanu spowodowała, że rozbiornik 5 został poprawiony. Issue #106 (ang.)\nObecnie przestrzenie trasowe są usuwane z adresu i nazwy. Przesunięcie torów blokowało prawidłową operację. Issue #98 (ang.)\nAdded json configig\nDodawane są różne odstępy dla urządzeń online i offline\nzaimplementowany eksport i import urządzeń",
+                "uk": "Виправлено ручку державних оновлень, що спричиняє аварійні аварії на Js-controller 5. (Issue #106)\nВідсутня кількість місць, що містяться в ip-адресі та ім'я. Зняття проїзду заблоковано правильну операцію. (Issue #98)\nДодано json config\nДодано різні інтервали для онлайн і офлайн пристроїв\nекспорт/імпорт приладів",
+                "zh-cn": "修改了国家更新,造成四舍五入机。 (Isue #106)\n现在从管道和名称中拆除了铁路空间。 铁路空间阻碍了正确行动。 (第98号)\n增编\n增加在线和外线装置的不同间隔\n执行的设备进出口"
+            }
+        },
+        "titleLang": {
+            "en": "PING",
+            "de": "PING",
+            "ru": "PING",
+            "pt": "PING",
+            "nl": "PING",
+            "fr": "PING",
+            "it": "PING",
+            "es": "PING",
+            "pl": "PING",
+            "uk": "PING",
+            "zh-cn": "PING"
+        },
+        "desc": {
+            "en": "This adapter cyclic polls configured IPs.",
+            "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
+            "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING",
+            "pt": "As pesquisas cíclicas deste adaptador configuraram IPs.",
+            "nl": "Deze adapter cyclische polls geconfigureerde IP's.",
+            "fr": "Cet adaptateur interroge cycliquement les adresses IP configurées.",
+            "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
+            "es": "Este adaptador sondea cíclicamente las IP configuradas.",
+            "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
+            "uk": "Цей адаптер циклічно опитує налаштовані IP-адреси.",
+            "zh-cn": "该适配器循环轮询配置的IP。"
+        },
+        "authors": ["bluefox <dogafox@gmail.com>"],
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "compact": true,
+        "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
+        "loglevel": "info",
+        "icon": "ping.png",
+        "messagebox": true,
+        "keywords": ["poll", "ping", "ip"],
+        "adminUI": {
+            "config": "json"
+        },
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
+        "type": "network",
+        "plugins": {
+            "sentry": {
+                "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
+            }
+        },
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=5.0.19"
+            }
+        ],
+        "connectionType": "local",
+        "dataSource": "poll",
+        "tier": 2
     },
-    "titleLang": {
-      "en": "PING",
-      "de": "PING",
-      "ru": "PING",
-      "pt": "PING",
-      "nl": "PING",
-      "fr": "PING",
-      "it": "PING",
-      "es": "PING",
-      "pl": "PING",
-      "uk": "PING",
-      "zh-cn": "PING"
+    "native": {
+        "devices": [],
+        "interval": 60000,
+        "intervalByUnreach": 30000,
+        "numberOfRetries": 1,
+        "noHostname": false,
+        "autoDetect": "0"
     },
-    "desc": {
-      "en": "This adapter cyclic polls configured IPs.",
-      "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
-      "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING",
-      "pt": "As pesquisas cíclicas deste adaptador configuraram IPs.",
-      "nl": "Deze adapter cyclische polls geconfigureerde IP's.",
-      "fr": "Cet adaptateur interroge cycliquement les adresses IP configurées.",
-      "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
-      "es": "Este adaptador sondea cíclicamente las IP configuradas.",
-      "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
-      "uk": "Цей адаптер циклічно опитує налаштовані IP-адреси.",
-      "zh-cn": "该适配器循环轮询配置的IP。"
-    },
-    "authors": [
-      "bluefox <dogafox@gmail.com>"
-    ],
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "compact": true,
-    "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
-    "loglevel": "info",
-    "icon": "ping.png",
-    "messagebox": true,
-    "keywords": [
-      "poll",
-      "ping",
-      "ip"
-    ],
-    "adminUI": {
-      "config": "json"
-    },
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
-    "type": "network",
-    "plugins": {
-      "sentry": {
-        "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
-      }
-    },
-    "licenseInformation": {
-      "type": "free",
-      "license": "MIT"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=5.0.19"
-      }
-    ],
-    "connectionType": "local",
-    "dataSource": "poll",
-    "tier": 2
-  },
-  "native": {
-    "devices": [],
-    "interval": 60000,
-    "intervalByUnreach": 30000,
-    "numberOfRetries": 1,
-    "noHostname": false,
-    "autoDetect": "0"
-  },
-  "notifications": [
-    {
-      "scope": "ping",
-      "name": {
-        "en": "ping",
-        "de": "ping",
-        "ru": "ping",
-        "pt": "ping",
-        "nl": "ping",
-        "fr": "ping",
-        "it": "ping",
-        "es": "ping",
-        "pl": "ping",
-        "uk": "ping",
-        "zh-cn": "ping"
-      },
-      "description": {
-        "en": "These notifications inform about new found devices.",
-        "de": "Diese Benachrichtigungen informieren über neu gefundene Geräte.",
-        "ru": "Эти уведомления информируют о новых найденных устройствах.",
-        "pt": "Essas notificações informam sobre novos dispositivos encontrados.",
-        "nl": "Deze meldingen informeren over nieuw gevonden apparaten.",
-        "fr": "Ces notifications informent sur les nouveaux appareils trouvés.",
-        "it": "Queste notifiche informano sui nuovi dispositivi trovati.",
-        "es": "Estas notificaciones informan sobre los nuevos dispositivos encontrados.",
-        "pl": "Te powiadomienia informują o nowo znalezionych urządzeniach.",
-        "uk": "Ці сповіщення інформують про нові знайдені пристрої.",
-        "zh-cn": "这些通知通知您发现的新设备。"
-      },
-      "categories": [
+    "notifications": [
         {
-          "category": "newDevices",
-          "name": {
-            "en": "New IP addresses found",
-            "de": "Neue IP-Adressen gefunden",
-            "ru": "Найдены новые IP-адреса",
-            "pt": "Novos endereços IP encontrados",
-            "nl": "Nieuwe IP-adressen gevonden",
-            "fr": "Nouveaux adresses IP trouvées",
-            "it": "Nuovi indirizzi IP trovati",
-            "es": "Nuevas direcciones IP encontradas",
-            "pl": "Znaleziono nowe adresy IP",
-            "uk": "Знайдено нові IP-адреси",
-            "zh-cn": "找到新的 IP 地址"
-          },
-          "severity": "notify",
-          "description": {
-            "en": "New IP addresses could be added for monitoring.",
-            "de": "Neue IP-Adressen könnten zur Überwachung hinzugefügt werden.",
-            "ru": "Новые IP-адреса могут быть добавлены для мониторинга.",
-            "pt": "Novos endereços IP podem ser adicionados para monitoramento.",
-            "nl": "Nieuwe IP-adressen kunnen worden toegevoegd voor monitoring.",
-            "fr": "De nouvelles adresses IP pourraient être ajoutées pour la surveillance.",
-            "it": "Nuovi indirizzi IP potrebbero essere aggiunti per il monitoraggio.",
-            "es": "Se podrían agregar nuevas direcciones IP para su monitoreo.",
-            "pl": "Nowe adresy IP mogą być dodane do monitorowania.",
-            "uk": "Нові IP-адреси можуть бути додані для моніторингу.",
-            "zh-cn": "新的 IP 地址可以用于监控。"
-          },
-          "regex": [],
-          "limit": 1
+            "scope": "ping",
+            "name": {
+                "en": "ping",
+                "de": "ping",
+                "ru": "ping",
+                "pt": "ping",
+                "nl": "ping",
+                "fr": "ping",
+                "it": "ping",
+                "es": "ping",
+                "pl": "ping",
+                "uk": "ping",
+                "zh-cn": "ping"
+            },
+            "description": {
+                "en": "These notifications inform about new found devices.",
+                "de": "Diese Benachrichtigungen informieren über neu gefundene Geräte.",
+                "ru": "Эти уведомления информируют о новых найденных устройствах.",
+                "pt": "Essas notificações informam sobre novos dispositivos encontrados.",
+                "nl": "Deze meldingen informeren over nieuw gevonden apparaten.",
+                "fr": "Ces notifications informent sur les nouveaux appareils trouvés.",
+                "it": "Queste notifiche informano sui nuovi dispositivi trovati.",
+                "es": "Estas notificaciones informan sobre los nuevos dispositivos encontrados.",
+                "pl": "Te powiadomienia informują o nowo znalezionych urządzeniach.",
+                "uk": "Ці сповіщення інформують про нові знайдені пристрої.",
+                "zh-cn": "这些通知通知您发现的新设备。"
+            },
+            "categories": [
+                {
+                    "category": "newDevices",
+                    "name": {
+                        "en": "New IP addresses found",
+                        "de": "Neue IP-Adressen gefunden",
+                        "ru": "Найдены новые IP-адреса",
+                        "pt": "Novos endereços IP encontrados",
+                        "nl": "Nieuwe IP-adressen gevonden",
+                        "fr": "Nouveaux adresses IP trouvées",
+                        "it": "Nuovi indirizzi IP trovati",
+                        "es": "Nuevas direcciones IP encontradas",
+                        "pl": "Znaleziono nowe adresy IP",
+                        "uk": "Знайдено нові IP-адреси",
+                        "zh-cn": "找到新的 IP 地址"
+                    },
+                    "severity": "notify",
+                    "description": {
+                        "en": "New IP addresses could be added for monitoring.",
+                        "de": "Neue IP-Adressen könnten zur Überwachung hinzugefügt werden.",
+                        "ru": "Новые IP-адреса могут быть добавлены для мониторинга.",
+                        "pt": "Novos endereços IP podem ser adicionados para monitoramento.",
+                        "nl": "Nieuwe IP-adressen kunnen worden toegevoegd voor monitoring.",
+                        "fr": "De nouvelles adresses IP pourraient être ajoutées pour la surveillance.",
+                        "it": "Nuovi indirizzi IP potrebbero essere aggiunti per il monitoraggio.",
+                        "es": "Se podrían agregar nuevas direcciones IP para su monitoreo.",
+                        "pl": "Nowe adresy IP mogą być dodane do monitorowania.",
+                        "uk": "Нові IP-адреси можуть бути додані для моніторингу.",
+                        "zh-cn": "新的 IP 地址可以用于监控。"
+                    },
+                    "regex": [],
+                    "limit": 1
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "browse",
-      "type": "channel",
-      "common": {
-        "expert": true,
-        "name": "Browse"
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.progress",
-      "type": "state",
-      "common": {
-        "name": "Progress",
-        "type": "number",
-        "role": "state",
-        "read": true,
-        "write": false,
-        "expert": true,
-        "def": 0,
-        "min": 0,
-        "max": 255
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.result",
-      "type": "state",
-      "common": {
-        "name": "Browse result",
-        "type": "json",
-        "role": "state",
-        "expert": true,
-        "read": true,
-        "write": false,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.running",
-      "type": "state",
-      "common": {
-        "name": "Browse running",
-        "type": "boolean",
-        "role": "state",
-        "expert": true,
-        "read": true,
-        "write": true,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.status",
-      "type": "state",
-      "common": {
-        "name": "Browse status",
-        "type": "string",
-        "role": "state",
-        "expert": true,
-        "read": true,
-        "write": false,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.interface",
-      "type": "state",
-      "common": {
-        "name": "Browse interface",
-        "type": "string",
-        "role": "state",
-        "expert": true,
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.rangeStart",
-      "type": "state",
-      "common": {
-        "name": "Browse IP range start",
-        "type": "string",
-        "role": "state",
-        "expert": true,
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "browse.rangeLength",
-      "type": "state",
-      "common": {
-        "name": "Browse IP range length",
-        "type": "number",
-        "role": "state",
-        "read": true,
-        "expert": true,
-        "write": true,
-        "def": 0
-      },
-      "native": {}
-    }
-  ]
+    ],
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "browse",
+            "type": "channel",
+            "common": {
+                "expert": true,
+                "name": "Browse"
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.progress",
+            "type": "state",
+            "common": {
+                "name": "Progress",
+                "type": "number",
+                "role": "state",
+                "read": true,
+                "write": false,
+                "expert": true,
+                "def": 0,
+                "min": 0,
+                "max": 255
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.result",
+            "type": "state",
+            "common": {
+                "name": "Browse result",
+                "type": "json",
+                "role": "state",
+                "expert": true,
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.running",
+            "type": "state",
+            "common": {
+                "name": "Browse running",
+                "type": "boolean",
+                "role": "state",
+                "expert": true,
+                "read": true,
+                "write": true,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.status",
+            "type": "state",
+            "common": {
+                "name": "Browse status",
+                "type": "string",
+                "role": "state",
+                "expert": true,
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.interface",
+            "type": "state",
+            "common": {
+                "name": "Browse interface",
+                "type": "string",
+                "role": "state",
+                "expert": true,
+                "read": true,
+                "write": true,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.rangeStart",
+            "type": "state",
+            "common": {
+                "name": "Browse IP range start",
+                "type": "string",
+                "role": "state",
+                "expert": true,
+                "read": true,
+                "write": true,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "browse.rangeLength",
+            "type": "state",
+            "common": {
+                "name": "Browse IP range length",
+                "type": "number",
+                "role": "state",
+                "read": true,
+                "expert": true,
+                "write": true,
+                "def": 0
+            },
+            "native": {}
+        }
+    ]
 }

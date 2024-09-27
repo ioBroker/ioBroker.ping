@@ -17,7 +17,7 @@ const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
-const { init, tt, t } = require('./lib/i18n');
+const I18n = require('./lib/i18n');
 let adapter;
 
 let arp;
@@ -28,11 +28,11 @@ let isStopping = false;
 let detectedIPs = [];
 let cyclicPingTimeout = null;
 
-const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?]/g;
+const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
 
 function startAdapter(options) {
     options = options || {};
-    Object.assign(options, {name: adapterName});
+    Object.assign(options, { name: adapterName });
 
     adapter = new utils.Adapter(options);
 
@@ -148,14 +148,15 @@ async function browse(iface) {
 
     try {
         vendor = vendor || require('@network-utils/vendor-lookup');
-        arp =  arp || require('@network-utils/arp-lookup');
-    } catch (e) {
+        arp = arp || require('@network-utils/arp-lookup');
+    } catch {
         adapter.log.warn('Cannot use module "arp-lookup"');
     }
 
-    const result = iface.rangeStart && iface.rangeLength ?
-        { firstAddress: iface.rangeStart, length: iface.rangeLength } :
-        ip.subnet(iface.ip, iface.netmask);
+    const result =
+        iface.rangeStart && iface.rangeLength
+            ? { firstAddress: iface.rangeStart, length: iface.rangeLength }
+            : ip.subnet(iface.ip, iface.netmask);
 
     if (result.length > 1024) {
         adapter.log.warn(`Too many IPs to ping: ${result.length}. Maximum is 1024`);
@@ -177,38 +178,40 @@ async function browse(iface) {
 
         // do not ping the already configured and ignored devices
         if (!adapter.config.devices.find(dev => dev.ip === addr) && !detectedIPs.find(item => item.ip === addr)) {
-            await new Promise(resolve => ping.probe(addr, { log: adapter.log.debug }, async (_err, status) => {
-                if (status?.alive) {
-                    console.log(`Found ${status.host}`);
-                    let mac = undefined;
-                    let vendorName = undefined;
-                    if (arp) {
-                        mac = await arp.toMAC(status.host);
-                        if (mac && vendor) {
-                            vendorName = vendor.toVendor(mac);
+            await new Promise(resolve =>
+                ping.probe(addr, { log: adapter.log.debug }, async (_err, status) => {
+                    if (status?.alive) {
+                        console.log(`Found ${status.host}`);
+                        let mac = undefined;
+                        let vendorName = undefined;
+                        if (arp) {
+                            mac = await arp.toMAC(status.host);
+                            if (mac && vendor) {
+                                vendorName = vendor.toVendor(mac);
+                            }
                         }
-                    }
-                    const item = detectedIPs.find(item => item.ip === status.host);
-                    let changed = false;
-                    if (item) {
-                        if (item.mac !== mac || item.vendor !== vendorName) {
+                        const item = detectedIPs.find(item => item.ip === status.host);
+                        let changed = false;
+                        if (item) {
+                            if (item.mac !== mac || item.vendor !== vendorName) {
+                                changed = true;
+                                item.mac = mac || item.mac;
+                                item.vendor = vendorName || item.vendor;
+                            }
+                        } else {
+                            detectedIPs.push({ ip: status.host, mac, vendor: vendorName, ignore: false });
+                            detectedIPs.sort((a, b) => (a.ip > b.ip ? 1 : a.ip < b.ip ? -1 : 0));
                             changed = true;
-                            item.mac = mac || item.mac;
-                            item.vendor = vendorName || item.vendor;
+                        }
+                        if (changed) {
+                            adapter.setState('browse.result', JSON.stringify(detectedIPs), true);
                         }
                     } else {
-                        detectedIPs.push({ip: status.host, mac, vendor: vendorName, ignore: false});
-                        detectedIPs.sort((a, b) => a.ip > b.ip ? 1 : (a.ip < b.ip ? -1 : 0));
-                        changed = true;
+                        console.log(`Progress ${progress} / 255`);
                     }
-                    if (changed) {
-                        adapter.setState('browse.result', JSON.stringify(detectedIPs), true);
-                    }
-                } else {
-                    console.log(`Progress ${progress} / 255`);
-                }
-                resolve();
-            }));
+                    resolve();
+                }),
+            );
         }
 
         if (stopBrowsing) {
@@ -226,15 +229,19 @@ async function browse(iface) {
     runningBrowse = false;
     stopBrowsing = false;
 
-    const newDevices = detectedIPs.filter(item => !item.ignore && !adapter.config.devices.find(dev => dev.ip === item.ip));
+    const newDevices = detectedIPs.filter(
+        item => !item.ignore && !adapter.config.devices.find(dev => dev.ip === item.ip),
+    );
     if (generateNotification && newDevices.length) {
         await adapter.registerNotification(
             'ping',
             'newDevices',
-            newDevices.length === 1 ? t('New device found') : t('%s new devices found', null, newDevices.length),
+            newDevices.length === 1
+                ? I18n.translate('New device found')
+                : I18n.translate('%s new devices found', newDevices.length),
             {
                 contextData: {
-                    offlineMessage: tt('Instance is offline'),
+                    offlineMessage: I18n.getTranslatedObject('Instance is offline'),
                     newDevices,
                 },
             },
@@ -251,9 +258,9 @@ function getGuiSchema(newDevices) {
             _info: {
                 type: 'header',
                 size: 5,
-                text: tt('New devices found'),
+                text: I18n.getTranslatedObject('New devices found'),
                 sm: 12,
-            }
+            },
         },
     };
 
@@ -294,7 +301,7 @@ function getGuiSchema(newDevices) {
         schema.items = {};
         schema.items[`_noDevices`] = {
             type: 'staticText',
-            text: tt('Notification is not actual. All found devices are already added.'),
+            text: I18n.getTranslatedObject('Notification is not actual. All found devices are already added.'),
             sm: 12,
         };
     }
@@ -304,7 +311,7 @@ function getGuiSchema(newDevices) {
         type: 'staticLink',
         href: '#tab-instances/config/system.adapter.ping.0/_browse',
         close: true,
-        label: tt('Open settings'),
+        label: I18n.getTranslatedObject('Open settings'),
         variant: 'contained',
         button: true,
         icon: 'open',
@@ -314,7 +321,7 @@ function getGuiSchema(newDevices) {
         schema.items[`_save`] = {
             type: 'sendto',
             command: 'ping:save',
-            label: tt('Save settings'),
+            label: I18n.getTranslatedObject('Save settings'),
             variant: 'contained',
             icon: 'save',
         };
@@ -329,7 +336,8 @@ async function processMessage(obj) {
             // Try to ping one IP or name
             if (obj.callback && obj.message) {
                 ping.probe(obj.message, { log: adapter.log.debug }, (err, result) =>
-                    adapter.sendTo(obj.from, obj.command, { result, error: err }, obj.callback));
+                    adapter.sendTo(obj.from, obj.command, { result, error: err }, obj.callback),
+                );
             }
             break;
         }
@@ -341,8 +349,7 @@ async function processMessage(obj) {
             }
 
             // Try to ping all IPs of the network
-            browse(intr)
-                .catch(error => adapter.log.error(`Cannot browse: ${error}`));
+            browse(intr).catch(error => adapter.log.error(`Cannot browse: ${error}`));
 
             break;
         }
@@ -359,12 +366,17 @@ async function processMessage(obj) {
                 }
             }
 
-            adapter.sendTo(obj.from, obj.command, {
-                command: {
-                    command: 'nop',
-                    refresh: !!obj.message?.ip,
+            adapter.sendTo(
+                obj.from,
+                obj.command,
+                {
+                    command: {
+                        command: 'nop',
+                        refresh: !!obj.message?.ip,
+                    },
                 },
-            }, obj.callback);
+                obj.callback,
+            );
 
             break;
         }
@@ -383,14 +395,19 @@ async function processMessage(obj) {
             if (changed) {
                 await adapter.setForeignObjectAsync(config._id, config);
             }
-            adapter.sendTo(obj.from, obj.command, {
-                command: {
-                    command: 'message',
-                    message: tt('Saved'),
-                    refresh: true,
+            adapter.sendTo(
+                obj.from,
+                obj.command,
+                {
+                    command: {
+                        command: 'message',
+                        message: I18n.getTranslatedObject('Saved'),
+                        refresh: true,
+                    },
                 },
-            }, obj.callback);
-            break
+                obj.callback,
+            );
+            break;
         }
 
         case 'admin:getNotificationSchema':
@@ -443,14 +460,14 @@ async function pingAll(taskList, isUnreach) {
 
 function pingSingleDevice(task, retryCounter) {
     return new Promise(resolve =>
-        ping.probe(task.host, {log: adapter.log.debug}, async (err, result) => {
+        ping.probe(task.host, { log: adapter.log.debug }, async (err, result) => {
             err && adapter.log.error(`Error by pinging: ${err}`);
 
             if (result) {
                 adapter.log.debug(
                     `Ping result for ${result.host}: ${result.alive} in ${
                         result.ms === null ? '-' : result.ms
-                    }ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`
+                    }ms (Tried ${retryCounter}/${adapter.config.numberOfRetries} times)`,
                 );
 
                 if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
@@ -461,37 +478,39 @@ function pingSingleDevice(task, retryCounter) {
                      */
                     resolve(false);
                     return;
-                } else {
-                    await setDeviceStates(task, result);
                 }
+                await setDeviceStates(task, result);
             } else if (!err) {
                 adapter.log.warn(`No result by pinging of ${task.host}`);
             }
             resolve(true);
-        }));
+        }),
+    );
 }
 
 async function setDeviceStates(task, result) {
     task.online = result.alive;
     if (task.extendedInfo) {
-        await adapter.setStateAsync(task.stateAlive, {val: result.alive, ack: true});
-        await adapter.setStateAsync(task.stateTime, {val: result.ms === null ? null : result.ms / 1000, ack: true});
+        await adapter.setStateAsync(task.stateAlive, { val: result.alive, ack: true });
+        await adapter.setStateAsync(task.stateTime, { val: result.ms === null ? null : result.ms / 1000, ack: true });
 
         let rps = 0;
         if (result.alive && result.ms !== null && result.ms > 0) {
             rps = result.ms <= 1 ? 1000 : 1000.0 / result.ms;
         }
-        await adapter.setStateAsync(task.stateRps, {val: rps, ack: true});
+        await adapter.setStateAsync(task.stateRps, { val: rps, ack: true });
     } else {
-        await adapter.setStateAsync(task.stateAlive, {val: result.alive, ack: true});
+        await adapter.setStateAsync(task.stateAlive, { val: result.alive, ack: true });
     }
 }
 
 function buildId(id) {
-    return adapter.namespace +
+    return (
+        adapter.namespace +
         (id.device ? `.${id.device}` : '') +
         (id.channel ? `.${id.channel}` : '') +
-        (id.state ? `.${id.state}` : '');
+        (id.state ? `.${id.state}` : '')
+    );
 }
 
 function isDevicesEqual(rhs, lhs) {
@@ -503,7 +522,8 @@ function isChannelsEqual(rhs, lhs) {
 }
 
 function isStatesEqual(rhs, lhs) {
-    return rhs.common.name === lhs.common.name &&
+    return (
+        rhs.common.name === lhs.common.name &&
         rhs.common.def === lhs.common.def &&
         rhs.common.min === lhs.common.min &&
         rhs.common.max === lhs.common.max &&
@@ -512,7 +532,8 @@ function isStatesEqual(rhs, lhs) {
         rhs.common.read === lhs.common.read &&
         rhs.common.write === lhs.common.write &&
         rhs.common.role === lhs.common.role &&
-        rhs.native.host === lhs.native.host;
+        rhs.native.host === lhs.native.host
+    );
 }
 
 async function syncObjects(preparedObjects, oldObjects) {
@@ -523,7 +544,7 @@ async function syncObjects(preparedObjects, oldObjects) {
         if (oldObj && oldObj.type === 'device') {
             if (!isDevicesEqual(oldObj, preparedObjects.device)) {
                 await adapter.extendObject(fullID, {
-                    common: preparedObjects.device.common
+                    common: preparedObjects.device.common,
                 });
             }
             oldObjects[fullID] = undefined;
@@ -546,7 +567,7 @@ async function syncObjects(preparedObjects, oldObjects) {
                 adapter.log.debug(`Update channel id=${fullID}`);
                 await adapter.extendObjectAsync(fullID, {
                     common: channel.common,
-                    native: channel.native
+                    native: channel.native,
                 });
             }
             oldObjects[fullID] = undefined;
@@ -580,7 +601,13 @@ async function syncObjects(preparedObjects, oldObjects) {
             adapter.log.debug(`Create state id=${fullID}`);
 
             try {
-                await adapter.createStateAsync(state.id.device, state.id.channel, state.id.state, state.common, state.native);
+                await adapter.createStateAsync(
+                    state.id.device,
+                    state.id.channel,
+                    state.id.state,
+                    state.common,
+                    state.native,
+                );
             } catch (err) {
                 adapter.log.error(`Cannot create state: ${fullID} Error: ${err}`);
             }
@@ -602,7 +629,7 @@ function prepareObjectsForHost(hostDevice, config) {
     const idName = (config.use_name ? name || host : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
 
     if (config.extended_info) {
-        const channelID = {device: hostDevice, channel: idName};
+        const channelID = { device: hostDevice, channel: idName };
 
         const stateAliveID = { device: hostDevice, channel: idName, state: 'alive' };
         const stateTimeID = { device: hostDevice, channel: idName, state: 'time' };
@@ -623,13 +650,13 @@ function prepareObjectsForHost(hostDevice, config) {
                 },
                 native: {
                     host,
-                }
+                },
             },
             states: [
                 {
                     id: stateAliveID,
                     common: {
-                        name: `Alive ${name}` || host,
+                        name: name ? `Alive ${name}` : host,
                         def: false,
                         type: 'boolean',
                         read: true,
@@ -639,7 +666,7 @@ function prepareObjectsForHost(hostDevice, config) {
                     },
                     native: {
                         host,
-                    }
+                    },
                 },
                 {
                     id: stateTimeID,
@@ -677,33 +704,32 @@ function prepareObjectsForHost(hostDevice, config) {
                 },
             ],
         };
-    } else {
-        const stateID = {device: hostDevice, channel: '', state: idName};
-        return {
-            ping_task: {
-                host: config.ip.trim(),
-                extendedInfo: false,
-                stateAlive: stateID,
-            },
-            states: [
-                {
-                    id: stateID,
-                    common: {
-                        name: `Alive ${name}` || host,
-                        def: false,
-                        type: 'boolean',
-                        read: true,
-                        write: false,
-                        role: 'indicator.reachable',
-                        desc: `Ping state of ${host}`,
-                    },
-                    native: {
-                        host,
-                    },
-                },
-            ],
-        };
     }
+    const stateID = { device: hostDevice, channel: '', state: idName };
+    return {
+        ping_task: {
+            host: config.ip.trim(),
+            extendedInfo: false,
+            stateAlive: stateID,
+        },
+        states: [
+            {
+                id: stateID,
+                common: {
+                    name: name ? `Alive ${name}` : host,
+                    def: false,
+                    type: 'boolean',
+                    read: true,
+                    write: false,
+                    role: 'indicator.reachable',
+                    desc: `Ping state of ${host}`,
+                },
+                native: {
+                    host,
+                },
+            },
+        ],
+    };
 }
 
 function prepareObjectsByConfig() {
@@ -741,7 +767,7 @@ function prepareObjectsByConfig() {
             const fullID = buildId(config.channel.id);
             if (usedIDs[fullID]) {
                 adapter.log.warn(
-                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`
+                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`,
                 );
             } else {
                 usedIDs[fullID] = device;
@@ -753,7 +779,7 @@ function prepareObjectsByConfig() {
             const fullID = buildId(state.id);
             if (usedIDs[fullID]) {
                 adapter.log.warn(
-                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`
+                    `Objects with same id = ${fullID} created for two hosts ${JSON.stringify(usedIDs[fullID])}  ${JSON.stringify(device)}`,
                 );
             } else {
                 usedIDs[fullID] = device;
@@ -785,13 +811,16 @@ async function pingOnTime() {
         return;
     }
 
-    cyclicPingTimeout = setTimeout(() => {
-        cyclicPingTimeout = null;
-        if (isStopping) {
-            return;
-        }
-        pingOnTime();
-    }, adapter.config.autoDetect * 60000 - (Date.now() - started));
+    cyclicPingTimeout = setTimeout(
+        () => {
+            cyclicPingTimeout = null;
+            if (isStopping) {
+                return;
+            }
+            pingOnTime();
+        },
+        adapter.config.autoDetect * 60000 - (Date.now() - started),
+    );
 }
 
 async function syncConfig() {
@@ -804,7 +833,7 @@ async function syncConfig() {
         if (id.startsWith(`${adapter.namespace}.browse`)) {
             delete objects[id];
         }
-    })
+    });
     // remove browse folder
     adapter.log.debug('Prepare tasks of objects update');
     await syncObjects(preparedObjects, objects);
@@ -823,7 +852,7 @@ async function main(adapter) {
         await adapter.setStateAsync('browse.rangeLength', 0, true);
     }
 
-    await init(adapter);
+    await I18n.init(`${__dirname}/lib`, adapter);
 
     adapter.config.autoDetect = parseInt(adapter.config.autoDetect, 10) || 0;
 
@@ -831,7 +860,7 @@ async function main(adapter) {
     if (res?.val) {
         try {
             detectedIPs = JSON.parse(res.val.toString());
-        } catch (e) {
+        } catch {
             detectedIPs = [];
         }
     }
@@ -871,8 +900,7 @@ async function main(adapter) {
     }
 
     if (adapter.config.autoDetect) {
-        pingOnTime()
-            .catch(e => adapter.log.error(`Cannot start auto detect: ${e}`));
+        pingOnTime().catch(e => adapter.log.error(`Cannot start auto detect: ${e}`));
     }
     if (!adapter.config.devices || !adapter.config.devices.length) {
         adapter.log.warn('No one host configured for ping');
