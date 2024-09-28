@@ -50,7 +50,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 -   [ ] Implement the possibility to monitor TCP ports
 
 ## Changelog
-### 1.7.7 (2024-09-28)
+### **WORK IN PROGRESS**
 
 -   (bluefox) Used `iobroker/eslint-config`
 -   (bluefox) Fixed some errors with `setcup`
