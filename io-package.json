@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.7.7",
+    "version": "1.7.8",
     "news": {
+      "1.7.8": {
+        "en": "Used `iobroker/eslint-config`\nFixed some errors with `setcup`\nCorrected admin notification",
+        "de": "Gebraucht `iobroker/eslintconfig `\nEinige Fehler mit `setcup behoben `\nKorrigierte Admin-Benachrichtigung",
+        "ru": "Использованный `iobroker/eslint-config \"\nИсправлены некоторые ошибки с `setcup \"\nИсправленное уведомление администратора",
+        "pt": "Usado `iobroker/eslint-config \"\nCorrigido alguns erros com `setcup \"\nNotificação administrativa correta",
+        "nl": "Gebruikte iobroker/eslint-config Wat\nFoutjes opgelost met de setcup Wat\nGecorrigeerde kennisgeving van de beheerder",
+        "fr": "Utilisé `iobroker/eslint-config \"\nCorrection de certaines erreurs avec `setcup \"\nNotification administrative corrigée",
+        "it": "Usato `iobroker/eslint-config #\nRisolto alcuni errori con `setcup #\nNotifica di amministrazione corretta",
+        "es": "Usado `iobroker/eslint-config `\nSe han corregido algunos errores con `setcup `\nNotificación de administración corregida",
+        "pl": "Używany 'iobroker / eslint- config'\nNaprawiono kilka błędów z 'setcup'\nPoprawione powiadomienie administratora",
+        "uk": "`iobroker/eslint-config й\nВиправлено помилки з `setcup й\nВиправлено повідомлення адміністратора",
+        "zh-cn": "已使用的“ io 经纪人/ slint- 配置” `\n用“ 设置” 修正了一些错误 `\n更正的管理员通知"
+      },
       "1.7.6": {
         "en": "Corrected notification message",
         "de": "Korrigierte Meldung",
