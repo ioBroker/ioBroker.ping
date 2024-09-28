@@ -55,6 +55,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 
 -   (bluefox) Used `iobroker/eslint-config`
 -   (bluefox) Fixed some errors with `setcup`
+-   (bluefox) Corrected admin notification
 
 ### 1.7.6 (2024-09-21)
 

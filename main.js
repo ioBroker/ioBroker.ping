@@ -12,12 +12,11 @@
 /* jslint node: true */
 
 'use strict';
-const utils = require('@iobroker/adapter-core'); // Get common adapter utils
+const { Adapter, I18n } = require('@iobroker/adapter-core'); // Get common adapter utils
 const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
 const adapterName = require('./package.json').name.split('.').pop();
-const I18n = require('./lib/i18n');
 let adapter;
 
 let arp;
@@ -34,7 +33,7 @@ function startAdapter(options) {
     options = options || {};
     Object.assign(options, { name: adapterName });
 
-    adapter = new utils.Adapter(options);
+    adapter = new Adapter(options);
 
     adapter.on('message', obj => obj?.command && processMessage(obj));
 
@@ -241,8 +240,12 @@ async function browse(iface) {
                 : I18n.translate('%s new devices found', newDevices.length),
             {
                 contextData: {
-                    offlineMessage: I18n.getTranslatedObject('Instance is offline'),
-                    newDevices,
+                    admin: {
+                        notification: {
+                            offlineMessage: I18n.getTranslatedObject('Instance is offline'),
+                            newDevices,
+                        },
+                    },
                 },
             },
         );
