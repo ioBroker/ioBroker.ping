@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.7.8",
+    "version": "1.7.9",
     "news": {
+      "1.7.9": {
+        "en": "Small changes the layout of the dynamic messages",
+        "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",
+        "ru": "Небольшие изменения макета динамических сообщений",
+        "pt": "Pequenas mudanças no layout das mensagens dinâmicas",
+        "nl": "Kleine wijzigingen in de indeling van de dynamische berichten",
+        "fr": "Petits changements dans la disposition des messages dynamiques",
+        "it": "Piccoli cambiamenti il layout dei messaggi dinamici",
+        "es": "Pequeños cambios en el diseño de los mensajes dinámicos",
+        "pl": "Małe zmiany układu komunikatów dynamicznych",
+        "uk": "Невеликі зміни макета динамічних повідомлень",
+        "zh-cn": "小改动动态消息的布局"
+      },
       "1.7.8": {
         "en": "Used `iobroker/eslint-config`\nFixed some errors with `setcup`\nCorrected admin notification",
         "de": "Gebraucht `iobroker/eslintconfig `\nEinige Fehler mit `setcup behoben `\nKorrigierte Admin-Benachrichtigung",
@@ -80,19 +93,6 @@
         "pl": "Dodano rozdzielczość adresów IP do adresów MAC",
         "uk": "Додано дозвіл IP-адрес в адрес MAC",
         "zh-cn": "添加IP地址到 MAC 地址的分辨率"
-      },
-      "1.7.0": {
-        "en": "Added possibility to browse the IP ranges",
-        "de": "Zusätzliche Möglichkeit, die IP-Bereiche zu durchsuchen",
-        "ru": "Добавлена возможность просматривать диапазоны IP",
-        "pt": "Adicionada possibilidade de navegar nos intervalos IP",
-        "nl": "Toegevoegde mogelijkheid om door de IP-bereiken te bladeren",
-        "fr": "Ajout de la possibilité de parcourir les plages IP",
-        "it": "Aggiunta possibilità di sfogliare gli intervalli IP",
-        "es": "Mayor posibilidad de navegar por los rangos IP",
-        "pl": "Dodano możliwość przeglądania zakresów IP",
-        "uk": "Додана можливість переглядати діапазони IP",
-        "zh-cn": "添加浏览 IP 范围的可能性"
       }
     },
     "titleLang": {

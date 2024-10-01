@@ -50,7 +50,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 -   [ ] Implement the possibility to monitor TCP ports
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.7.9 (2024-10-01)
    
 -   (@GermanBluefox) Small changes the layout of the dynamic messages
 
