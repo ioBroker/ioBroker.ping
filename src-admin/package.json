@@ -13,7 +13,7 @@
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@craco/craco": "^7.1.0",
-        "@iobroker/adapter-react-v5": "^7.1.4",
+        "@iobroker/adapter-react-v5": "^7.2.1",
         "@iobroker/json-config": "^7.1.5",
         "@mui/icons-material": "^6.1.1",
         "@mui/material": "^6.1.1",
@@ -22,7 +22,7 @@
         "@rollup/plugin-commonjs": "^28.0.0",
         "@rollup/plugin-node-resolve": "^15.3.0",
         "@rollup/plugin-replace": "^6.0.1",
-        "@types/react": "^18.3.9",
+        "@types/react": "^18.3.10",
         "@types/react-dom": "^18.3.0",
         "craco-esbuild": "^0.6.1",
         "craco-module-federation": "^1.1.0",

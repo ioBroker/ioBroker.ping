@@ -12,7 +12,8 @@
 /* jslint node: true */
 
 'use strict';
-const { Adapter, I18n } = require('@iobroker/adapter-core'); // Get common adapter utils
+const { Adapter } = require('@iobroker/adapter-core'); // Get common adapter utils
+const I18n = require('@iobroker/i18n'); // Get common adapter utils
 const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
@@ -316,6 +317,10 @@ function getGuiSchema(newDevices) {
         close: true,
         label: I18n.getTranslatedObject('Open settings'),
         variant: 'contained',
+        sm: 12,
+        md: 6,
+        lg: 4,
+        xl: 2,
         button: true,
         icon: 'open',
     };
@@ -327,6 +332,10 @@ function getGuiSchema(newDevices) {
             label: I18n.getTranslatedObject('Save settings'),
             variant: 'contained',
             icon: 'save',
+            sm: 12,
+            md: 6,
+            lg: 4,
+            xl: 2,
         };
     }
 
