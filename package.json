@@ -42,7 +42,7 @@
     "@iobroker/legacy-testing": "^1.0.13",
     "axios": "^1.7.7",
     "mocha": "^10.7.3",
-    "chai": "^4.5.0",
+    "chai": "^5.1.2",
     "colorette": "^2.0.20",
     "puppeteer": "^23.4.1"
   },
