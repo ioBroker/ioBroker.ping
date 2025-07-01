@@ -44,7 +44,7 @@
     "mocha": "^10.7.3",
     "chai": "^4.5.0",
     "colorette": "^2.0.20",
-    "puppeteer": "^23.9.0"
+    "puppeteer": "^24.11.1"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.ping/issues"
