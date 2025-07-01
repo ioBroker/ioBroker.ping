@@ -40,7 +40,7 @@
     "@iobroker/eslint-config": "^0.1.6",
     "@iobroker/testing": "^5.0.4",
     "@iobroker/legacy-testing": "^1.0.13",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "mocha": "^10.7.3",
     "chai": "^4.5.0",
     "colorette": "^2.0.20",
