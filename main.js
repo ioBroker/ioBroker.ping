@@ -587,7 +587,11 @@ async function syncObjects(preparedObjects, oldObjects) {
             adapter.log.debug(`Create channel id=${fullID}`);
 
             try {
-                await adapter.createChannelAsync(channel.id.device, channel.id.channel, channel.common, channel.native);
+                await adapter.setObjectAsync(fullID, {
+                    type: 'channel',
+                    common: channel.common,
+                    native: channel.native,
+                });
             } catch (err) {
                 adapter.log.error(`Cannot create channel: ${fullID} Error: ${err}`);
             }
@@ -613,13 +617,11 @@ async function syncObjects(preparedObjects, oldObjects) {
             adapter.log.debug(`Create state id=${fullID}`);
 
             try {
-                await adapter.createStateAsync(
-                    state.id.device,
-                    state.id.channel,
-                    state.id.state,
-                    state.common,
-                    state.native,
-                );
+                await adapter.setObjectAsync(fullID, {
+                    type: 'state',
+                    common: state.common,
+                    native: state.native,
+                });
             } catch (err) {
                 adapter.log.error(`Cannot create state: ${fullID} Error: ${err}`);
             }
