@@ -3,7 +3,7 @@ const currentImports = {};
       let moduleMap = {
 "./Components":()=>{
       dynamicLoadingCss([], false, './Components');
-      return __federation_import('./assets/__federation_expose_Components-CeTP8y2I.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      return __federation_import('./assets/__federation_expose_Components-DTjtRxKB.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
