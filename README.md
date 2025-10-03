@@ -14,6 +14,8 @@
 
 Pings specified IP addresses in a defined interval and monitors the results.
 
+You can also monitor TCP ports by specifying the port number after the IP address with a colon (e.g., `192.168.1.1:80` or `google.com:443`). This will check if the port is reachable instead of using ICMP ping.
+
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## Ping from javascript adapter
@@ -23,6 +25,14 @@ You can ping any IP address from the JavaScript adapter with command:
 ```js
 sendTo('ping.0', 'ping', '192.168.1.1', (res) => {
     console.log('Result: ' + JSON.stringify(res)); // Result: {"result": {"host": "192.168.1.1", "alive": true, "ms": 250}}
+});
+```
+
+You can also check TCP ports:
+
+```js
+sendTo('ping.0', 'ping', '192.168.1.1:80', (res) => {
+    console.log('Result: ' + JSON.stringify(res)); // Result: {"result": {"host": "192.168.1.1:80", "alive": true, "ms": 15}}
 });
 ```
 
@@ -47,7 +57,7 @@ You must install `setcap` with `sudo apt-get install libcap2-bin` before if `set
 
 ## Todo
 
--   [ ] Implement the possibility to monitor TCP ports
+-   [x] Implement the possibility to monitor TCP ports
 
 ## Changelog
 ### 1.7.9 (2024-10-01)
