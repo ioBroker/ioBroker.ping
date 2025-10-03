@@ -1,0 +1,17 @@
+{
+  "custom_ping_not_alive": "Ping instance is not alive",
+  "custom_ping_title": "Browse IP addresses of one interface",
+  "custom_ping_interface": "Interface",
+  "custom_ping_select_interface": "Select interface",
+  "custom_ping_browse": "Browse",
+  "custom_ping_add": "Add selected IP addresses",
+  "custom_ping_ip": "IP address",
+  "custom_ping_stop": "Stop browse",
+  "custom_ping_ips": "IP addresses",
+  "custom_ping_mac": "MAC address",
+  "custom_ping_vendor": "Manufacturer",
+  "custom_ping_ignore": "Ignore for notifications",
+  "custom_ping_range_begin": "Range start",
+  "custom_ping_range_end": "Range end",
+  "custom_ping_range_length": "Range length"
+}

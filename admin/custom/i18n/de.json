@@ -1,0 +1,17 @@
+{
+  "custom_ping_not_alive": "Ping-Instanz ist nicht am Leben",
+  "custom_ping_add": "Ausgewählte IP-Adressen hinzufügen",
+  "custom_ping_browse": "Durchsuchen",
+  "custom_ping_interface": "Schnittstelle",
+  "custom_ping_ip": "IP-Adresse",
+  "custom_ping_select_interface": "Schnittstelle auswählen",
+  "custom_ping_title": "Die IP-Adressen einer Schnittstelle durchsuchen",
+  "custom_ping_stop": "Beenden",
+  "custom_ping_ips": "IP-Adressen",
+  "custom_ping_mac": "MAC-Adresse",
+  "custom_ping_vendor": "Hersteller",
+  "custom_ping_ignore": "Für Benachrichtigungen ignorieren",
+  "custom_ping_range_begin": "Bereichsanfang",
+  "custom_ping_range_end": "Bereichsende",
+  "custom_ping_range_length": "Bereichslänge"
+}

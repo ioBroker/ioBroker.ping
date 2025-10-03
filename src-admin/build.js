@@ -22,5 +22,15 @@ function copyDir(src, dest) {
     }
 }
 
-copyDir(`${__dirname}/build`, `${__dirname}/../admin/custom`);
+// Copy build output to admin/custom
+copyDir(`${__dirname}/build/assets`, `${__dirname}/../admin/custom/assets`);
+
+// Copy customComponents.js to the root of admin/custom (required by jsonConfig.json)
+const customComponentsSrc = `${__dirname}/build/assets/customComponents.js`;
+const customComponentsDest = `${__dirname}/../admin/custom/customComponents.js`;
+if (fs.existsSync(customComponentsSrc)) {
+    fs.copyFileSync(customComponentsSrc, customComponentsDest);
+}
+
+// Copy i18n files
 copyDir(`${__dirname}/src/i18n`, `${__dirname}/../admin/custom/i18n`);
