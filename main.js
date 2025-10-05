@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2024 bluefox <dogafox@gmail.com>
+ *      (c) 2014-2025 bluefox <dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -12,8 +12,7 @@
 /* jslint node: true */
 
 'use strict';
-const { Adapter } = require('@iobroker/adapter-core'); // Get common adapter utils
-const I18n = require('@iobroker/i18n'); // Get common adapter utils
+const { Adapter, I18n } = require('@iobroker/adapter-core'); // Get common adapter utils
 const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
@@ -147,8 +146,8 @@ async function browse(iface) {
     detectedIPs = detectedIPs.filter(item => item.ignore);
 
     try {
-        vendor = vendor || require('@network-utils/vendor-lookup');
-        arp = arp || require('@network-utils/arp-lookup');
+        vendor ||= require('@network-utils/vendor-lookup');
+        arp ||= require('@network-utils/arp-lookup');
     } catch {
         adapter.log.warn('Cannot use module "arp-lookup"');
     }
@@ -553,7 +552,7 @@ async function syncObjects(preparedObjects, oldObjects) {
         const fullID = buildId(preparedObjects.device.id);
         const oldObj = oldObjects[fullID];
 
-        if (oldObj && oldObj.type === 'device') {
+        if (oldObj?.type === 'device') {
             if (!isDevicesEqual(oldObj, preparedObjects.device)) {
                 await adapter.extendObject(fullID, {
                     common: preparedObjects.device.common,
@@ -574,7 +573,7 @@ async function syncObjects(preparedObjects, oldObjects) {
         const fullID = buildId(channel.id);
         const oldObj = oldObjects[fullID];
 
-        if (oldObj && oldObj.type === 'channel') {
+        if (oldObj?.type === 'channel') {
             if (!isChannelsEqual(oldObj, channel)) {
                 adapter.log.debug(`Update channel id=${fullID}`);
                 await adapter.extendObjectAsync(fullID, {
@@ -640,7 +639,10 @@ async function syncObjects(preparedObjects, oldObjects) {
 function prepareObjectsForHost(hostDevice, config) {
     const host = (config.ip || '').trim();
     const name = (config.name || '').trim();
-    const idName = (config.use_name ? name || host : host).replace(FORBIDDEN_CHARS, '_').replace(/[.\s]+/g, '_');
+    const idName = (config.use_name ? name || host : host)
+        .replace(FORBIDDEN_CHARS, '_')
+        .replace(/[.\s]+/g, '_')
+        .replace(/:/g, '_');
 
     if (config.extended_info) {
         const channelID = { device: hostDevice, channel: idName };

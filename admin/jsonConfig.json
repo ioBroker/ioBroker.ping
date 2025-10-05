@@ -1,176 +1,177 @@
 {
-  "i18n": true,
-  "type": "tabs",
-  "items": {
-    "_main": {
-      "type": "panel",
-      "label": "Main settings",
-      "items": {
-        "interval": {
-          "type": "number",
-          "min": 5000,
-          "label": "Interval",
-          "help": "ms",
-          "xs": 12,
-          "sm": 12,
-          "md": 3,
-          "lg": 3
-        },
-        "intervalByUnreach": {
-          "type": "number",
-          "min": 5000,
-          "label": "Interval if unreachable",
-          "help": "ms",
-          "xs": 12,
-          "sm": 12,
-          "md": 3,
-          "lg": 3
-        },
-        "numberOfRetries": {
-          "newLine": true,
-          "type": "number",
-          "min": 0,
-          "label": "Number of retries",
-          "xs": 12,
-          "sm": 12,
-          "md": 3,
-          "lg": 3
-        },
-        "noHostname": {
-          "newLine": true,
-          "type": "checkbox",
-          "label": "No host name in state name",
-          "xs": 12,
-          "sm": 12
-        },
-        "setcap": {
-          "newLine": true,
-          "type": "checkbox",
-          "label": "Allow with setcap the required rights for ping",
-          "xs": 12,
-          "sm": 12,
-          "help": "This allows to run ping without root rights"
-        }
-      }
-    },
-    "_devices": {
-      "type": "panel",
-      "label": "Devices",
-      "items": {
-        "devices": {
-          "type": "table",
-          "xs": 12,
-          "sm": 12,
-          "md": 12,
-          "lg": 12,
-          "showSecondAddAt": 10,
-          "export": true,
-          "import": true,
-          "items": [
-            {
-              "type": "checkbox",
-              "attr": "enabled",
-              "title": "Enabled",
-              "width": 70
-            },
-            {
-              "type": "text",
-              "attr": "name",
-              "title": "Name"
-            },
-            {
-              "type": "checkbox",
-              "attr": "use_name",
-              "title": "Use name",
-              "width": 70
-            },
-            {
-              "type": "text",
-              "attr": "ip",
-              "title": "IP Address"
-            },
-            {
-              "type": "checkbox",
-              "attr": "extended_info",
-              "title": "Extended Info",
-              "width": 70
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "_main": {
+            "type": "panel",
+            "label": "Main settings",
+            "items": {
+                "interval": {
+                    "type": "number",
+                    "min": 5000,
+                    "label": "Interval",
+                    "help": "ms",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 3
+                },
+                "intervalByUnreach": {
+                    "type": "number",
+                    "min": 5000,
+                    "label": "Interval if unreachable",
+                    "help": "ms",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 3
+                },
+                "numberOfRetries": {
+                    "newLine": true,
+                    "type": "number",
+                    "min": 0,
+                    "label": "Number of retries",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 3
+                },
+                "noHostname": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "No host name in state name",
+                    "xs": 12,
+                    "sm": 12
+                },
+                "setcap": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Allow with setcap the required rights for ping",
+                    "xs": 12,
+                    "sm": 12,
+                    "help": "This allows to run ping without root rights"
+                }
             }
-          ]
-        }
-      }
-    },
-    "_browse": {
-      "type": "panel",
-      "label": "Browse",
-      "items": {
-        "autoDetect": {
-          "newLine": true,
-          "type": "select",
-          "label": "Auto detect",
-          "options": [
-            {
-              "value": "0",
-              "label": "disabled"
-            },
-            {
-              "value": "60",
-              "label": "every hour"
-            },
-            {
-              "value": "120",
-              "label": "every 2 hours"
-            },
-            {
-              "value": "180",
-              "label": "every 3 hours"
-            },
-            {
-              "value": "240",
-              "label": "every 4 hours"
-            },
-            {
-              "value": "360",
-              "label": "every 6 hours"
-            },
-            {
-              "value": "360",
-              "label": "every 6 hours"
-            },
-            {
-              "value": "720",
-              "label": "every 12 hours"
-            },
-            {
-              "value": "1440",
-              "label": "every day"
+        },
+        "_devices": {
+            "type": "panel",
+            "label": "Devices",
+            "items": {
+                "devices": {
+                    "type": "table",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "showSecondAddAt": 10,
+                    "export": true,
+                    "import": true,
+                    "items": [
+                        {
+                            "type": "checkbox",
+                            "attr": "enabled",
+                            "title": "Enabled",
+                            "width": 70
+                        },
+                        {
+                            "type": "text",
+                            "attr": "name",
+                            "title": "Name"
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "use_name",
+                            "title": "Use name",
+                            "width": 70
+                        },
+                        {
+                            "type": "text",
+                            "attr": "ip",
+                            "title": "IP Address"
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "extended_info",
+                            "title": "Extended Info",
+                            "width": 70
+                        }
+                    ]
+                }
             }
-          ],
-          "xs": 12,
-          "sm": 12,
-          "md": 3,
-          "lg": 3
         },
-        "_info": {
-          "hidden": "!data.autoDetect || data.autoDetect === '0'",
-          "type": "staticText",
-          "text": "Select interface for browsing to enable auto detect",
-          "xs": 12,
-          "sm": 12,
-          "md": 3,
-          "lg": 3
-        },
-        "_browse1": {
-          "newLine": true,
-          "xs": 12,
-          "sm": 12,
-          "md": 12,
-          "lg": 8,
-          "i18n": true,
-          "url": "custom/customComponents.js",
-          "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
-          "type": "custom"
+        "_browse": {
+            "type": "panel",
+            "label": "Browse",
+            "items": {
+                "autoDetect": {
+                    "newLine": true,
+                    "type": "select",
+                    "label": "Auto detect",
+                    "options": [
+                        {
+                            "value": "0",
+                            "label": "disabled"
+                        },
+                        {
+                            "value": "60",
+                            "label": "every hour"
+                        },
+                        {
+                            "value": "120",
+                            "label": "every 2 hours"
+                        },
+                        {
+                            "value": "180",
+                            "label": "every 3 hours"
+                        },
+                        {
+                            "value": "240",
+                            "label": "every 4 hours"
+                        },
+                        {
+                            "value": "360",
+                            "label": "every 6 hours"
+                        },
+                        {
+                            "value": "360",
+                            "label": "every 6 hours"
+                        },
+                        {
+                            "value": "720",
+                            "label": "every 12 hours"
+                        },
+                        {
+                            "value": "1440",
+                            "label": "every day"
+                        }
+                    ],
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 3
+                },
+                "_info": {
+                    "hidden": "!data.autoDetect || data.autoDetect === '0'",
+                    "type": "staticText",
+                    "text": "Select interface for browsing to enable auto detect",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 3
+                },
+                "_browse1": {
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 8,
+                    "i18n": true,
+                    "url": "custom/customComponents.js",
+                    "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
+                    "bundlerType": "module",
+                    "type": "custom"
+                }
+            }
         }
-      }
     }
-  }
 }
