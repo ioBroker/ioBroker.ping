@@ -7,3 +7,6 @@ package-lock.json
 src-admin/package-lock.json
 *.tgz
 /src-admin/.__mf__temp/
+
+#ignore .commitinfo created by ioBroker release script
+.commitinfo
