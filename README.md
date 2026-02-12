@@ -62,6 +62,10 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Migrated to TypeScript
+- (@GermanBluefox) Updated dependencies
+
 ### 1.8.0 (2025-10-05)
 
 - (@GermanBluefox) Removed admin 4,5 support
@@ -70,7 +74,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 ### 1.7.9 (2024-10-01)
 
-- (@GermanBluefox) Small changes the layout of the dynamic messages
+- (@GermanBluefox) Small changes to the layout of the dynamic messages
 
 ### 1.7.8 (2024-09-28)
 

@@ -55,10 +55,12 @@
         "LICENSE"
     ],
     "scripts": {
-        "test": "node node_modules/mocha/bin/mocha --exit",
+        "test:integration": "mocha --exit",
+        "test:package": "mocha test/package.test.js --exit",
+        "test": "npm run test:integration",
         "build:tsc": "tsc -p tsconfig.build.json",
         "build": "npm run build:tsc && node tasks",
-        "lint": "eslint -c eslint.config.mjs main.js lib",
+        "lint": "eslint -c eslint.config.mjs",
         "release": "release-script",
         "release-patch": "release-script patch --yes",
         "release-minor": "release-script minor --yes",

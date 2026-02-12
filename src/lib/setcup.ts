@@ -31,7 +31,7 @@ async function pingPath(): Promise<string> {
 // allow ping execution
 export default function allowPing(): Promise<void> {
     return new Promise((resolve, reject) => {
-        pingPath().then(path => {
+        void pingPath().then(path => {
             if (path) {
                 cp.exec(`sudo setcap cap_net_raw+ep ${path}`, (err /*, stdout, stderr */) => {
                     if (err) {
