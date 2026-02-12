@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "news": {
+      "1.8.1": {
+        "en": "Migrated to TypeScript\nUpdated dependencies",
+        "de": "Zu TypeScript migriert\nAktualisierte Abhängigkeiten",
+        "ru": "Иммиграция в TypeScript\nОбновленные зависимости",
+        "pt": "Migrado para TipoScript\nDependências atualizadas",
+        "nl": "Naar typeScript migreren\nBijgewerkte afhankelijkheden",
+        "fr": "Migré vers TypeScript\nDépendances actualisées",
+        "it": "Migrato a TypeScript\nDipendenze aggiornate",
+        "es": "Migrado a TipoScript\nDependencias actualizadas",
+        "pl": "Migrated to TypeScript\nAktualizacja zależności",
+        "uk": "Migrated до TypeScript\nОновлені залежності",
+        "zh-cn": "移动到类型脚本\n更新的依赖关系"
+      },
       "1.7.9": {
         "en": "Small changes the layout of the dynamic messages",
         "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",

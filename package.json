@@ -1,72 +1,72 @@
 {
-    "name": "iobroker.ping",
-    "description": "This adapter cyclic polls configured IPs.",
-    "version": "1.8.0",
-    "author": "bluefox <dogafox@gmail.com>",
-    "contributors": [
-        "bluefox <dogafox@gmail.com>",
-        "Viktor Demydov <vdemidov@gmail.com>",
-        "basti4557 <sebastian@vindicators.de>"
-    ],
-    "homepage": "https://github.com/ioBroker/ioBroker.ping",
-    "license": "MIT",
-    "keywords": [
-        "ioBroker",
-        "ping",
-        "home automation"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ioBroker/ioBroker.ping"
-    },
-    "engines": {
-        "node": ">= 18"
-    },
-    "optionalDependencies": {
-        "@network-utils/arp-lookup": "^2.1.0"
-    },
-    "dependencies": {
-        "@iobroker/adapter-core": "~3.3.2",
-        "@network-utils/vendor-lookup": "^1.0.12",
-        "ip": "^2.0.1"
-    },
-    "devDependencies": {
-        "@alcalzone/release-script": "^5.0.0",
-        "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
-        "@alcalzone/release-script-plugin-license": "^4.0.0",
-        "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
-        "@iobroker/adapter-dev": "^1.5.0",
-        "@iobroker/build-tools": "^3.0.1",
-        "@iobroker/eslint-config": "^2.2.0",
-        "@iobroker/legacy-testing": "^2.0.2",
-        "@iobroker/testing": "^5.2.2",
-        "colorette": "^2.0.20",
-        "puppeteer": "^24.37.2"
-    },
-    "bugs": {
-        "url": "https://github.com/ioBroker/ioBroker.ping/issues"
-    },
-    "main": "main.js",
-    "files": [
-        "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
-        "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
-        "build/",
-        "io-package.json",
-        "LICENSE"
-    ],
-    "scripts": {
-        "test:integration": "mocha --exit",
-        "test:package": "mocha test/package.test.js --exit",
-        "test": "npm run test:integration",
-        "build:tsc": "tsc -p tsconfig.build.json",
-        "build": "npm run build:tsc && node tasks",
-        "lint": "eslint -c eslint.config.mjs",
-        "release": "release-script",
-        "release-patch": "release-script patch --yes",
-        "release-minor": "release-script minor --yes",
-        "release-major": "release-script major --yes",
-        "translate": "translate-adapter",
-        "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
-        "npm": "npm i && cd src-admin && npm i -f"
-    }
+  "name": "iobroker.ping",
+  "description": "This adapter cyclic polls configured IPs.",
+  "version": "1.8.1",
+  "author": "bluefox <dogafox@gmail.com>",
+  "contributors": [
+    "bluefox <dogafox@gmail.com>",
+    "Viktor Demydov <vdemidov@gmail.com>",
+    "basti4557 <sebastian@vindicators.de>"
+  ],
+  "homepage": "https://github.com/ioBroker/ioBroker.ping",
+  "license": "MIT",
+  "keywords": [
+    "ioBroker",
+    "ping",
+    "home automation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ioBroker/ioBroker.ping"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "optionalDependencies": {
+    "@network-utils/arp-lookup": "^2.1.0"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "~3.3.2",
+    "@network-utils/vendor-lookup": "^1.0.12",
+    "ip": "^2.0.1"
+  },
+  "devDependencies": {
+    "@alcalzone/release-script": "^5.0.0",
+    "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
+    "@alcalzone/release-script-plugin-license": "^4.0.0",
+    "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
+    "@iobroker/adapter-dev": "^1.5.0",
+    "@iobroker/build-tools": "^3.0.1",
+    "@iobroker/eslint-config": "^2.2.0",
+    "@iobroker/legacy-testing": "^2.0.2",
+    "@iobroker/testing": "^5.2.2",
+    "colorette": "^2.0.20",
+    "puppeteer": "^24.37.2"
+  },
+  "bugs": {
+    "url": "https://github.com/ioBroker/ioBroker.ping/issues"
+  },
+  "main": "main.js",
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "build/",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test:integration": "mocha --exit",
+    "test:package": "mocha test/package.test.js --exit",
+    "test": "npm run test:integration",
+    "build:tsc": "tsc -p tsconfig.build.json",
+    "build": "npm run build:tsc && node tasks",
+    "lint": "eslint -c eslint.config.mjs",
+    "release": "release-script",
+    "release-patch": "release-script patch --yes",
+    "release-minor": "release-script minor --yes",
+    "release-major": "release-script major --yes",
+    "translate": "translate-adapter",
+    "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
+    "npm": "npm i && cd src-admin && npm i -f"
+  }
 }

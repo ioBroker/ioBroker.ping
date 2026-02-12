@@ -62,7 +62,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.8.1 (2026-02-12)
 - (@GermanBluefox) Migrated to TypeScript
 - (@GermanBluefox) Updated dependencies
 
