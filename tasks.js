@@ -17,6 +17,10 @@ function copyAllAdminFiles() {
     copyFiles(['src-admin/src/i18n/*.json'], 'admin/custom/i18n');
 }
 
+function copyI18nFiles() {
+    copyFiles(['src/lib/i18n/*.json'], 'build/lib/i18n/');
+}
+
 if (process.argv.includes('--admin-0-clean')) {
     cleanAdmin();
 } else if (process.argv.includes('--admin-1-npm')) {
@@ -30,5 +34,6 @@ if (process.argv.includes('--admin-0-clean')) {
     npmInstall(`${__dirname}/src-admin/`)
         .then(() => buildAdmin())
         .then(() => copyAllAdminFiles())
+        .then(() => copyI18nFiles())
         .catch(e => console.error(e));
 }
