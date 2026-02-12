@@ -16,7 +16,7 @@ const { Adapter, I18n } = require('@iobroker/adapter-core'); // Get common adapt
 const ip = require('ip');
 const ping = require('./lib/ping');
 const allowPing = require('./lib/setcup');
-const adapterName = require('./package.json').name.split('.').pop();
+const adapterName = require('../package.json').name.split('.').pop();
 let adapter;
 
 let arp;
@@ -95,7 +95,7 @@ async function browse(iface) {
 
     if (!iface || typeof iface === 'string') {
         if (!iface) {
-            // read last selected interface
+            // read the last selected interface
             const iState = await adapter.getStateAsync('browse.interface');
             // if nothing selected, nothing to do
             if (!iState || !iState.val) {
@@ -483,7 +483,7 @@ function pingSingleDevice(task, retryCounter) {
 
                 if (!result.alive && retryCounter < adapter.config.numberOfRetries) {
                     /* When the ping failed, it also could be a device problem.
-                       Some Android Handys sometimes don't answer to a ping,
+                       Some Android phones sometimes don't answer to a ping,
                        but do in fact answer for the following ping.
                        So we are giving the device some more attempts until it finally fails.
                      */
@@ -928,7 +928,7 @@ async function main(adapter) {
     await pingAll(pingTaskList, true);
 }
 
-// If started as allInOne/compact mode => return function to create instance
+// If started as allInOne/compact mode => return function to create an instance
 if (module && module.parent) {
     module.exports = startAdapter;
 } else {

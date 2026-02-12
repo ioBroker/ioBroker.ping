@@ -10,23 +10,22 @@
     "devDependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
-        "@iobroker/adapter-react-v5": "7.7.3",
-        "@iobroker/json-config": "7.7.3",
-        "@module-federation/runtime": "^0.10.0",
-        "@module-federation/vite": "^1.2.7",
+        "@iobroker/adapter-react-v5": "8.0.21",
+        "@iobroker/json-config": "8.1.9",
+        "@module-federation/runtime": "^2.0.1",
+        "@module-federation/vite": "^1.11.0",
         "@mui/icons-material": "^6.5.0",
         "@mui/material": "^6.5.0",
         "@originjs/vite-plugin-federation": "^1.4.1",
-        "@types/react": "^18.3.25",
+        "@types/react": "^18.3.28",
         "@types/react-dom": "^18.3.7",
-        "@vitejs/plugin-react": "^5.0.4",
+        "@vitejs/plugin-react": "^5.1.4",
         "ip": "^2.0.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "vite": "7.1.11",
+        "vite": "7.1.7",
         "vite-plugin-commonjs": "^0.10.4",
-        "vite-plugin-svgr": "^4.5.0",
-        "vite-tsconfig-paths": "^5.1.4"
+        "vite-tsconfig-paths": "^6.1.1"
     },
     "browserslist": {
         "production": [
