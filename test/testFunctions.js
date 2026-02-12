@@ -1,8 +1,8 @@
-const expect = require('chai').expect;
 const fs = require('node:fs');
 const setup = require('@iobroker/legacy-testing');
 const guiHelper = require('@iobroker/legacy-testing/guiHelper');
 const adapterName = require('../package.json').name.split('.').pop();
+const assert = require('node:assert');
 
 let objects = null;
 let states  = null;
@@ -12,16 +12,18 @@ const hostname = require('node:os').hostname();
 let gPage;
 
 function checkConnectionOfAdapter(cb, counter) {
-    counter = counter || 0;
+    counter ||= 0;
     if (counter > 20) {
-        cb && cb('Cannot check connection');
+        cb?.('Cannot check connection');
         return;
     }
 
     states.getState(`system.adapter.${adapterName}.0.alive`, (err, state) => {
-        if (err) console.error(err);
-        if (state && state.val) {
-            cb && cb();
+        if (err) {
+            console.error(err);
+        }
+        if (state?.val) {
+            cb?.();
         } else {
             setTimeout(() => checkConnectionOfAdapter(cb, counter + 1), 1000);
         }
@@ -57,7 +59,7 @@ function checkIsAdminStarted(states, cb, counter) {
         console.log(`[${counter}]Check if admin is started "system.adapter.admin.0.alive" = ${JSON.stringify(state)}`);
         err && console.error(err);
         if (state?.val) {
-            cb && cb();
+            cb?.();
         } else {
             setTimeout(() => checkIsAdminStarted(states, cb, counter - 1), 500);
         }
@@ -140,14 +142,14 @@ describe('Test PING', function () {
         setTimeout(() => {
             // if object exists
             objects.getObject(`${adapterName}.0.${hostname}.192_168_168_168`, (err, obj) => {
-                expect(err).to.be.not.ok;
-                expect(obj).to.be.ok;
+                assert(!err);
+                assert(obj);
                 objects.getObject(`${adapterName}.0.${hostname}.google_com`, (err, obj) => {
-                    expect(err).to.be.not.ok;
-                    expect(obj).to.be.ok;
+                    assert(!err);
+                    assert(obj);
                     objects.getObject(`${adapterName}.0.${hostname}.127_0_0_1`, (err, obj) => {
-                        expect(err).to.be.not.ok;
-                        expect(obj).to.be.ok;
+                        assert(!err);
+                        assert(obj);
                         setTimeout(done, 5000);
                     });
                 });
@@ -159,19 +161,19 @@ describe('Test PING', function () {
         const sID = `${adapterName}.0.${hostname}.127_0_0_1`;
 
         states.getState(sID, (err, state) => {
-            expect(err).to.be.not.ok;
+            assert(!err);
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
-                    console.log(id + ': ' + JSON.stringify(state));
+                    console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        expect(state.val).to.be.true;
+                        assert(state.val === true);
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                expect(state.val).to.be.true;
+                assert(state.val === true);
                 done();
             }
         });
@@ -186,19 +188,19 @@ describe('Test PING', function () {
         }
 
         states.getState(sID, (err, state) => {
-            expect(err).to.be.not.ok;
+            assert(!err);
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
                     console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        expect(state.val).to.be.true;
+                        assert(state.val === true);
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                expect(state.val).to.be.true;
+                assert(state.val === true);
                 done();
             }
         });
@@ -213,19 +215,19 @@ describe('Test PING', function () {
         }
 
         states.getState(sID, (err, state) => {
-            expect(err).to.be.not.ok;
+            assert(!err);
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
                     console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        expect(state.val).to.be.false;
+                        assert(state.val === false);
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                expect(state.val).to.be.false;
+                assert(state.val === false);
                 done();
             }
         });

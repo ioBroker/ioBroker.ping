@@ -3,19 +3,6 @@
     "name": "ping",
     "version": "1.8.0",
     "news": {
-      "1.8.0": {
-        "en": "Removed admin 4,5 support\nUpdated dependencies\nAdded possibility to probe TCP ports",
-        "de": "Admin 4,5-Unterstützung entfernt\nAktualisierte Abhängigkeiten\nMöglichkeit zur Sonde von TCP-Ports",
-        "ru": "Снята поддержка admin 4,5\nОбновленные зависимости\nДобавлена возможность зондирования портов TCP",
-        "pt": "Suporte ao administrador removido 4,5\nDependências atualizadas\nAdicionada possibilidade de sondar portas TCP",
-        "nl": "Admin 4,5-ondersteuning verwijderd\nBijgewerkte afhankelijkheden\nToegevoegde mogelijkheid om TCP-poorten te onderzoeken",
-        "fr": "Supprimé le support d'administration 4,5\nDépendances actualisées\nPossibilité supplémentaire de sonder les ports TCP",
-        "it": "Supporto admin 4,5 rimosso\nDipendenze aggiornate\nAggiunta possibilità di sonda porte TCP",
-        "es": "Administración eliminado 4,5 soporte\nDependencias actualizadas\nAñadido posibilidad de sonda puertos TCP",
-        "pl": "Usunięty admin 4,5 wsparcie\nAktualizacja zależności\nDodano możliwość sondowania portów TCP",
-        "uk": "Видалити адмін 4,5 підтримки\nОновлені залежності\nДодана можливість зондувати TCP порти",
-        "zh-cn": "删除管理员 4,5 支持\n更新的依赖关系\n添加探测 TCP 端口的可能性"
-      },
       "1.7.9": {
         "en": "Small changes the layout of the dynamic messages",
         "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",

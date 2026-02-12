@@ -1,6 +1,7 @@
-const expect = require('chai').expect;
-const ping = require('../lib/ping');
+const assert = require('node:assert');
 const http = require('node:http');
+
+const ping = require('../build/lib/ping');
 
 describe('Test TCP Port Monitoring', function () {
     let server;
@@ -32,37 +33,37 @@ describe('Test TCP Port Monitoring', function () {
 
     it('Test parseAddress with port', function (done) {
         const result = ping.parseAddress('192.168.1.1:80');
-        expect(result).to.be.ok;
-        expect(result.host).to.equal('192.168.1.1');
-        expect(result.port).to.equal(80);
+        assert(!!result);
+        assert(result.host === '192.168.1.1');
+        assert(result.port === 80);
         done();
     });
 
     it('Test parseAddress with hostname and port', function (done) {
         const result = ping.parseAddress('google.com:443');
-        expect(result).to.be.ok;
-        expect(result.host).to.equal('google.com');
-        expect(result.port).to.equal(443);
+        assert(!!result);
+        assert(result.host === 'google.com');
+        assert(result.port === 443);
         done();
     });
 
     it('Test parseAddress without port', function (done) {
         const result = ping.parseAddress('192.168.1.1');
-        expect(result).to.be.ok;
-        expect(result.host).to.equal('192.168.1.1');
-        expect(result.port).to.equal(null);
+        assert(!!result);
+        assert(result.host === '192.168.1.1');
+        assert(result.port === null);
         done();
     });
 
     it('Test TCP port check - open port', function (done) {
         this.timeout(5000);
         ping.probe(`127.0.0.1:${serverPort}`, { log: () => {} }, (err, result) => {
-            expect(err).to.be.not.ok;
-            expect(result).to.be.ok;
-            expect(result.alive).to.be.true;
-            expect(result.host).to.equal(`127.0.0.1:${serverPort}`);
-            expect(result.ms).to.be.a('number');
-            expect(result.ms).to.be.at.least(0);
+            assert(!err);
+            assert(result);
+            assert(result.alive === true);
+            assert(result.host === `127.0.0.1:${serverPort}`);
+            assert(typeof result.ms === 'number');
+            assert(result.ms >= 0);
             done();
         });
     });
@@ -71,11 +72,11 @@ describe('Test TCP Port Monitoring', function () {
         this.timeout(5000);
         const closedPort = serverPort + 1000;
         ping.probe(`127.0.0.1:${closedPort}`, { log: () => {}, timeout: 1 }, (err, result) => {
-            expect(err).to.be.not.ok;
-            expect(result).to.be.ok;
-            expect(result.alive).to.be.false;
-            expect(result.host).to.equal(`127.0.0.1:${closedPort}`);
-            expect(result.ms).to.equal(null);
+            assert(!err);
+            assert(!!result);
+            assert(result.alive === false);
+            assert(result.host === `127.0.0.1:${closedPort}`);
+            assert(result.ms === null);
             done();
         });
     });
@@ -83,10 +84,10 @@ describe('Test TCP Port Monitoring', function () {
     it('Test regular ping still works', function (done) {
         this.timeout(5000);
         ping.probe('127.0.0.1', { log: () => {}, minReply: 1 }, (err, result) => {
-            expect(err).to.be.not.ok;
-            expect(result).to.be.ok;
-            expect(result.alive).to.be.true;
-            expect(result.host).to.equal('127.0.0.1');
+            assert(!err);
+            assert(!!result);
+            assert(result.alive === true);
+            assert(result.host === '127.0.0.1');
             done();
         });
     });
