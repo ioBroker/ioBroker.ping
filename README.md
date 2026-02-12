@@ -88,7 +88,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 ### 1.7.5 (2024-09-18)
 
-- (@GermanBluefox) Corrected small error about range length
+- (@GermanBluefox) Corrected a small error about range length
 
 ### 1.7.4 (2024-09-17)
 
@@ -247,7 +247,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2025, @GermanBluefox <dogafox@gmail.com>
+Copyright (c) 2014-2026, @GermanBluefox <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
