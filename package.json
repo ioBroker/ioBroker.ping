@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.ping/issues"
   },
-  "main": "main.js",
+  "main": "build/main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",

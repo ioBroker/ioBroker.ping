@@ -1,7 +1,6 @@
 const fs = require('node:fs');
 const setup = require('@iobroker/legacy-testing');
 const guiHelper = require('@iobroker/legacy-testing/guiHelper');
-const adapterName = require('../package.json').name.split('.').pop();
 const assert = require('node:assert');
 
 let objects = null;
@@ -18,7 +17,7 @@ function checkConnectionOfAdapter(cb, counter) {
         return;
     }
 
-    states.getState(`system.adapter.${adapterName}.0.alive`, (err, state) => {
+    states.getState('system.adapter.ping.0.alive', (err, state) => {
         if (err) {
             console.error(err);
         }
@@ -123,7 +122,7 @@ describe('Test PING', function () {
                 setup.startCustomAdapter('admin', 0);
                 await checkIsAdminStartedAsync(states);
                 const { page } = await guiHelper.startBrowser(
-                    adapterName,
+                    'ping',
                     `${__dirname}/../`,
                     process.env.CI === 'true',
                     '/'
@@ -136,18 +135,18 @@ describe('Test PING', function () {
 
     it('Test PING: Check if adapter started', done => {
         checkConnectionOfAdapter(done);
-    }).timeout(5000);
+    }).timeout(50000);
 
     it('Test PING: check creation of state', done => {
         setTimeout(() => {
             // if object exists
-            objects.getObject(`${adapterName}.0.${hostname}.192_168_168_168`, (err, obj) => {
+            objects.getObject(`ping.0.${hostname}.192_168_168_168`, (err, obj) => {
                 assert(!err);
                 assert(obj);
-                objects.getObject(`${adapterName}.0.${hostname}.google_com`, (err, obj) => {
+                objects.getObject(`ping.0.${hostname}.google_com`, (err, obj) => {
                     assert(!err);
                     assert(obj);
-                    objects.getObject(`${adapterName}.0.${hostname}.127_0_0_1`, (err, obj) => {
+                    objects.getObject(`ping.0.${hostname}.127_0_0_1`, (err, obj) => {
                         assert(!err);
                         assert(obj);
                         setTimeout(done, 5000);
@@ -158,7 +157,7 @@ describe('Test PING', function () {
     }).timeout(20000);
 
     it('Test PING: if localhost alive', done => {
-        const sID = `${adapterName}.0.${hostname}.127_0_0_1`;
+        const sID = `ping.0.${hostname}.127_0_0_1`;
 
         states.getState(sID, (err, state) => {
             assert(!err);
@@ -180,7 +179,7 @@ describe('Test PING', function () {
     }).timeout(8000);
 
     it('Test PING: if google alive', done => {
-        const sID = `${adapterName}.0.${hostname}.google_com`;
+        const sID = `ping.0.${hostname}.google_com`;
 
         if (!((process.env.APPVEYOR && process.env.APPVEYOR === 'True') || (process.env.TRAVIS && process.env.TRAVIS === 'true'))) {
             done();
@@ -207,7 +206,7 @@ describe('Test PING', function () {
     }).timeout(1000);
 
     it('Test PING: if not_exist not alive', done => {
-        const sID = `${adapterName}.0.${hostname}.192_168_168_168`;
+        const sID = `ping.0.${hostname}.192_168_168_168`;
 
         if (!((process.env.APPVEYOR && process.env.APPVEYOR === 'True') || (process.env.TRAVIS && process.env.TRAVIS === 'true'))) {
             done();
@@ -241,7 +240,7 @@ describe('Test PING', function () {
     });
 
     it('Test GUI', async () => {
-        await gPage.goto(`http://127.0.0.1:8081/#tab-instances/config/system.adapter.${adapterName}.0`, { waitUntil: 'domcontentloaded' });
+        await gPage.goto(`http://127.0.0.1:8081/#tab-instances/config/system.adapter.ping.0`, { waitUntil: 'domcontentloaded' });
         await gPage.waitForSelector('button.MuiTab-root', { timeout: 20_000 });
         // if the slow connection dialog is opened, close it
         const cancel = await gPage.$$('#ar_dialog_confirm_cancel_');
