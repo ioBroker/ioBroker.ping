@@ -16,11 +16,11 @@ Pings specified IP addresses in a defined interval and monitors the results.
 
 You can also monitor TCP ports by specifying the port number after the IP address with a colon (e.g., `192.168.1.1:80` or `google.com:443`). This will check if the port is reachable instead of using ICMP ping.
 
-**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
+**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information on how to disable the error reporting, see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## Ping from javascript adapter
 
-You can ping any IP address from the JavaScript adapter with command:
+You can ping any IP address from the JavaScript adapter with the command:
 
 ```js
 sendTo('ping.0', 'ping', '192.168.1.1', res => {
@@ -155,7 +155,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 ### 1.4.6 (2020-04-29)
 
-- (Apollon77) Make sure the adapter does not crash if ping command cannot be executed (Sentry)
+- (Apollon77) Make sure the adapter does not crash if the ping command cannot be executed (Sentry)
 - (Apollon77) Catch error when `ping.probe` could not be started (Sentry IOBROKER-PING-2)
 
 ### 1.4.5 (2020-04-23)
@@ -226,7 +226,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 ### 0.1.0 (2014-11-26)
 
-- (@GermanBluefox) Used ping npm module instead of static one
+- (@GermanBluefox) Used ping npm module instead of a static one
 
 ### 0.0.5 (2014-11-21)
 
@@ -238,7 +238,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
 ### 0.0.3 (2014-11-03)
 
-- (@GermanBluefox) fix ping node (do not forget to remove package from git when the npm gets the update)
+- (@GermanBluefox) fix ping node (do not forget to remove the package from git when the npm gets the update)
 
 ### 0.0.1 (2014-11-02)
 
