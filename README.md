@@ -62,7 +62,7 @@ The adapter will check if the TCP port is reachable instead of using ICMP ping.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.0.0 (2026-02-26)
 - (@GermanBluefox) Migrated to TypeScript
 - (@GermanBluefox) Updated dependencies
 - (@GermanBluefox) A Minimal Node.js version is now 20

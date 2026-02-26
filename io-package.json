@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "1.8.1",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "Migrated to TypeScript\nUpdated dependencies\nA Minimal Node.js version is now 20",
+        "de": "Zu TypeScript migriert\nAktualisierte Abhängigkeiten\nEine Minimal Node.js-Version ist jetzt 20",
+        "ru": "Иммиграция в TypeScript\nОбновленные зависимости\nМинимальная версия Node.js теперь 20",
+        "pt": "Migrado para TipoScript\nDependências atualizadas\nUma versão Minimal Node.js é agora 20",
+        "nl": "Naar typeScript migreren\nBijgewerkte afhankelijkheden\nEen minimale Node.js versie is nu 20",
+        "fr": "Migré vers TypeScript\nDépendances actualisées\nUne version Minimal Node.js est maintenant 20",
+        "it": "Migrato a TypeScript\nDipendenze aggiornate\nUna versione Minimal Node.js è ora 20",
+        "es": "Migrado a TipoScript\nDependencias actualizadas\nUna versión Minimal Node.js es ahora 20",
+        "pl": "Migrated to TypeScript\nAktualizacja zależności\nMinimal Node.js wersja jest teraz 20",
+        "uk": "Migrated до TypeScript\nОновлені залежності\nВерсія Minimal Node.js тепер 20",
+        "zh-cn": "移动到类型脚本\n更新的依赖关系\n最小节点Js版本现在是20"
+      },
       "1.7.9": {
         "en": "Small changes the layout of the dynamic messages",
         "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",
