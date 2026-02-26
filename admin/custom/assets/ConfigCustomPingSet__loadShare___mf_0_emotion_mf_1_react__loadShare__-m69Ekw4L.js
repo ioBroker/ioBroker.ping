@@ -1,1 +1,0 @@
-import{C as o}from"./ConfigCustomPingSet__mf_v__runtimeInit__mf_v__-D0l9imiu.js";const{initPromise:t}=o,_=t.then(e=>e.loadShare("@emotion/react",{customShareInfo:{shareConfig:{singleton:!0,strictVersion:!1,requiredVersion:"*"}}})),r=await _.then(e=>e());var i=r;export{i as C};

@@ -20,7 +20,7 @@
     "url": "https://github.com/ioBroker/ioBroker.ping"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">=20"
   },
   "optionalDependencies": {
     "@network-utils/arp-lookup": "^2.1.0"
