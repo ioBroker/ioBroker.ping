@@ -12,10 +12,11 @@ const config = {
             name: 'ConfigCustomPingSet',
             filename: 'customComponents.js',
             exposes: {
-                './Components': './src/Components.jsx',
+                './Components': './src/Components.tsx',
             },
             remotes: {},
             shared: moduleFederationShared(pack),
+            dts: false,
         }),
         react(),
         vitetsConfigPaths(),
