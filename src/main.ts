@@ -2,7 +2,7 @@
  *
  *      ioBroker PING Adapter
  *
- *      (c) 2014-2025 bluefox <dogafox@gmail.com>
+ *      (c) 2014-2026 bluefox <dogafox@gmail.com>
  *
  *      MIT License
  *
@@ -12,6 +12,7 @@ import * as ip from 'ip';
 
 import * as ping from './lib/ping';
 import allowPing from './lib/setcup';
+import wakeOnLan, { isMACValid } from './lib/wakeOnLan';
 import type { DeviceConfig, PingAdapterConfig } from './types';
 
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
@@ -43,6 +44,7 @@ interface PingTask {
     stateTime?: string;
     stateRps?: string;
     online?: boolean;
+    mac?: string;
 }
 
 interface PreparedObjects {
@@ -76,6 +78,7 @@ class PingAdapter extends Adapter {
     private detectedIPs: DetectedIP[] = [];
     private cyclicPingTimeout: ReturnType<typeof setTimeout> | null = null;
     private temporaryAddressesToAdd: TemporaryAddress[] = [];
+    private stateToTask: Map<string, PingTask> = new Map();
 
     public constructor(options: Partial<AdapterOptions> = {}) {
         super({
@@ -100,9 +103,12 @@ class PingAdapter extends Adapter {
                 this.isStopping = true;
             },
             stateChange: (id: string, state: ioBroker.State | null | undefined): void => {
-                if (state && !state.val && !state.ack && id.endsWith('.browse.running')) {
+                if (!state || state.ack) {
+                    return;
+                }
+                if (!state.val && id.endsWith('.browse.running')) {
                     this.stopBrowsing = true;
-                } else if (state && state.val && !state.ack && id.endsWith('.browse.result')) {
+                } else if (state.val && id.endsWith('.browse.result')) {
                     // read ignore states of IP addresses
                     try {
                         const ips: DetectedIP[] = JSON.parse(state.val as string);
@@ -116,6 +122,18 @@ class PingAdapter extends Adapter {
                         });
                     } catch (e) {
                         this.log.warn(`Cannot parse browse result: ${e}`);
+                    }
+                } else {
+                    const task = this.stateToTask.get(id);
+                    if (task) {
+                        if (state.val === false) {
+                            this.log.debug(`Immediate ping requested for ${task.host}`);
+                            this.pingSingleDevice(task, 0).catch(e => this.log.error(`Cannot ping ${task.host}: ${e}`));
+                        } else if (state.val === true) {
+                            this.sendWakeOnLan(task).catch(e =>
+                                this.log.error(`Cannot send WoL to ${task.host}: ${e}`),
+                            );
+                        }
                     }
                 }
             },
@@ -402,6 +420,20 @@ class PingAdapter extends Adapter {
                 break;
             }
 
+            case 'wakeOnLan': {
+                const msg = obj.message as string | { mac: string; ip?: string } | undefined;
+                const mac = typeof msg === 'string' ? msg : msg?.mac;
+                const ip = typeof msg === 'object' ? msg?.ip : undefined;
+                if (!mac || !isMACValid(mac)) {
+                    this.sendTo(obj.from, obj.command, { error: `Invalid MAC address: ${mac}` }, obj.callback);
+                    break;
+                }
+                this.log.info(`Sending Wake-on-LAN to MAC: ${mac}${ip ? ` IP: ${ip}` : ''}`);
+                wakeOnLan(mac, { port: 9, ip });
+                this.sendTo(obj.from, obj.command, { result: { mac, ip } }, obj.callback);
+                break;
+            }
+
             case 'ping:settings:browse': {
                 const intr = obj.message;
                 if (obj.callback) {
@@ -551,6 +583,12 @@ class PingAdapter extends Adapter {
 
     async setDeviceStates(task: PingTask, result: ping.PingResult): Promise<void> {
         task.online = result.alive;
+        if (result.alive && !task.mac && this.arpToMac) {
+            const mac = await this.arpToMac(task.host);
+            if (mac) {
+                task.mac = mac;
+            }
+        }
         if (task.extendedInfo) {
             await this.setStateAsync(task.stateAlive, { val: result.alive, ack: true });
             await this.setStateAsync(task.stateTime!, {
@@ -566,6 +604,46 @@ class PingAdapter extends Adapter {
         } else {
             await this.setStateAsync(task.stateAlive, { val: result.alive, ack: true });
         }
+    }
+
+    async sendWakeOnLan(task: PingTask): Promise<void> {
+        let mac = task.mac;
+
+        if (!mac) {
+            const detected = this.detectedIPs.find(d => d.ip === task.host);
+            if (detected?.mac) {
+                mac = detected.mac;
+                task.mac = mac;
+            }
+        }
+
+        if (!mac) {
+            if (!this.arpToMac) {
+                try {
+                    const arpModule = await import('@network-utils/arp-lookup');
+                    this.arpToMac = (arpModule.default || arpModule).toMAC;
+                } catch {
+                    // optional dependency not installed
+                }
+            }
+            if (this.arpToMac) {
+                const resolved = await this.arpToMac(task.host);
+                if (resolved) {
+                    mac = resolved;
+                    task.mac = mac;
+                }
+            }
+        }
+
+        if (!mac) {
+            this.log.warn(
+                `Cannot send Wake-on-LAN to ${task.host}: MAC address unknown. Browse network first or configure MAC in device settings.`,
+            );
+            return;
+        }
+
+        this.log.info(`Sending Wake-on-LAN to ${task.host} (MAC: ${mac})`);
+        wakeOnLan(mac, { port: 9 });
     }
 
     buildId(id: { device?: string; channel?: string; state?: string }): string {
@@ -738,7 +816,7 @@ class PingAdapter extends Adapter {
                             def: false,
                             type: 'boolean',
                             read: true,
-                            write: false,
+                            write: true,
                             role: 'indicator.reachable',
                             desc: `Ping state of ${host}`,
                         },
@@ -801,7 +879,7 @@ class PingAdapter extends Adapter {
                         def: false,
                         type: 'boolean',
                         read: true,
-                        write: false,
+                        write: true,
                         role: 'indicator.reachable',
                         desc: `Ping state of ${host}`,
                     },
@@ -915,6 +993,11 @@ class PingAdapter extends Adapter {
         const preparedObjects = this.prepareObjectsByConfig();
         this.log.debug('Get existing objects');
 
+        this.stateToTask.clear();
+        for (const task of preparedObjects.pingTaskList) {
+            this.stateToTask.set(task.stateAlive, task);
+        }
+
         const objects: Record<string, ioBroker.Object | undefined> = (await this.getAdapterObjectsAsync()) as Record<
             string,
             ioBroker.Object | undefined
@@ -955,8 +1038,7 @@ class PingAdapter extends Adapter {
             }
         }
 
-        this.subscribeStates('browse.running');
-        this.subscribeStates('browse.result');
+        this.subscribeStates('*');
 
         this.config.interval = parseInt(String(this.config.interval), 10);
 

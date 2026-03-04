@@ -56,12 +56,57 @@ From version 1.8.0 you can also check TCP ports by specifying the port number af
 
 The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
+## Wake-on-LAN from javascript adapter
+
+You can wake up any device by sending a Wake-on-LAN magic packet using its MAC address:
+
+```js
+// Send to broadcast (255.255.255.255)
+sendTo('ping.0', 'wakeOnLan', '01:23:45:67:89:AB', res => {
+    console.log('Result: ' + JSON.stringify(res)); // Result: {"result": {"mac": "01:23:45:67:89:AB"}}
+});
+
+// Send to a specific IP (e.g. directed broadcast)
+sendTo('ping.0', 'wakeOnLan', { mac: '01:23:45:67:89:AB', ip: '192.168.1.255' }, res => {
+    console.log('Result: ' + JSON.stringify(res)); // Result: {"result": {"mac": "01:23:45:67:89:AB", "ip": "192.168.1.255"}}
+});
+```
+
+## Writing to alive states
+
+Every device state is writable and reacts to unacknowledged writes:
+
+- **Write `false`** — triggers an immediate ping of that device, outside of the normal polling interval.
+- **Write `true`** — sends a [Wake-on-LAN](https://en.wikipedia.org/wiki/Wake-on-LAN) magic packet to wake the device up.
+
+### Wake-on-LAN
+
+For Wake-on-LAN to work, the adapter needs to know the device's MAC address. It is resolved in this order:
+
+1. **MAC discovered by network browse** — if the device was found during a network browse, its MAC address is cached automatically.
+2. **Live ARP lookup** — if the above is not available, the adapter tries to resolve the MAC via ARP at the moment of the write.
+
+If the MAC address cannot be determined, a warning is logged and the packet is not sent.
+
+Example from the JavaScript adapter:
+
+```js
+// Trigger immediate ping
+setState('ping.0.myHost.192_168_1_1', false);
+
+// Send Wake-on-LAN magic packet
+setState('ping.0.myHost.192_168_1_1', true);
+```
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Implemented wake-on-lan functionality
+
 ### 2.0.0 (2026-02-26)
 - (@GermanBluefox) Migrated to TypeScript
 - (@GermanBluefox) Updated dependencies
