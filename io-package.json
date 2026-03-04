@@ -1,162 +1,168 @@
 {
   "common": {
-      "name": "ping",
-      "version": "2.0.0",
-      "news": {
-          "2.0.0": {
-              "en": "Migrated to TypeScript\nUpdated dependencies\nA Minimal Node.js version is now 20",
-              "de": "Zu TypeScript migriert\nAktualisierte Abhängigkeiten\nEine Minimal Node.js-Version ist jetzt 20",
-              "ru": "Иммиграция в TypeScript\nОбновленные зависимости\nМинимальная версия Node.js теперь 20",
-              "pt": "Migrado para TipoScript\nDependências atualizadas\nUma versão Minimal Node.js é agora 20",
-              "nl": "Naar typeScript migreren\nBijgewerkte afhankelijkheden\nEen minimale Node.js versie is nu 20",
-              "fr": "Migré vers TypeScript\nDépendances actualisées\nUne version Minimal Node.js est maintenant 20",
-              "it": "Migrato a TypeScript\nDipendenze aggiornate\nUna versione Minimal Node.js è ora 20",
-              "es": "Migrado a TipoScript\nDependencias actualizadas\nUna versión Minimal Node.js es ahora 20",
-              "pl": "Migrated to TypeScript\nAktualizacja zależności\nMinimal Node.js wersja jest teraz 20",
-              "uk": "Migrated до TypeScript\nОновлені залежності\nВерсія Minimal Node.js тепер 20",
-              "zh-cn": "移动到类型脚本\n更新的依赖关系\n最小节点Js版本现在是20"
-          },
-          "1.7.9": {
-              "en": "Small changes the layout of the dynamic messages",
-              "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",
-              "ru": "Небольшие изменения макета динамических сообщений",
-              "pt": "Pequenas mudanças no layout das mensagens dinâmicas",
-              "nl": "Kleine wijzigingen in de indeling van de dynamische berichten",
-              "fr": "Petits changements dans la disposition des messages dynamiques",
-              "it": "Piccoli cambiamenti il layout dei messaggi dinamici",
-              "es": "Pequeños cambios en el diseño de los mensajes dinámicos",
-              "pl": "Małe zmiany układu komunikatów dynamicznych",
-              "uk": "Невеликі зміни макета динамічних повідомлень",
-              "zh-cn": "小改动动态消息的布局"
-          },
-          "1.7.8": {
-              "en": "Used `iobroker/eslint-config`\nFixed some errors with `setcup`\nCorrected admin notification",
-              "de": "Gebraucht `iobroker/eslintconfig `\nEinige Fehler mit `setcup behoben `\nKorrigierte Admin-Benachrichtigung",
-              "ru": "Использованный `iobroker/eslint-config \"\nИсправлены некоторые ошибки с `setcup \"\nИсправленное уведомление администратора",
-              "pt": "Usado `iobroker/eslint-config \"\nCorrigido alguns erros com `setcup \"\nNotificação administrativa correta",
-              "nl": "Gebruikte iobroker/eslint-config Wat\nFoutjes opgelost met de setcup Wat\nGecorrigeerde kennisgeving van de beheerder",
-              "fr": "Utilisé `iobroker/eslint-config \"\nCorrection de certaines erreurs avec `setcup \"\nNotification administrative corrigée",
-              "it": "Usato `iobroker/eslint-config #\nRisolto alcuni errori con `setcup #\nNotifica di amministrazione corretta",
-              "es": "Usado `iobroker/eslint-config `\nSe han corregido algunos errores con `setcup `\nNotificación de administración corregida",
-              "pl": "Używany 'iobroker / eslint- config'\nNaprawiono kilka błędów z 'setcup'\nPoprawione powiadomienie administratora",
-              "uk": "`iobroker/eslint-config й\nВиправлено помилки з `setcup й\nВиправлено повідомлення адміністратора",
-              "zh-cn": "已使用的“ io 经纪人/ slint- 配置” `\n用“ 设置” 修正了一些错误 `\n更正的管理员通知"
-          },
-          "1.7.6": {
-              "en": "Corrected notification message",
-              "de": "Korrigierte Meldung",
-              "ru": "Исправленное уведомление",
-              "pt": "Mensagem de notificação corrigida",
-              "nl": "Gecorrigeerde melding",
-              "fr": "Message de notification corrigé",
-              "it": "Messaggio di notifica corretto",
-              "es": "Mensaje de notificación corregido",
-              "pl": "Poprawiony komunikat notyfikacyjny",
-              "uk": "Виправлено повідомлення про повідомлення",
-              "zh-cn": "更正的通知信息"
-          },
-          "1.7.5": {
-              "en": "Corrected small error about range length",
-              "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
-              "ru": "Исправлена небольшая ошибка относительно длины диапазона",
-              "pt": "Erro pequeno corrigido sobre o comprimento do intervalo",
-              "nl": "Gecorrigeerde kleine fout over bereiklengte",
-              "fr": "Correction d'une petite erreur sur la longueur de la plage",
-              "it": "Corretto piccolo errore sulla lunghezza dell'intervallo",
-              "es": "Corregido pequeño error sobre la longitud del rango",
-              "pl": "Poprawiony mały błąd o długości zakresu",
-              "uk": "Виправлена невелика помилка про довжину діапазону",
-              "zh-cn": "修正范围长度的小错误"
-          },
-          "1.7.4": {
-              "en": "Added support for dynamic notifications\nAdded custom range settings",
-              "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
-              "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
-              "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
-              "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
-              "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
-              "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
-              "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
-              "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
-              "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
-              "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
-          },
-          "1.7.3": {
-              "en": "Added the functionality to poll the address range periodically",
-              "de": "Hinzugefügt die Funktionalität, um den Adressbereich periodisch abzufragen",
-              "ru": "Добавлена функциональность для периодического опроса адресного диапазона",
-              "pt": "Adicionado a funcionalidade para sondar o intervalo de endereços periodicamente",
-              "nl": "De functionaliteit toegevoegd om het adresbereik periodiek te peilen",
-              "fr": "Ajout de la fonctionnalité pour le sondage périodique de la plage d'adresses",
-              "it": "Aggiunta la funzionalità per sondare l'intervallo di indirizzi periodicamente",
-              "es": "Añadido la funcionalidad para encuestar el rango de dirección periódicamente",
-              "pl": "Dodano funkcjonalność badania zakresu adresów okresowo",
-              "uk": "Додано функціональність для опитування адресного діапазону періодично",
-              "zh-cn": "添加功能以定期对地址范围进行投票"
-          }
+    "name": "ping",
+    "version": "2.1.0",
+    "news": {
+      "2.1.0": {
+        "en": "Implemented wake-on-lan functionality\nImplemented pings with hping3 for sleeping devices (e.g. iPhones)",
+        "de": "Ergänzte Wake-on-lan Funktionalität\nImplementierte Pings mit hping3 für Schlafgeräte (z.B. iPhones)",
+        "ru": "Внедренная функция wake-on-lan\nВнедренный пинг с hping3 для спящих устройств (например, iPhone)",
+        "pt": "Funcionalidade de wake-on-lan implementada\nPings implementados com hping3 para dispositivos de sono (por exemplo, iPhones)",
+        "nl": "Implementeerde wake-on-lan-functionaliteit\nGeïmplementeerde pings met hping3 voor slaaptoestellen (bv. iPhones)",
+        "fr": "Mise en œuvre de la fonctionnalité wake-on-lan\nPings mis en œuvre avec hping3 pour les dispositifs de couchage (par exemple iPhones)",
+        "it": "Funzionalità di wake-on-lan implementate\nPings implementato con hping3 per i dispositivi a pelo (ad esempio iPhone)",
+        "es": "Funcionalidad implementada de wake-on-lan\nPings implementados con hping3 para dispositivos para dormir (por ejemplo, iPhones)",
+        "pl": "Wdrożenie funkcji wake- on- lan\nWbudowane pingi z hping3 do urządzeń nasennych (np. iPhone)",
+        "uk": "Реалізовано функціональність\nРеалізовані пінги з hping3 для сплячих пристроїв (наприклад, iPhone)",
+        "zh-cn": "已执行的全天候功能\n用于睡眠装置(如iPhones)的hping3已执行"
       },
-      "titleLang": {
-          "en": "PING",
-          "de": "PING",
-          "ru": "PING",
-          "pt": "PING",
-          "nl": "PING",
-          "fr": "PING",
-          "it": "PING",
-          "es": "PING",
-          "pl": "PING",
-          "uk": "PING",
-          "zh-cn": "PING"
+      "2.0.0": {
+        "en": "Migrated to TypeScript\nUpdated dependencies\nA Minimal Node.js version is now 20",
+        "de": "Zu TypeScript migriert\nAktualisierte Abhängigkeiten\nEine Minimal Node.js-Version ist jetzt 20",
+        "ru": "Иммиграция в TypeScript\nОбновленные зависимости\nМинимальная версия Node.js теперь 20",
+        "pt": "Migrado para TipoScript\nDependências atualizadas\nUma versão Minimal Node.js é agora 20",
+        "nl": "Naar typeScript migreren\nBijgewerkte afhankelijkheden\nEen minimale Node.js versie is nu 20",
+        "fr": "Migré vers TypeScript\nDépendances actualisées\nUne version Minimal Node.js est maintenant 20",
+        "it": "Migrato a TypeScript\nDipendenze aggiornate\nUna versione Minimal Node.js è ora 20",
+        "es": "Migrado a TipoScript\nDependencias actualizadas\nUna versión Minimal Node.js es ahora 20",
+        "pl": "Migrated to TypeScript\nAktualizacja zależności\nMinimal Node.js wersja jest teraz 20",
+        "uk": "Migrated до TypeScript\nОновлені залежності\nВерсія Minimal Node.js тепер 20",
+        "zh-cn": "移动到类型脚本\n更新的依赖关系\n最小节点Js版本现在是20"
       },
-      "desc": {
-          "en": "This adapter cyclic polls configured IPs.",
-          "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
-          "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING",
-          "pt": "As pesquisas cíclicas deste adaptador configuraram IPs.",
-          "nl": "Deze adapter cyclische polls geconfigureerde IP's.",
-          "fr": "Cet adaptateur interroge cycliquement les adresses IP configurées.",
-          "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
-          "es": "Este adaptador sondea cíclicamente las IP configuradas.",
-          "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
-          "uk": "Цей адаптер циклічно опитує налаштовані IP-адреси.",
-          "zh-cn": "该适配器循环轮询配置的IP。"
+      "1.7.9": {
+        "en": "Small changes the layout of the dynamic messages",
+        "de": "Kleine Änderungen des Layouts der dynamischen Nachrichten",
+        "ru": "Небольшие изменения макета динамических сообщений",
+        "pt": "Pequenas mudanças no layout das mensagens dinâmicas",
+        "nl": "Kleine wijzigingen in de indeling van de dynamische berichten",
+        "fr": "Petits changements dans la disposition des messages dynamiques",
+        "it": "Piccoli cambiamenti il layout dei messaggi dinamici",
+        "es": "Pequeños cambios en el diseño de los mensajes dinámicos",
+        "pl": "Małe zmiany układu komunikatów dynamicznych",
+        "uk": "Невеликі зміни макета динамічних повідомлень",
+        "zh-cn": "小改动动态消息的布局"
       },
-      "authors": ["bluefox <dogafox@gmail.com>"],
-      "platform": "Javascript/Node.js",
-      "mode": "daemon",
-      "compact": true,
-      "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
-      "loglevel": "info",
-      "icon": "ping.png",
-      "messagebox": true,
-      "keywords": ["poll", "ping", "ip"],
-      "adminUI": {
-          "config": "json"
+      "1.7.8": {
+        "en": "Used `iobroker/eslint-config`\nFixed some errors with `setcup`\nCorrected admin notification",
+        "de": "Gebraucht `iobroker/eslintconfig `\nEinige Fehler mit `setcup behoben `\nKorrigierte Admin-Benachrichtigung",
+        "ru": "Использованный `iobroker/eslint-config \"\nИсправлены некоторые ошибки с `setcup \"\nИсправленное уведомление администратора",
+        "pt": "Usado `iobroker/eslint-config \"\nCorrigido alguns erros com `setcup \"\nNotificação administrativa correta",
+        "nl": "Gebruikte iobroker/eslint-config Wat\nFoutjes opgelost met de setcup Wat\nGecorrigeerde kennisgeving van de beheerder",
+        "fr": "Utilisé `iobroker/eslint-config \"\nCorrection de certaines erreurs avec `setcup \"\nNotification administrative corrigée",
+        "it": "Usato `iobroker/eslint-config #\nRisolto alcuni errori con `setcup #\nNotifica di amministrazione corretta",
+        "es": "Usado `iobroker/eslint-config `\nSe han corregido algunos errores con `setcup `\nNotificación de administración corregida",
+        "pl": "Używany 'iobroker / eslint- config'\nNaprawiono kilka błędów z 'setcup'\nPoprawione powiadomienie administratora",
+        "uk": "`iobroker/eslint-config й\nВиправлено помилки з `setcup й\nВиправлено повідомлення адміністратора",
+        "zh-cn": "已使用的“ io 经纪人/ slint- 配置” `\n用“ 设置” 修正了一些错误 `\n更正的管理员通知"
       },
-      "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
-      "type": "network",
-      "plugins": {
-          "sentry": {
-              "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
-          }
+      "1.7.6": {
+        "en": "Corrected notification message",
+        "de": "Korrigierte Meldung",
+        "ru": "Исправленное уведомление",
+        "pt": "Mensagem de notificação corrigida",
+        "nl": "Gecorrigeerde melding",
+        "fr": "Message de notification corrigé",
+        "it": "Messaggio di notifica corretto",
+        "es": "Mensaje de notificación corregido",
+        "pl": "Poprawiony komunikat notyfikacyjny",
+        "uk": "Виправлено повідомлення про повідомлення",
+        "zh-cn": "更正的通知信息"
       },
-      "licenseInformation": {
-          "type": "free",
-          "license": "MIT"
+      "1.7.5": {
+        "en": "Corrected small error about range length",
+        "de": "Korrigierter kleiner Fehler über Reichweitenlänge",
+        "ru": "Исправлена небольшая ошибка относительно длины диапазона",
+        "pt": "Erro pequeno corrigido sobre o comprimento do intervalo",
+        "nl": "Gecorrigeerde kleine fout over bereiklengte",
+        "fr": "Correction d'une petite erreur sur la longueur de la plage",
+        "it": "Corretto piccolo errore sulla lunghezza dell'intervallo",
+        "es": "Corregido pequeño error sobre la longitud del rango",
+        "pl": "Poprawiony mały błąd o długości zakresu",
+        "uk": "Виправлена невелика помилка про довжину діапазону",
+        "zh-cn": "修正范围长度的小错误"
       },
-      "dependencies": [
-          {
-              "js-controller": ">=6.0.11"
-          }
-      ],
-      "globalDependencies": [
-          {
-              "admin": ">=7.6.20"
-          }
-      ],
-      "connectionType": "local",
-      "dataSource": "poll",
-      "tier": 2
+      "1.7.4": {
+        "en": "Added support for dynamic notifications\nAdded custom range settings",
+        "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
+        "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
+        "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
+        "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
+        "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
+        "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
+        "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
+        "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
+        "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
+        "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
+      }
+    },
+    "titleLang": {
+      "en": "PING",
+      "de": "PING",
+      "ru": "PING",
+      "pt": "PING",
+      "nl": "PING",
+      "fr": "PING",
+      "it": "PING",
+      "es": "PING",
+      "pl": "PING",
+      "uk": "PING",
+      "zh-cn": "PING"
+    },
+    "desc": {
+      "en": "This adapter cyclic polls configured IPs.",
+      "de": "Adapter fragt zyklisch konfigurierte IP Addressen ab",
+      "ru": "Драйвер постоянно опрашивает заданные IP адреса при помощи утилиты PING",
+      "pt": "As pesquisas cíclicas deste adaptador configuraram IPs.",
+      "nl": "Deze adapter cyclische polls geconfigureerde IP's.",
+      "fr": "Cet adaptateur interroge cycliquement les adresses IP configurées.",
+      "it": "Questo adattatore esegue il polling ciclico degli IP configurati.",
+      "es": "Este adaptador sondea cíclicamente las IP configuradas.",
+      "pl": "Ta karta cyklicznie odpytuje skonfigurowane adresy IP.",
+      "uk": "Цей адаптер циклічно опитує налаштовані IP-адреси.",
+      "zh-cn": "该适配器循环轮询配置的IP。"
+    },
+    "authors": [
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "compact": true,
+    "readme": "https://github.com/ioBroker/ioBroker.ping/blob/master/README.md",
+    "loglevel": "info",
+    "icon": "ping.png",
+    "messagebox": true,
+    "keywords": [
+      "poll",
+      "ping",
+      "ip"
+    ],
+    "adminUI": {
+      "config": "json"
+    },
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.ping/master/admin/ping.png",
+    "type": "network",
+    "plugins": {
+      "sentry": {
+        "dsn": "https://2ac0bd290eda4f368ee03373392e2542@sentry.iobroker.net/34"
+      }
+    },
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.20"
+      }
+    ],
+    "connectionType": "local",
+    "dataSource": "poll",
+    "tier": 2
   },
   "native": {
     "devices": [],
