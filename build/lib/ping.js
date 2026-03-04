@@ -55,6 +55,22 @@ function probeTcpPort(host, port, config, callback) {
     });
     socket.connect(port, host);
 }
+function wakeWithHping3(addr, log, callback) {
+    const args = ['-2', '-c', '10', '-p', '5353', '-i', 'u1', '-q', addr];
+    log(`hping3 wake: hping3 ${args.join(' ')}`);
+    try {
+        const ls = node_child_process_1.default.spawn('hping3', args);
+        ls.on('error', (e) => {
+            log(`hping3 error (falling back to regular ping): ${e.message}`);
+            callback();
+        });
+        ls.on('exit', () => callback());
+    }
+    catch (e) {
+        log(`Cannot start hping3 (falling back to regular ping): ${e}`);
+        callback();
+    }
+}
 function probe(addr, config, callback) {
     config ||= {};
     // Check if the address contains a port
@@ -62,6 +78,11 @@ function probe(addr, config, callback) {
     if (parsed.port !== null) {
         // Use TCP port check
         return probeTcpPort(parsed.host, parsed.port, config, callback);
+    }
+    if (config.useHping3 && p.startsWith('linux')) {
+        const log = config.log || console.log;
+        wakeWithHping3(addr, log, () => probe(addr, { ...config, useHping3: false }, callback));
+        return;
     }
     let ls = null;
     const log = config.log || console.log;

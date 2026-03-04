@@ -164,7 +164,8 @@
     "intervalByUnreach": 30000,
     "numberOfRetries": 1,
     "noHostname": false,
-    "autoDetect": "0"
+    "autoDetect": "0",
+    "installHping3": false
   },
   "notifications": [
     {

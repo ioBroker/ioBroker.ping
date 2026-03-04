@@ -4,6 +4,7 @@ export interface DeviceConfig {
     use_name: boolean;
     ip: string;
     extended_info: boolean;
+    use_hping3?: boolean;
 }
 export interface PingAdapterConfig {
     devices: DeviceConfig[];
@@ -13,4 +14,5 @@ export interface PingAdapterConfig {
     noHostname: boolean;
     autoDetect: number;
     setcap: boolean;
+    installHping3: boolean;
 }

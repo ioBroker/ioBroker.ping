@@ -49,6 +49,7 @@ const adapter_core_1 = require("@iobroker/adapter-core");
 const ip = __importStar(require("ip"));
 const ping = __importStar(require("./lib/ping"));
 const setcup_1 = __importDefault(require("./lib/setcup"));
+const hping3_1 = require("./lib/hping3");
 const wakeOnLan_1 = __importStar(require("./lib/wakeOnLan"));
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
 class PingAdapter extends adapter_core_1.Adapter {
@@ -484,7 +485,7 @@ class PingAdapter extends adapter_core_1.Adapter {
         }
     }
     pingSingleDevice(task, retryCounter) {
-        return new Promise(resolve => ping.probe(task.host, { log: this.log.debug }, async (err, result) => {
+        return new Promise(resolve => ping.probe(task.host, { log: this.log.debug, useHping3: task.useHping3 }, async (err, result) => {
             err && this.log.error(`Error by pinging: ${err}`);
             if (result) {
                 this.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${this.config.numberOfRetries} times)`);
@@ -692,6 +693,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                 ping_task: {
                     host,
                     extendedInfo: true,
+                    useHping3: !!config.use_hping3,
                     stateAlive: this.buildId(stateAliveID),
                     stateTime: this.buildId(stateTimeID),
                     stateRps: this.buildId(stateRpsID),
@@ -768,6 +770,7 @@ class PingAdapter extends adapter_core_1.Adapter {
             ping_task: {
                 host: config.ip.trim(),
                 extendedInfo: false,
+                useHping3: !!config.use_hping3,
                 stateAlive: this.buildId(stateID),
             },
             states: [
@@ -935,6 +938,21 @@ class PingAdapter extends adapter_core_1.Adapter {
             }
             catch (e) {
                 this.log.warn(`Cannot allow setcap for ping: ${e}`);
+            }
+        }
+        if (this.config.installHping3) {
+            if (!(0, hping3_1.isLinux)()) {
+                this.log.warn('hping3 is only available on Linux, ignoring installHping3 option');
+            }
+            else if (!(await (0, hping3_1.isHping3Available)())) {
+                this.log.info('Installing hping3...');
+                try {
+                    await (0, hping3_1.installHping3)();
+                    this.log.info('hping3 installed successfully');
+                }
+                catch (e) {
+                    this.log.warn(`Cannot install hping3: ${e}`);
+                }
             }
         }
         if (this.config.autoDetect) {

@@ -50,6 +50,24 @@ Or you can allow the ping execution by `sudo setcap cap_net_raw+ep /bin/ping` co
 
 You must install `setcap` with `sudo apt-get install libcap2-bin` before if `setcup` not found.
 
+## hping3 support for sleeping devices (e.g. iPhones)
+
+Some devices, particularly iPhones in deep sleep mode, do not respond to standard ICMP ping. To detect such devices reliably, the adapter can use `hping3` to send a burst of UDP packets to port 5353 (mDNS) which wakes the device, followed by a regular ping to confirm reachability.
+
+Enable **"Use hping3"** for individual devices in the Devices table. The adapter runs:
+
+```
+hping3 -2 -c 10 -p 5353 -i u1 -q <IP>
+```
+
+…then immediately performs a regular ICMP ping. If hping3 is not installed, the adapter falls back to regular ping automatically.
+
+**Installation (Linux only):** Enable **"Install hping3 if not available"** in the main settings. The adapter will run `sudo apt-get install -y hping3` on startup if hping3 is not yet present on the system. Alternatively, install it manually:
+
+```bash
+sudo apt-get install hping3
+```
+
 ## TCP Port Check
 
 From version 1.8.0 you can also check TCP ports by specifying the port number after the IP address with a colon (e.g., `192.168.1.1:80`).
@@ -106,6 +124,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 ## Changelog
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Implemented wake-on-lan functionality
+- (@GermanBluefox) Implemented pings with hping3 for sleeping devices (e.g. iPhones)
 
 ### 2.0.0 (2026-02-26)
 - (@GermanBluefox) Migrated to TypeScript

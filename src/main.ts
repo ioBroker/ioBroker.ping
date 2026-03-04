@@ -12,6 +12,7 @@ import * as ip from 'ip';
 
 import * as ping from './lib/ping';
 import allowPing from './lib/setcup';
+import { installHping3, isHping3Available, isLinux } from './lib/hping3';
 import wakeOnLan, { isMACValid } from './lib/wakeOnLan';
 import type { DeviceConfig, PingAdapterConfig } from './types';
 
@@ -45,6 +46,7 @@ interface PingTask {
     stateRps?: string;
     online?: boolean;
     mac?: string;
+    useHping3?: boolean;
 }
 
 interface PreparedObjects {
@@ -553,7 +555,7 @@ class PingAdapter extends Adapter {
 
     pingSingleDevice(task: PingTask, retryCounter: number): Promise<boolean> {
         return new Promise(resolve =>
-            ping.probe(task.host, { log: this.log.debug }, async (err, result) => {
+            ping.probe(task.host, { log: this.log.debug, useHping3: task.useHping3 }, async (err, result) => {
                 err && this.log.error(`Error by pinging: ${err}`);
 
                 if (result) {
@@ -792,6 +794,7 @@ class PingAdapter extends Adapter {
                 ping_task: {
                     host,
                     extendedInfo: true,
+                    useHping3: !!config.use_hping3,
                     stateAlive: this.buildId(stateAliveID),
                     stateTime: this.buildId(stateTimeID),
                     stateRps: this.buildId(stateRpsID),
@@ -868,6 +871,7 @@ class PingAdapter extends Adapter {
             ping_task: {
                 host: config.ip.trim(),
                 extendedInfo: false,
+                useHping3: !!config.use_hping3,
                 stateAlive: this.buildId(stateID),
             },
             states: [
@@ -1068,6 +1072,20 @@ class PingAdapter extends Adapter {
                 await allowPing();
             } catch (e) {
                 this.log.warn(`Cannot allow setcap for ping: ${e}`);
+            }
+        }
+
+        if (this.config.installHping3) {
+            if (!isLinux()) {
+                this.log.warn('hping3 is only available on Linux, ignoring installHping3 option');
+            } else if (!(await isHping3Available())) {
+                this.log.info('Installing hping3...');
+                try {
+                    await installHping3();
+                    this.log.info('hping3 installed successfully');
+                } catch (e) {
+                    this.log.warn(`Cannot install hping3: ${e}`);
+                }
             }
         }
 

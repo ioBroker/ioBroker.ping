@@ -50,6 +50,14 @@
                     "xs": 12,
                     "sm": 12,
                     "help": "This allows to run ping without root rights"
+                },
+                "installHping3": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Install hping3 if not available (Linux only)",
+                    "xs": 12,
+                    "sm": 12,
+                    "help": "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging"
                 }
             }
         },
@@ -94,6 +102,13 @@
                             "attr": "extended_info",
                             "title": "Extended Info",
                             "width": 70
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "use_hping3",
+                            "title": "Use hping3",
+                            "width": 80,
+                            "tooltip": "Wake device before ping (e.g. for iPhones in deep sleep)"
                         }
                     ]
                 }

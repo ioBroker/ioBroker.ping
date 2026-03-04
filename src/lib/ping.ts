@@ -16,6 +16,7 @@ export interface PingConfig {
     minReply?: number;
     extra?: string[];
     log?: (...args: any[]) => void;
+    useHping3?: boolean;
 }
 
 export type PingCallback = (err: Error | string | null, result?: PingResult) => void;
@@ -81,6 +82,22 @@ function probeTcpPort(host: string, port: number, config: PingConfig, callback: 
     socket.connect(port, host);
 }
 
+function wakeWithHping3(addr: string, log: (...args: any[]) => void, callback: () => void): void {
+    const args = ['-2', '-c', '10', '-p', '5353', '-i', 'u1', '-q', addr];
+    log(`hping3 wake: hping3 ${args.join(' ')}`);
+    try {
+        const ls = cp.spawn('hping3', args);
+        ls.on('error', (e: Error) => {
+            log(`hping3 error (falling back to regular ping): ${e.message}`);
+            callback();
+        });
+        ls.on('exit', () => callback());
+    } catch (e) {
+        log(`Cannot start hping3 (falling back to regular ping): ${e}`);
+        callback();
+    }
+}
+
 export function probe(addr: string, config: PingConfig | undefined, callback: PingCallback): void {
     config ||= {};
 
@@ -89,6 +106,12 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
     if (parsed.port !== null) {
         // Use TCP port check
         return probeTcpPort(parsed.host, parsed.port, config, callback);
+    }
+
+    if (config.useHping3 && p.startsWith('linux')) {
+        const log = config.log || console.log;
+        wakeWithHping3(addr, log, () => probe(addr, { ...config, useHping3: false }, callback));
+        return;
     }
 
     let ls: cp.ChildProcess | null = null;
