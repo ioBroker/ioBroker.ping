@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "news": {
+      "2.1.1": {
+        "en": "Added support for device manager",
+        "de": "Unterstützung für Gerätemanager hinzugefügt",
+        "ru": "Добавлена поддержка диспетчера устройств",
+        "pt": "Adicionado suporte para o gerenciador de dispositivos",
+        "nl": "Ondersteuning toegevoegd voor apparaatbeheer",
+        "fr": "Ajout du support pour le gestionnaire de périphériques",
+        "it": "Aggiunto supporto per il gestore del dispositivo",
+        "es": "Soporte añadido para el administrador del dispositivo",
+        "pl": "Dodano wsparcie dla menedżera urządzeń",
+        "uk": "Додано підтримку диспетчера пристроїв",
+        "zh-cn": "添加设备管理器支持"
+      },
       "2.1.0": {
         "en": "Implemented wake-on-lan functionality\nImplemented pings with hping3 for sleeping devices (e.g. iPhones)",
         "de": "Ergänzte Wake-on-lan Funktionalität\nImplementierte Pings mit hping3 für Schlafgeräte (z.B. iPhones)",
@@ -80,19 +93,6 @@
         "pl": "Poprawiony mały błąd o długości zakresu",
         "uk": "Виправлена невелика помилка про довжину діапазону",
         "zh-cn": "修正范围长度的小错误"
-      },
-      "1.7.4": {
-        "en": "Added support for dynamic notifications\nAdded custom range settings",
-        "de": "Unterstützung für dynamische Benachrichtigungen hinzugefügt\nBenutzerdefinierte Reichweiteneinstellungen hinzugefügt",
-        "ru": "Добавлена поддержка динамических уведомлений\nДобавленные настройки диапазона",
-        "pt": "Adicionado suporte para notificações dinâmicas\nAdicionados configurações de intervalo personalizado",
-        "nl": "Ondersteuning toegevoegd voor dynamische meldingen\nAangepaste bereikinstellingen toegevoegd",
-        "fr": "Ajout d'un support pour les notifications dynamiques\nAjout de paramètres de plage personnalisés",
-        "it": "Aggiunto supporto per le notifiche dinamiche\nImpostazioni della gamma personalizzata",
-        "es": "Apoyo adicional para notificaciones dinámicas\nAjustes de rango personalizado",
-        "pl": "Dodano wsparcie dla powiadomień dynamicznych\nDodano własne ustawienia zakresu",
-        "uk": "Додана підтримка динамічних повідомлень\nДодано налаштування користувацького діапазону",
-        "zh-cn": "添加对动态通知的支持\n添加自定义区域设置"
       }
     },
     "titleLang": {

@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.1 (2026-03-05)
 - (@GermanBluefox) Added support for device manager
 
 ### 2.1.0 (2026-03-04)
