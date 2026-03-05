@@ -14,6 +14,7 @@ import * as ping from './lib/ping';
 import allowPing from './lib/setcup';
 import { installHping3, isHping3Available, isLinux } from './lib/hping3';
 import wakeOnLan, { isMACValid } from './lib/wakeOnLan';
+import PingDeviceManagement from './lib/DeviceManagement';
 import type { DeviceConfig, PingAdapterConfig } from './types';
 
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
@@ -81,12 +82,18 @@ class PingAdapter extends Adapter {
     private cyclicPingTimeout: ReturnType<typeof setTimeout> | null = null;
     private temporaryAddressesToAdd: TemporaryAddress[] = [];
     private stateToTask: Map<string, PingTask> = new Map();
+    private pingTaskList: PingTask[] = [];
+    private deviceManagement: PingDeviceManagement | null = null;
 
     public constructor(options: Partial<AdapterOptions> = {}) {
         super({
             ...options,
             name: 'ping',
-            message: obj => this.processMessage(obj),
+            message: obj => {
+                if (!obj?.command?.startsWith('dm:')) {
+                    void this.processMessage(obj);
+                }
+            },
             ready: () => this.main(),
             unload: () => {
                 if (this.timer) {
@@ -140,6 +147,8 @@ class PingAdapter extends Adapter {
                 }
             },
         });
+
+        this.deviceManagement = new PingDeviceManagement(this);
     }
 
     async browse(ifaceParam?: string | BrowseInterface): Promise<void> {
@@ -648,6 +657,35 @@ class PingAdapter extends Adapter {
         wakeOnLan(mac, { port: 9 });
     }
 
+    getTaskByDeviceId(deviceId: string): PingTask | undefined {
+        return this.pingTaskList.find(task => {
+            const idName = task.host
+                .replace(FORBIDDEN_CHARS, '_')
+                .replace(/[.\s]+/g, '_')
+                .replace(/:/g, '_');
+            return idName === deviceId;
+        });
+    }
+
+    async rePingDevice(deviceId: string): Promise<boolean> {
+        const task = this.getTaskByDeviceId(deviceId);
+        if (!task) {
+            this.log.warn(`Cannot re-ping: device "${deviceId}" not found`);
+            return false;
+        }
+        this.log.info(`Re-ping requested for ${task.host}`);
+        return this.pingSingleDevice(task, 0);
+    }
+
+    async sendWoLForDevice(deviceId: string): Promise<void> {
+        const task = this.getTaskByDeviceId(deviceId);
+        if (!task) {
+            this.log.warn(`Cannot send WoL: device "${deviceId}" not found`);
+            return;
+        }
+        await this.sendWakeOnLan(task);
+    }
+
     buildId(id: { device?: string; channel?: string; state?: string }): string {
         return (
             this.namespace +
@@ -1097,11 +1135,13 @@ class PingAdapter extends Adapter {
             return;
         }
 
-        const pingTaskList = await this.syncConfig();
-        await this.pingAll(pingTaskList);
-        await this.pingAll(pingTaskList, true);
+        this.pingTaskList = await this.syncConfig();
+        await this.pingAll(this.pingTaskList);
+        await this.pingAll(this.pingTaskList, true);
     }
 }
+
+export default PingAdapter;
 
 if (require.main !== module) {
     // Export the constructor in compact mode

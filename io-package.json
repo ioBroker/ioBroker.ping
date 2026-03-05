@@ -131,6 +131,9 @@
     "loglevel": "info",
     "icon": "ping.png",
     "messagebox": true,
+    "supportedMessages": {
+      "deviceManager": true
+    },
     "keywords": [
       "poll",
       "ping",

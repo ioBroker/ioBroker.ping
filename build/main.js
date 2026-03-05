@@ -51,6 +51,7 @@ const ping = __importStar(require("./lib/ping"));
 const setcup_1 = __importDefault(require("./lib/setcup"));
 const hping3_1 = require("./lib/hping3");
 const wakeOnLan_1 = __importStar(require("./lib/wakeOnLan"));
+const DeviceManagement_1 = __importDefault(require("./lib/DeviceManagement"));
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
 class PingAdapter extends adapter_core_1.Adapter {
     stopBrowsing = false;
@@ -64,11 +65,17 @@ class PingAdapter extends adapter_core_1.Adapter {
     cyclicPingTimeout = null;
     temporaryAddressesToAdd = [];
     stateToTask = new Map();
+    pingTaskList = [];
+    deviceManagement = null;
     constructor(options = {}) {
         super({
             ...options,
             name: 'ping',
-            message: obj => this.processMessage(obj),
+            message: obj => {
+                if (!obj?.command?.startsWith('dm:')) {
+                    void this.processMessage(obj);
+                }
+            },
             ready: () => this.main(),
             unload: () => {
                 if (this.timer) {
@@ -123,6 +130,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                 }
             },
         });
+        this.deviceManagement = new DeviceManagement_1.default(this);
     }
     async browse(ifaceParam) {
         if (this.runningBrowse) {
@@ -564,6 +572,32 @@ class PingAdapter extends adapter_core_1.Adapter {
         this.log.info(`Sending Wake-on-LAN to ${task.host} (MAC: ${mac})`);
         (0, wakeOnLan_1.default)(mac, { port: 9 });
     }
+    getTaskByDeviceId(deviceId) {
+        return this.pingTaskList.find(task => {
+            const idName = task.host
+                .replace(FORBIDDEN_CHARS, '_')
+                .replace(/[.\s]+/g, '_')
+                .replace(/:/g, '_');
+            return idName === deviceId;
+        });
+    }
+    async rePingDevice(deviceId) {
+        const task = this.getTaskByDeviceId(deviceId);
+        if (!task) {
+            this.log.warn(`Cannot re-ping: device "${deviceId}" not found`);
+            return;
+        }
+        this.log.info(`Re-ping requested for ${task.host}`);
+        await this.pingSingleDevice(task, 0);
+    }
+    async sendWoLForDevice(deviceId) {
+        const task = this.getTaskByDeviceId(deviceId);
+        if (!task) {
+            this.log.warn(`Cannot send WoL: device "${deviceId}" not found`);
+            return;
+        }
+        await this.sendWakeOnLan(task);
+    }
     buildId(id) {
         return (this.namespace +
             (id.device ? `.${id.device}` : '') +
@@ -962,11 +996,12 @@ class PingAdapter extends adapter_core_1.Adapter {
             this.log.warn('No one host configured for ping');
             return;
         }
-        const pingTaskList = await this.syncConfig();
-        await this.pingAll(pingTaskList);
-        await this.pingAll(pingTaskList, true);
+        this.pingTaskList = await this.syncConfig();
+        await this.pingAll(this.pingTaskList);
+        await this.pingAll(this.pingTaskList, true);
     }
 }
+exports.default = PingAdapter;
 if (require.main !== module) {
     // Export the constructor in compact mode
     module.exports = (options) => new PingAdapter(options);
