@@ -10,7 +10,7 @@ import type PingAdapter from '../main';
 
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
 
-class PingDeviceManagement extends DeviceManagement<PingAdapter> {
+export default class PingDeviceManagement extends DeviceManagement<PingAdapter> {
     protected getInstanceInfo(): InstanceDetails {
         return {
             apiVersion: 'v3',
@@ -151,5 +151,3 @@ class PingDeviceManagement extends DeviceManagement<PingAdapter> {
         }
     }
 }
-
-export default PingDeviceManagement;
