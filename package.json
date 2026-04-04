@@ -42,7 +42,7 @@
     "@iobroker/legacy-testing": "^2.0.2",
     "@iobroker/testing": "^5.2.2",
     "colorette": "^2.0.20",
-    "puppeteer": "^24.37.5"
+    "puppeteer": "^24.40.0"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.ping/issues"
