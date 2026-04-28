@@ -56,7 +56,9 @@ function checkIsAdminStarted(states, cb, counter) {
 
     states.getState('system.adapter.admin.0.alive', (err, state) => {
         console.log(`[${counter}]Check if admin is started "system.adapter.admin.0.alive" = ${JSON.stringify(state)}`);
-        err && console.error(err);
+        if (err) {
+            console.error(err);
+        }
         if (state?.val) {
             cb?.();
         } else {
@@ -113,8 +115,8 @@ describe('Test PING', function () {
 
             setup.startController(
                 true,
-                (id, obj) => onObjectChanged && onObjectChanged(id, obj),
-                (id, state) => onStateChanged && onStateChanged(id, state),
+                (id, obj) => onObjectChanged && onObjectChanged?.(id, obj),
+                (id, state) => onStateChanged && onStateChanged?.(id, state),
             async (_objects, _states) => {
                 objects = _objects;
                 states  = _states;
@@ -141,14 +143,14 @@ describe('Test PING', function () {
         setTimeout(() => {
             // if object exists
             objects.getObject(`ping.0.${hostname}.192_168_168_168`, (err, obj) => {
-                assert(!err);
-                assert(obj);
+                assert(!err, 'Error should be falsy when getting object for 192_168_168_168');
+                assert(obj, 'Object for 192_168_168_168 should exist');
                 objects.getObject(`ping.0.${hostname}.google_com`, (err, obj) => {
-                    assert(!err);
-                    assert(obj);
+                    assert(!err, 'Error should be falsy when getting object for google_com');
+                    assert(obj, 'Object for google_com should exist');
                     objects.getObject(`ping.0.${hostname}.127_0_0_1`, (err, obj) => {
-                        assert(!err);
-                        assert(obj);
+                        assert(!err, 'Error should be falsy when getting object for 127_0_0_1');
+                        assert(obj, 'Object for 127_0_0_1 should exist');
                         setTimeout(done, 5000);
                     });
                 });
@@ -160,19 +162,19 @@ describe('Test PING', function () {
         const sID = `ping.0.${hostname}.127_0_0_1`;
 
         states.getState(sID, (err, state) => {
-            assert(!err);
+            assert(!err, 'Error should be falsy when getting state for 127_0_0_1');
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
                     console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        assert(state.val === true);
+                        assert(state.val === true, 'State value for 127_0_0_1 should be true');
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                assert(state.val === true);
+                assert(state.val === true, 'State value for 127_0_0_1 should be true');
                 done();
             }
         });
@@ -187,19 +189,19 @@ describe('Test PING', function () {
         }
 
         states.getState(sID, (err, state) => {
-            assert(!err);
+            assert(!err, 'Error should be falsy when getting state for google_com');
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
                     console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        assert(state.val === true);
+                        assert(state.val === true, 'State value for google_com should be true');
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                assert(state.val === true);
+                assert(state.val === true, 'State value for google_com should be true');
                 done();
             }
         });
@@ -214,19 +216,19 @@ describe('Test PING', function () {
         }
 
         states.getState(sID, (err, state) => {
-            assert(!err);
+            assert(!err, 'Error should be falsy when getting state for 192_168_168_168');
             if (!state || !state.ack) {
                 onStateChanged = function (id, state) {
                     console.log(`${id}: ${JSON.stringify(state)}`);
                     if (id === sID) {
                         onStateChanged = null;
-                        assert(state.val === false);
+                        assert(state.val === false, 'State value for 192_168_168_168 should be false');
                         done();
                     }
                 };
             } else {
                 console.log(`${sID}: ${JSON.stringify(state)}`);
-                assert(state.val === false);
+                assert(state.val === false, 'State value for 192_168_168_168 should be false');
                 done();
             }
         });

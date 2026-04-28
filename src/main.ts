@@ -95,7 +95,7 @@ class PingAdapter extends Adapter {
                 }
             },
             ready: () => this.main(),
-            unload: () => {
+            unload: (cb: () => void): void => {
                 if (this.timer) {
                     clearTimeout(this.timer);
                     this.timer = null;
@@ -110,6 +110,7 @@ class PingAdapter extends Adapter {
                 }
 
                 this.isStopping = true;
+                cb?.();
             },
             stateChange: (id: string, state: ioBroker.State | null | undefined): void => {
                 if (!state || state.ack) {
@@ -417,7 +418,7 @@ class PingAdapter extends Adapter {
     }
 
     async processMessage(obj: ioBroker.Message): Promise<void> {
-        if (!obj || !obj.command) {
+        if (!obj?.command) {
             return;
         }
         switch (obj.command) {
