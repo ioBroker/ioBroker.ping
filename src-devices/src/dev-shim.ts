@@ -135,7 +135,6 @@ const muiIcons = {
 // Sanity log so a dev opening DevTools immediately sees whether the shim is wired up. The
 // guard suppresses the message if the host happens to populate the global before this point
 // (shouldn't happen in dev, but harmless). Drop the log if it gets noisy.
-// eslint-disable-next-line no-console
 console.log(
     '[dev-shim] __iobrokerShared__ initialised — Box=',
     typeof muiMaterial.Box,

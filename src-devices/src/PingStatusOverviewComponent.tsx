@@ -71,9 +71,11 @@ interface DeviceEntry {
 interface PingStatusOverviewState extends WidgetGenericState {
     devices: Map<string, DeviceEntry>;
     dialogOpen: boolean;
-    /** Wall-clock timestamp updated periodically while the dialog is open, so the
+    /**
+     * Wall-clock timestamp updated periodically while the dialog is open, so the
      *  "since X" labels stay current (e.g. switching from "1 min ago" to "2 min ago").
-     *  Only ticks while the dialog is mounted, to avoid waking the tab on every minute. */
+     *  Only ticks while the dialog is mounted, to avoid waking the tab on every minute.
+     */
     nowTick: number;
 }
 
@@ -119,7 +121,7 @@ function formatRelative(ts: number, now: number): string {
 }
 
 /**
- * Same lightweight i18n strategy as PingIpAddressComponent — read from the host's global
+ * The same lightweight i18n strategy as PingIpAddressComponent — read from the host's global
  * I18n if exposed, otherwise fall back to the English literal. Keeps the widget decoupled
  * from the host bridge's exact contents.
  */
@@ -281,7 +283,9 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
         // Index by both raw and trimmed IP so casual whitespace differences don't make
         // the lookup miss.
         const adapterCfg = allObjects[`system.adapter.${instance}`] as
-            | (ioBroker.AdapterObject & { native?: { devices?: Array<{ ip?: string; name?: string; enabled?: boolean }> } })
+            | (ioBroker.AdapterObject & {
+                  native?: { devices?: Array<{ ip?: string; name?: string; enabled?: boolean }> };
+              })
             | undefined;
         const cfgByHost = new Map<string, { name?: string; enabled?: boolean }>();
         for (const d of adapterCfg?.native?.devices ?? []) {
@@ -612,7 +616,7 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
                     {unknown > 0 ? <Box sx={{ flex: unknown, bgcolor: COLORS.unknown }} /> : null}
                 </Box>
 
-                {/* Total + (unknown) hint. Hidden when there are no devices at all so the
+                {/* Total + (unknown) hint. Hidden when there are no devices at all, so the
                     tile doesn't read as "0 devices • 0 unknown" which is just noise. */}
                 {all.length > 0 ? (
                     <Typography
@@ -635,8 +639,10 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
         );
     }
 
-    /** Order devices for the dialog grid: dead first (most actionable), then alive,
-     *  then unknown — within each group, sort by name for a stable ordering. */
+    /**
+     * Order devices for the dialog grid: dead first (most actionable), then alive,
+     *  then unknown — within each group, sort by name for a stable ordering.
+     */
     private sortedDevices(): DeviceEntry[] {
         const groupRank = (d: DeviceEntry): number => (d.alive === false ? 0 : d.alive === true ? 1 : 2);
         return Array.from(this.state.devices.values()).sort((a, b) => {

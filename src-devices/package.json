@@ -12,7 +12,7 @@
         "@emotion/styled": "^11.14.1",
         "@iobroker/adapter-react-v5": "^8.1.6",
         "@iobroker/dm-utils": "^3.0.19",
-        "@iobroker/dm-widgets": "^0.3.1",
+        "@iobroker/dm-widgets": "^0.3.2",
         "@iobroker/json-config": "^8.3.10",
         "@module-federation/runtime": "^2.3.1",
         "@module-federation/vite": "^1.14.2",

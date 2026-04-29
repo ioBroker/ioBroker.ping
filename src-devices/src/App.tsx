@@ -174,7 +174,6 @@ export default function App(): React.JSX.Element {
                             }
                         })
                         .catch((err: unknown) => {
-                            // eslint-disable-next-line no-console
                             console.warn('ping:getDevices failed', err);
                         });
                 },
@@ -190,7 +189,6 @@ export default function App(): React.JSX.Element {
                 // ignore
             }
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (conn === 'connecting') {

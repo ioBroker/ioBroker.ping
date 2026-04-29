@@ -46,13 +46,13 @@ interface PingIpAddressSettings extends CustomWidgetPlugin {
     /**
      * Full state id of the device's `alive` boolean. The dropdown returned by
      * `ping:getDevices` stores this as its `value` so the widget can subscribe directly
-     *  without further lookup. In extended-info mode this looks like
+     *  without a further lookup. In extended-info mode this looks like
      *  `ping.0.<hostName>.<idName>.alive`; in simple mode it is just
      *  `ping.0.<hostName>.<idName>` (the alive boolean lives at the channel id, no
      *  sub-state). Either way we subscribe to it as-is.
      */
     deviceId?: string;
-    /** Show device name above the IP. */
+    /** Show the device name above the IP. */
     showName?: boolean;
     /** Show the latest ping response time (only meaningful in extended-info mode). */
     showResponseTime?: boolean;
@@ -63,7 +63,7 @@ interface PingIpAddressState extends WidgetGenericState {
     ip: string | null;
     /** Friendly name (channel.common.name). Falls back to the IP when empty. */
     name: string | null;
-    /** Latest `.alive` state value — null until first sample arrives. */
+    /** Latest `.alive` state value — null until the first sample arrives. */
     alive: boolean | null;
     /** Latest `.time` state value (seconds), or null when extended mode is off. */
     responseTimeS: number | null;
@@ -134,14 +134,14 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                         sm: 12,
                     },
                     deviceId: {
-                        // selectSendTo asks the chosen ping instance for its devices list
+                        // selectSendTo asks the chosen ping instance for its device list
                         // (see ping:getDevices in src/main.ts). The result is shaped as
-                        // [{ value, label }] and the user picks one.
+                        // [{ value, label }], and the user picks one.
                         type: 'selectSendTo',
                         label: 'pingip_device',
                         command: 'ping:getDevices',
-                        // Re-query the list whenever the instance changes so the dropdown
-                        // matches the freshly-selected adapter.
+                        // Re-query the list whenever the instance changes, so the dropdown
+                        // matches the freshly selected adapter.
                         alsoDependsOn: ['instance'],
                         // Bind to the chosen instance — selectSendTo defaults to the first
                         // instance of the adapter, but we want to honour the user's choice.
@@ -231,7 +231,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
     /**
      * Derive the response-time state id from the alive state id. In extended-info mode the
      * alive id ends with `.alive`, and the sibling `.time` lives next to it. In simple
-     * mode the alive id has no suffix and there's no time state — return null so we skip
+     * mode the alive id has no suffix, and there's no time state — return null, so we skip
      * the subscription cleanly.
      */
     private deriveTimeId(aliveId: string): string | null {
