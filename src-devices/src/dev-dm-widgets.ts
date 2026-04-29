@@ -18,15 +18,10 @@ import * as ReactRuntime from 'react';
 import * as MuiMaterialAll from '@mui/material';
 import * as MuiIconsAll from '@mui/icons-material';
 import momentRuntime from 'moment';
+import * as AdapterReactRuntime from '@iobroker/adapter-react-v5';
 
 // Real package, reached via its sub-path so the bare-specifier alias doesn't loop back here.
-export {
-    WidgetGeneric,
-    default,
-    getTileStyles,
-    isNeumorphicTheme,
-    StateContext,
-} from '@iobroker/dm-widgets/build/index.js';
+export { WidgetGeneric, default, getTileStyles, isNeumorphicTheme, StateContext } from '@iobroker/dm-widgets';
 export type {
     WidgetGenericProps,
     WidgetGenericState,
@@ -45,7 +40,7 @@ export type {
     ExtraInfoEntry,
     StateChangeListener,
     ObjectChangeListener,
-} from '@iobroker/dm-widgets/build/index.js';
+} from '@iobroker/dm-widgets';
 
 // Replace the host-bridged values with the dev environment's actual modules. `import * as`
 // from real `@mui/material` already gives a namespace where `.Box`, `.Button` etc. are
@@ -54,3 +49,4 @@ export const React = ReactRuntime;
 export const MuiMaterial = MuiMaterialAll;
 export const MuiIcons = MuiIconsAll;
 export const moment = momentRuntime;
+export const AdapterReact = AdapterReactRuntime;

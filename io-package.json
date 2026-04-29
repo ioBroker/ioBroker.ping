@@ -150,7 +150,7 @@
                         "uk": "Показывает состояние одного устройства",
                         "zh-cn": "显示一个设备的状态"
                     },
-                    "icon": "wind.png"
+                    "icon": "device.png"
                 },
                 {
                     "name": "PingStatusOverviewComponent",
@@ -168,7 +168,7 @@
                         "uk": "Показывает обзор всех устройств",
                         "zh-cn": "显示所有设备的概览"
                     },
-                    "icon": "wind.png"
+                    "icon": "overview.png"
                 }
             ]
         },

@@ -20,7 +20,7 @@
     "pingstat_empty": "Keine Ping-Geräte konfiguriert",
     "pingstat_dialog_title": "Ping-Geräte",
     "pingstat_online_since": "Online seit",
-    "pingstat_offline_since": "Offline seit",
+    "pingstat_offline_since": "Zuletzt gesehen",
     "pingstat_no_data": "Noch keine Daten",
     "pingstat_close": "Schließen"
 }

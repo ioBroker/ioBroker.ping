@@ -22,23 +22,28 @@ import WidgetGeneric, {
     MuiMaterial,
     getTileStyles,
     isNeumorphicTheme,
+    AdapterReact,
     type WidgetGenericProps,
     type WidgetGenericState,
     type CustomWidgetPlugin,
 } from '@iobroker/dm-widgets';
 import type { BoxProps, TypographyProps, IconButtonProps } from '@mui/material';
 import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/json-config';
+import type { I18n as I18nType, Icon as IconType } from '@iobroker/adapter-react-v5';
+import { getDeviceAliveState, getDeviceMsState, getDeviceName } from './utils';
 
-// Same MUI bridge resolution as the other widgets — pull components from the host-shared
+// The same MUI bridge resolution as the other widgets — pull components from the host-shared
 // `window.__iobrokerShared__` via `@iobroker/dm-widgets` rather than direct `@mui/material`
 // imports, so this widget shares the host's React/MUI instances. We deliberately stick to
 // the smallest set the host is guaranteed to bridge (Box / Typography / IconButton); the
-// status pill is rendered as a styled Box so we don't depend on `Chip` being in the
-// bridge, and the copy button uses a Unicode glyph so we don't depend on a specific
+// status pill is rendered as a styled Box, so we don't depend on `Chip` being in the
+// bridge, and the copy button uses a Unicode glyph, so we don't depend on a specific
 // MUI icon being exposed.
 const Box: React.ComponentType<BoxProps> = MuiMaterial?.Box;
 const Typography: React.ComponentType<TypographyProps> = MuiMaterial?.Typography;
 const IconButton: React.ComponentType<IconButtonProps> = MuiMaterial?.IconButton;
+const I18n = AdapterReact.I18n as typeof I18nType;
+const Icon = AdapterReact.Icon as typeof IconType;
 
 interface PingIpAddressSettings extends CustomWidgetPlugin {
     /** ping adapter instance, e.g. "ping.0". */
@@ -54,13 +59,17 @@ interface PingIpAddressSettings extends CustomWidgetPlugin {
     deviceId?: string;
     /** Show the device name above the IP. */
     showName?: boolean;
+    /** Hide IP address. */
+    hideIp?: boolean;
     /** Show the latest ping response time (only meaningful in extended-info mode). */
     showResponseTime?: boolean;
 }
 
 interface PingIpAddressState extends WidgetGenericState {
-    /** IP address as configured for the device — pulled from the channel's `native.ip`. */
-    ip: string | null;
+    /** State for alive status */
+    stateIp: string | null;
+    /** State for response time value */
+    stateTime: string | null;
     /** Friendly name (channel.common.name). Falls back to the IP when empty. */
     name: string | null;
     /** Latest `.alive` state value — null until the first sample arrives. */
@@ -80,28 +89,6 @@ const COLORS = {
     unknownText: '#c8d0d8',
 } as const;
 
-/**
- * Lightweight translation helper that reads from ioBroker's globally-shared `I18n` (the
- * host loads `dm-widgets/i18n/*.json` into it), falling back to the English literal
- * when the global isn't available (dev harness, host without translations, etc.).
- *
- * We don't statically import `@iobroker/adapter-react-v5`'s I18n here because it isn't
- * always part of the dm-widgets bridge, and a hard import would make the widget bundle
- * pull a duplicate copy. Reading from the window-global keeps the dependency soft.
- */
-function translateStatus(key: string, fallback: string): string {
-    const i18n = (globalThis as any)?.I18n;
-    if (i18n && typeof i18n.t === 'function') {
-        const translated = i18n.t(key);
-        // I18n.t returns the key itself when no translation is registered — treat that as
-        // "no translation" and fall back to the English literal.
-        if (translated && translated !== key) {
-            return translated;
-        }
-    }
-    return fallback;
-}
-
 export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, PingIpAddressSettings> {
     private subscribedIds: Array<{
         id: string;
@@ -112,7 +99,8 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         super(props);
         this.state = {
             ...this.state,
-            ip: null,
+            stateIp: null,
+            stateTime: null,
             name: null,
             alive: null,
             responseTimeS: null,
@@ -145,6 +133,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                         alsoDependsOn: ['instance'],
                         // Bind to the chosen instance — selectSendTo defaults to the first
                         // instance of the adapter, but we want to honour the user's choice.
+                        instance: '${data.instance}', // re-query the device list when the instance changes
                         sm: 12,
                     },
                     showName: {
@@ -159,15 +148,34 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                         default: true,
                         sm: 6,
                     },
+                    hideIp: {
+                        type: 'checkbox',
+                        label: 'pingip_hideIP',
+                        default: false,
+                        hidden: '!data.showName',
+                        sm: 6,
+                    },
+                    icon: {
+                        type: 'component',
+                        subType: 'iconSelect',
+                        label: 'pingip_icon',
+                        sm: 6,
+                    },
+                    name: {
+                        type: 'text',
+                        label: 'pingip_name',
+                        hidden: '!data.showName',
+                        sm: 12,
+                    },
                 },
             },
         };
     }
 
-    componentDidMount(): void {
+    async componentDidMount(): Promise<void> {
         super.componentDidMount?.();
-        void this.loadDeviceMetadata();
-        this.subscribeStates();
+        const result = await this.loadDeviceMetadata();
+        this.subscribeStates(result);
     }
 
     componentDidUpdate(prevProps: Readonly<WidgetGenericProps<PingIpAddressSettings>>): void {
@@ -177,7 +185,14 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
             prevProps.settings.deviceId !== this.props.settings.deviceId
         ) {
             this.unsubscribeStates();
-            this.setState({ ip: null, name: null, alive: null, responseTimeS: null, lastUpdate: null });
+            this.setState({
+                stateIp: null,
+                stateTime: null,
+                name: null,
+                alive: null,
+                responseTimeS: null,
+                lastUpdate: null,
+            });
             void this.loadDeviceMetadata();
             this.subscribeStates();
         }
@@ -195,55 +210,37 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
      * sanitised id, because the id replaces dots with underscores AND would also rewrite
      * a ":port" suffix to "_port" — making the round-trip ambiguous for TCP-port checks.
      */
-    private async loadDeviceMetadata(): Promise<void> {
+    private async loadDeviceMetadata(): Promise<{ stateIp: string | null; stateTime: string | null }> {
         const deviceId = this.props.settings.deviceId;
         if (!deviceId) {
-            return;
+            return { stateIp: null, stateTime: null };
         }
         try {
-            const obj = await this.props.stateContext.getObject<ioBroker.StateObject>(deviceId);
-            if (!obj) {
-                return;
+            const instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
+                `system.adapter.${this.props.settings.instance || 'ping.0'}`,
+            );
+            if (!instanceObj) {
+                return { stateIp: null, stateTime: null };
             }
-            const native = (obj.native as { host?: string } | undefined) ?? {};
-            const commonName = obj.common?.name;
-            // common.name can be a string or a translation object — pick the user's language
-            // when it's a map, fall back to English / first available value otherwise.
-            const name =
-                typeof commonName === 'string'
-                    ? commonName
-                    : commonName && typeof commonName === 'object'
-                      ? ((commonName as Record<string, string>).en ?? Object.values(commonName as object)[0] ?? null)
-                      : null;
-            // Strip the "Alive " prefix the adapter prepends when both name and host are set
+            const stateIp = getDeviceAliveState(instanceObj, deviceId);
+            const stateTime = getDeviceMsState(instanceObj, deviceId);
             // — that's a state-naming convention, not a display label we want to show as-is.
-            const cleanedName = typeof name === 'string' ? name.replace(/^Alive\s+/i, '') : null;
             this.setState({
-                ip: native.host ?? null,
-                name: cleanedName,
+                stateIp,
+                stateTime,
+                name: getDeviceName(instanceObj, deviceId),
             });
+            return { stateIp, stateTime };
         } catch {
             // Ignore — the IP/name will simply stay at their defaults. Subscriptions still
             // run, so alive/time can still update.
         }
+        return { stateIp: null, stateTime: null };
     }
 
-    /**
-     * Derive the response-time state id from the alive state id. In extended-info mode the
-     * alive id ends with `.alive`, and the sibling `.time` lives next to it. In simple
-     * mode the alive id has no suffix, and there's no time state — return null, so we skip
-     * the subscription cleanly.
-     */
-    private deriveTimeId(aliveId: string): string | null {
-        if (aliveId.endsWith('.alive')) {
-            return `${aliveId.slice(0, -'.alive'.length)}.time`;
-        }
-        return null;
-    }
-
-    private subscribeStates(): void {
-        const aliveId = this.props.settings.deviceId;
-        if (!aliveId) {
+    private subscribeStates(result?: { stateIp: string | null; stateTime: string | null }): void {
+        const stateIp = result?.stateIp || this.state.stateIp;
+        if (!stateIp) {
             return;
         }
         const ctx = this.props.stateContext;
@@ -253,18 +250,19 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                 this.setState({ alive: !!state.val, lastUpdate: state.ts || Date.now() });
             }
         };
-        ctx.getState(aliveId, aliveHandler);
-        this.subscribedIds.push({ id: aliveId, handler: aliveHandler });
+        ctx.getState(stateIp, aliveHandler);
+        this.subscribedIds.push({ id: stateIp, handler: aliveHandler });
+        const stateTime = result?.stateTime || this.state.stateTime;
+        const showResponseTime = this.props.settings.showResponseTime !== false;
 
-        const timeId = this.deriveTimeId(aliveId);
-        if (timeId) {
+        if (stateTime && showResponseTime) {
             const timeHandler = (_id: string, state: ioBroker.State | null | undefined): void => {
                 if (state && state.val != null) {
                     this.setState({ responseTimeS: Number(state.val) });
                 }
             };
-            ctx.getState(timeId, timeHandler);
-            this.subscribedIds.push({ id: timeId, handler: timeHandler });
+            ctx.getState(stateTime, timeHandler);
+            this.subscribedIds.push({ id: stateTime, handler: timeHandler });
         }
     }
 
@@ -282,7 +280,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
     }
 
     private async copyIpToClipboard(): Promise<void> {
-        const ip = this.state.ip;
+        const ip = this.props.settings.deviceId;
         if (!ip) {
             return;
         }
@@ -301,15 +299,15 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         let bg: string;
         let color: string;
         if (alive === null) {
-            label = translateStatus('pingip_unknown', '—');
+            label = I18n.t('pingip_unknown');
             bg = COLORS.unknownBg;
             color = COLORS.unknownText;
         } else if (alive) {
-            label = translateStatus('pingip_online', 'Online');
+            label = I18n.t('pingip_online');
             bg = COLORS.aliveBg;
             color = COLORS.aliveText;
         } else {
-            label = translateStatus('pingip_offline', 'Offline');
+            label = I18n.t('pingip_offline');
             bg = COLORS.deadBg;
             color = COLORS.deadText;
         }
@@ -335,16 +333,39 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
             </Box>
         );
     }
+    protected renderTileIcon(): React.JSX.Element | null {
+        const { alive } = this.state;
+
+        // Active: iconActive, fallback to icon (with active color); Inactive: icon only
+        const customIcon = alive
+            ? this.props.settings?.iconActive || this.props.settings?.icon
+            : this.props.settings?.icon;
+        if (!customIcon) {
+            return null;
+        }
+        return (
+            <Icon
+                src={customIcon}
+                style={{
+                    width: '40%',
+                    height: '40%',
+                    transition: 'color 0.25s ease',
+                }}
+            />
+        );
+    }
 
     /** Body of the tile — name, IP, status, optional response time. Used by both layouts. */
     private renderBody(compact: boolean): React.JSX.Element {
-        const { ip, name, alive, responseTimeS } = this.state;
+        const { name, alive, responseTimeS } = this.state;
+        const strName = this.props.settings.name || name;
         const showName = this.props.settings.showName !== false;
+        const hideIp = this.props.settings.hideIp === true && showName;
         const showResponseTime = this.props.settings.showResponseTime !== false;
         // Display the friendly name only when distinct from the IP — when a user just typed
         // the IP as the name, repeating it adds visual noise without information.
-        const displayName = showName && name && name !== ip ? name : null;
-        const ipLabel = ip ?? translateStatus('pingip_no_device', 'No device');
+        const displayName = showName && strName && strName !== this.props.settings.deviceId ? strName : null;
+        const ipLabel = this.props.settings.deviceId ?? I18n.t('pingip_no_device');
         // ms is more intuitive than seconds at sub-second response times — convert with one
         // decimal so 0.0123 s renders as "12 ms" instead of "0.012 s".
         const timeMs = responseTimeS != null && isFinite(responseTimeS) ? Math.round(responseTimeS * 1000) : null;
@@ -362,7 +383,12 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                     px: 1,
                     py: 1,
                 }}
+                onClick={e => {
+                    e.stopPropagation();
+                    void this.copyIpToClipboard();
+                }}
             >
+                {this.renderTileIcon()}
                 {displayName ? (
                     <Typography
                         variant={compact ? 'caption' : 'body2'}
@@ -392,38 +418,19 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                         fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
                     }}
                 >
-                    <Typography
-                        component="span"
-                        sx={{
-                            fontSize: compact ? '1.1rem' : '1.35rem',
-                            fontWeight: 700,
-                            letterSpacing: 0.5,
-                            // Keep the dotted IP atomic — no breaks even on narrow tiles.
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
-                        {ipLabel}
-                    </Typography>
-                    {ip ? (
-                        <IconButton
-                            size="small"
-                            onClick={e => {
-                                e.stopPropagation();
-                                void this.copyIpToClipboard();
-                            }}
+                    {!hideIp || !this.props.settings.deviceId ? (
+                        <Typography
+                            component="span"
                             sx={{
-                                opacity: 0.55,
-                                '&:hover': { opacity: 1 },
-                                fontSize: compact ? '0.85rem' : '1rem',
+                                fontSize: compact ? '1.1rem' : '1.35rem',
+                                fontWeight: 700,
+                                letterSpacing: 0.5,
+                                // Keep the dotted IP atomic — no breaks even on narrow tiles.
+                                whiteSpace: 'nowrap',
                             }}
-                            title={translateStatus('pingip_copy', 'Copy')}
                         >
-                            {/* Unicode "two squares" glyph — readable across platform fonts and
-                                doesn't depend on a specific MUI icon being part of the host
-                                bridge (the icon set the host exposes via window.__iobrokerShared__
-                                doesn't always include ContentCopy). */}
-                            <span aria-hidden>⧉</span>
-                        </IconButton>
+                            {ipLabel}
+                        </Typography>
                     ) : null}
                 </Box>
 
@@ -434,7 +441,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                             variant="caption"
                             sx={{ opacity: 0.8, fontVariantNumeric: 'tabular-nums' }}
                         >
-                            {`${timeMs} ms`}
+                            {`${timeMs} ${I18n.t('pingip_ms')}`}
                         </Typography>
                     ) : null}
                 </Box>

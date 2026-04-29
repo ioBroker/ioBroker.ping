@@ -10,4 +10,4 @@ const __mfModuleCache = globalThis[__mfCacheGlobalKey];
   const runtime = await initHost();
   const __mfRemotePreloads = [];
   await Promise.all(__mfRemotePreloads);
-})().then(() => import("./assets/index-D5PKxXA3.js"));
+})().then(() => import("./assets/index-CYIT9WDW.js"));

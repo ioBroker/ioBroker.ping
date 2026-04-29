@@ -463,14 +463,13 @@ class PingAdapter extends adapter_core_1.Adapter {
                 // (which the widget subscribes to directly); `label` is "<ip> — <name>"
                 // when a name is set, or just the IP. Disabled devices are skipped — there's
                 // no point in the user picking them since nothing updates.
-                const list = this.pingTaskList
-                    .filter(task => !!task.stateAlive)
-                    .map(task => {
-                    const cfg = this.config.devices?.find(d => (d.ip || '').trim() === task.host);
-                    const name = cfg?.name?.trim();
+                const list = this.config.devices
+                    .filter(device => device.ip && device.enabled)
+                    .map(device => {
+                    const name = device?.name?.trim();
                     return {
-                        value: task.stateAlive,
-                        label: name && name !== task.host ? `${task.host} — ${name}` : task.host,
+                        value: device.ip,
+                        label: name && name !== device.ip ? `${device.ip} — ${name}` : device.ip,
                     };
                 });
                 this.sendTo(obj.from, obj.command, list, obj.callback);

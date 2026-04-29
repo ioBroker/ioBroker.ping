@@ -122,8 +122,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### 2.1.1 (2026-03-05)
+### **WORK IN PROGRESS**
 - (@GermanBluefox) Added support for device manager
+- (@GermanBluefox) Added devices widgets
 
 ### 2.1.0 (2026-03-04)
 - (@GermanBluefox) Implemented wake-on-lan functionality

@@ -9,6 +9,10 @@
     "pingip_unknown": "Unknown",
     "pingip_no_device": "No device",
     "pingip_copy": "Copy IP",
+    "pingip_name": "Name",
+    "pingip_icon": "Icon",
+    "pingip_ms": "ms",
+    "pingip_hideIP": "Hide IP address",
 
     "PingStatusOverview": "Ping status overview",
     "pingstat_instance": "Ping adapter instance",
@@ -20,7 +24,7 @@
     "pingstat_empty": "No ping devices configured",
     "pingstat_dialog_title": "Ping devices",
     "pingstat_online_since": "Online since",
-    "pingstat_offline_since": "Offline since",
+    "pingstat_offline_since": "Last seen",
     "pingstat_no_data": "No data yet",
     "pingstat_close": "Close"
 }
