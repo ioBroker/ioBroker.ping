@@ -31,9 +31,9 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-check@v1
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
-          # install-command: 'npm install'
+          install-command: 'npm ci && cd src-devices && npm ci && cd ../src-admin && npm ci'
           lint: true
 
   # Runs adapter tests on all supported node versions and OSes
@@ -75,7 +75,7 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           build: true
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
