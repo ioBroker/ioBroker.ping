@@ -41,7 +41,6 @@ import { getDeviceAliveState, getDeviceMsState, getDeviceName } from './utils';
 // MUI icon being exposed.
 const Box: React.ComponentType<BoxProps> = MuiMaterial?.Box;
 const Typography: React.ComponentType<TypographyProps> = MuiMaterial?.Typography;
-const IconButton: React.ComponentType<IconButtonProps> = MuiMaterial?.IconButton;
 const I18n = AdapterReact.I18n as typeof I18nType;
 const Icon = AdapterReact.Icon as typeof IconType;
 
