@@ -1,0 +1,26 @@
+{
+    "PingIpAddress": "Ping IP-adres",
+    "pingip_instance": "Ping-adapterinstantie",
+    "pingip_device": "Apparaat",
+    "pingip_showName": "Apparaatnaam weergeven",
+    "pingip_showResponseTime": "Reactietijd weergeven",
+    "pingip_online": "Online",
+    "pingip_offline": "Offline",
+    "pingip_unknown": "Onbekend",
+    "pingip_no_device": "Geen apparaat",
+    "pingip_copy": "IP kopiëren",
+
+    "PingStatusOverview": "Ping-statusoverzicht",
+    "pingstat_instance": "Ping-adapterinstantie",
+    "pingstat_hideDisabled": "Uitgeschakelde apparaten verbergen",
+    "pingstat_online": "Online",
+    "pingstat_offline": "Offline",
+    "pingstat_unknown": "onbekend",
+    "pingstat_devices": "apparaten",
+    "pingstat_empty": "Geen ping-apparaten geconfigureerd",
+    "pingstat_dialog_title": "Ping-apparaten",
+    "pingstat_online_since": "Online sinds",
+    "pingstat_offline_since": "Offline sinds",
+    "pingstat_no_data": "Nog geen data",
+    "pingstat_close": "Sluiten"
+}

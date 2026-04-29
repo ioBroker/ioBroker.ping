@@ -1,0 +1,26 @@
+{
+    "PingIpAddress": "IP-адреса Ping",
+    "pingip_instance": "Екземпляр адаптера Ping",
+    "pingip_device": "Пристрій",
+    "pingip_showName": "Показувати ім'я пристрою",
+    "pingip_showResponseTime": "Показувати час відгуку",
+    "pingip_online": "В мережі",
+    "pingip_offline": "Не в мережі",
+    "pingip_unknown": "Невідомо",
+    "pingip_no_device": "Немає пристрою",
+    "pingip_copy": "Копіювати IP",
+
+    "PingStatusOverview": "Огляд статусу Ping",
+    "pingstat_instance": "Екземпляр адаптера Ping",
+    "pingstat_hideDisabled": "Сховати вимкнені пристрої",
+    "pingstat_online": "В мережі",
+    "pingstat_offline": "Не в мережі",
+    "pingstat_unknown": "невідомо",
+    "pingstat_devices": "пристроїв",
+    "pingstat_empty": "Немає налаштованих пристроїв ping",
+    "pingstat_dialog_title": "Пристрої ping",
+    "pingstat_online_since": "В мережі з",
+    "pingstat_offline_since": "Не в мережі з",
+    "pingstat_no_data": "Поки немає даних",
+    "pingstat_close": "Закрити"
+}

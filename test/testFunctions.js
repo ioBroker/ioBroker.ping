@@ -7,7 +7,7 @@ let objects = null;
 let states  = null;
 let onStateChanged = null;
 const onObjectChanged = null;
-const hostname = require('node:os').hostname();
+const hostname = require('node:os').hostname().replace(/\./g, '_');
 let gPage;
 
 function checkConnectionOfAdapter(cb, counter) {

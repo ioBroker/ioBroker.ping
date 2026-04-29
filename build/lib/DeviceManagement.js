@@ -46,20 +46,37 @@ class PingDeviceManagement extends dm_utils_1.DeviceManagement {
                         'zh-cn': '重新 Ping',
                     },
                     handler: async (_id, context) => {
-                        await this.adapter.rePingDevice(idName);
-                        await context.showMessage({
-                            en: 'Ping completed',
-                            de: 'Ping abgeschlossen',
-                            ru: 'Пинг завершен',
-                            pt: 'Ping concluído',
-                            nl: 'Ping voltooid',
-                            fr: 'Ping terminé',
-                            it: 'Ping completato',
-                            es: 'Ping completado',
-                            pl: 'Ping zakończony',
-                            uk: 'Пінг завершено',
-                            'zh-cn': 'Ping 完成',
-                        });
+                        const online = await this.adapter.rePingDevice(idName);
+                        if (online) {
+                            await context.showMessage({
+                                en: 'Device is online',
+                                de: 'Das Gerät ist online',
+                                ru: 'Устройство в сети',
+                                pt: 'O dispositivo está online',
+                                nl: 'Apparaat is online',
+                                fr: "L'appareil est en ligne",
+                                it: 'Il dispositivo è online',
+                                es: 'El dispositivo está en línea',
+                                pl: 'Urządzenie jest online',
+                                uk: 'Пристрій онлайн',
+                                'zh-cn': '设备在线',
+                            });
+                        }
+                        else {
+                            await context.showMessage({
+                                en: 'Device is offline',
+                                de: 'Das Gerät ist offline',
+                                ru: 'Устройство не в сети',
+                                pt: 'O dispositivo está offline',
+                                nl: 'Apparaat is offline',
+                                fr: "L'appareil est hors ligne",
+                                it: 'Il dispositivo è offline',
+                                es: 'El dispositivo está fuera de línea',
+                                pl: 'Urządzenie jest offline',
+                                uk: 'Пристрій офлайн',
+                                'zh-cn': '设备离线',
+                            });
+                        }
                         return { refresh: 'devices' };
                     },
                 },

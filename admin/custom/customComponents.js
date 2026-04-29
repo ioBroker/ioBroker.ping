@@ -1,1 +1,1 @@
-import{g as p,a}from"./assets/virtual_mf-REMOTE_ENTRY_ID-ChKHnezK.js";import"./assets/virtualExposes-dHY1tm5R.js";import"./assets/ConfigCustomPingSet__mf_v__runtimeInit__mf_v__-D0l9imiu.js";import"./assets/preload-helper-BDBacUwf.js";export{p as get,a as init};
+import"./assets/preload-helper-BDBacUwf.js";import{g as r,i as a}from"./assets/virtual_mf-REMOTE_ENTRY_ID___mfe_internal__ConfigCustomPingSet__customComponents_js-BIEsn5XJ.js";export{r as get,a as init};

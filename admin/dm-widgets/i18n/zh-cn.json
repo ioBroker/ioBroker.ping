@@ -1,0 +1,26 @@
+{
+    "PingIpAddress": "Ping IP 地址",
+    "pingip_instance": "Ping 适配器实例",
+    "pingip_device": "设备",
+    "pingip_showName": "显示设备名称",
+    "pingip_showResponseTime": "显示响应时间",
+    "pingip_online": "在线",
+    "pingip_offline": "离线",
+    "pingip_unknown": "未知",
+    "pingip_no_device": "无设备",
+    "pingip_copy": "复制 IP",
+
+    "PingStatusOverview": "Ping 状态概览",
+    "pingstat_instance": "Ping 适配器实例",
+    "pingstat_hideDisabled": "隐藏已禁用的设备",
+    "pingstat_online": "在线",
+    "pingstat_offline": "离线",
+    "pingstat_unknown": "未知",
+    "pingstat_devices": "设备",
+    "pingstat_empty": "未配置任何 ping 设备",
+    "pingstat_dialog_title": "Ping 设备",
+    "pingstat_online_since": "在线自",
+    "pingstat_offline_since": "离线自",
+    "pingstat_no_data": "暂无数据",
+    "pingstat_close": "关闭"
+}

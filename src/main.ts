@@ -521,6 +521,27 @@ class PingAdapter extends Adapter {
                 this.sendTo(obj.from, obj.command, { schema }, obj.callback);
                 break;
             }
+
+            case 'ping:getDevices': {
+                // Used by the ioBroker.devices widget config to populate its device picker.
+                // Returns one entry per configured ping device, shaped as the json-config
+                // selectSendTo expects: `{ value, label }`. `value` is the alive state id
+                // (which the widget subscribes to directly); `label` is "<ip> — <name>"
+                // when a name is set, or just the IP. Disabled devices are skipped — there's
+                // no point in the user picking them since nothing updates.
+                const list = this.pingTaskList
+                    .filter(task => !!task.stateAlive)
+                    .map(task => {
+                        const cfg = this.config.devices?.find(d => (d.ip || '').trim() === task.host);
+                        const name = cfg?.name?.trim();
+                        return {
+                            value: task.stateAlive,
+                            label: name && name !== task.host ? `${task.host} — ${name}` : task.host,
+                        };
+                    });
+                this.sendTo(obj.from, obj.command, list, obj.callback);
+                break;
+            }
         }
     }
 

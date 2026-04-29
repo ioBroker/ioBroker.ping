@@ -1,0 +1,26 @@
+{
+    "PingIpAddress": "Ping IP address",
+    "pingip_instance": "Ping adapter instance",
+    "pingip_device": "Device",
+    "pingip_showName": "Show device name",
+    "pingip_showResponseTime": "Show response time",
+    "pingip_online": "Online",
+    "pingip_offline": "Offline",
+    "pingip_unknown": "Unknown",
+    "pingip_no_device": "No device",
+    "pingip_copy": "Copy IP",
+
+    "PingStatusOverview": "Ping status overview",
+    "pingstat_instance": "Ping adapter instance",
+    "pingstat_hideDisabled": "Hide disabled devices",
+    "pingstat_online": "Online",
+    "pingstat_offline": "Offline",
+    "pingstat_unknown": "unknown",
+    "pingstat_devices": "devices",
+    "pingstat_empty": "No ping devices configured",
+    "pingstat_dialog_title": "Ping devices",
+    "pingstat_online_since": "Online since",
+    "pingstat_offline_since": "Offline since",
+    "pingstat_no_data": "No data yet",
+    "pingstat_close": "Close"
+}

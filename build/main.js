@@ -77,7 +77,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                 }
             },
             ready: () => this.main(),
-            unload: () => {
+            unload: (cb) => {
                 if (this.timer) {
                     clearTimeout(this.timer);
                     this.timer = null;
@@ -91,6 +91,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                     this.timerUnreach = null;
                 }
                 this.isStopping = true;
+                cb?.();
             },
             stateChange: (id, state) => {
                 if (!state || state.ack) {
@@ -372,7 +373,7 @@ class PingAdapter extends adapter_core_1.Adapter {
         return schema;
     }
     async processMessage(obj) {
-        if (!obj || !obj.command) {
+        if (!obj?.command) {
             return;
         }
         switch (obj.command) {
@@ -453,6 +454,26 @@ class PingAdapter extends adapter_core_1.Adapter {
             case 'getNotificationSchema': {
                 const schema = this.getGuiSchema(obj.message.newDevices);
                 this.sendTo(obj.from, obj.command, { schema }, obj.callback);
+                break;
+            }
+            case 'ping:getDevices': {
+                // Used by the ioBroker.devices widget config to populate its device picker.
+                // Returns one entry per configured ping device, shaped as the json-config
+                // selectSendTo expects: `{ value, label }`. `value` is the alive state id
+                // (which the widget subscribes to directly); `label` is "<ip> — <name>"
+                // when a name is set, or just the IP. Disabled devices are skipped — there's
+                // no point in the user picking them since nothing updates.
+                const list = this.pingTaskList
+                    .filter(task => !!task.stateAlive)
+                    .map(task => {
+                    const cfg = this.config.devices?.find(d => (d.ip || '').trim() === task.host);
+                    const name = cfg?.name?.trim();
+                    return {
+                        value: task.stateAlive,
+                        label: name && name !== task.host ? `${task.host} — ${name}` : task.host,
+                    };
+                });
+                this.sendTo(obj.from, obj.command, list, obj.callback);
                 break;
             }
         }
@@ -585,10 +606,10 @@ class PingAdapter extends adapter_core_1.Adapter {
         const task = this.getTaskByDeviceId(deviceId);
         if (!task) {
             this.log.warn(`Cannot re-ping: device "${deviceId}" not found`);
-            return;
+            return false;
         }
         this.log.info(`Re-ping requested for ${task.host}`);
-        await this.pingSingleDevice(task, 0);
+        return this.pingSingleDevice(task, 0);
     }
     async sendWoLForDevice(deviceId) {
         const task = this.getTaskByDeviceId(deviceId);

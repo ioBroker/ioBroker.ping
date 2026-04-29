@@ -1,0 +1,26 @@
+{
+    "PingIpAddress": "Adres IP Ping",
+    "pingip_instance": "Instancja adaptera Ping",
+    "pingip_device": "Urządzenie",
+    "pingip_showName": "Pokaż nazwę urządzenia",
+    "pingip_showResponseTime": "Pokaż czas odpowiedzi",
+    "pingip_online": "Online",
+    "pingip_offline": "Offline",
+    "pingip_unknown": "Nieznany",
+    "pingip_no_device": "Brak urządzenia",
+    "pingip_copy": "Kopiuj IP",
+
+    "PingStatusOverview": "Przegląd statusu ping",
+    "pingstat_instance": "Instancja adaptera Ping",
+    "pingstat_hideDisabled": "Ukryj wyłączone urządzenia",
+    "pingstat_online": "Online",
+    "pingstat_offline": "Offline",
+    "pingstat_unknown": "nieznany",
+    "pingstat_devices": "urządzeń",
+    "pingstat_empty": "Brak skonfigurowanych urządzeń ping",
+    "pingstat_dialog_title": "Urządzenia ping",
+    "pingstat_online_since": "Online od",
+    "pingstat_offline_since": "Offline od",
+    "pingstat_no_data": "Brak danych",
+    "pingstat_close": "Zamknij"
+}
