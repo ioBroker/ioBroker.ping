@@ -27,7 +27,7 @@ import WidgetGeneric, {
     type WidgetGenericState,
     type CustomWidgetPlugin,
 } from '@iobroker/dm-widgets';
-import type { BoxProps, TypographyProps, IconButtonProps } from '@mui/material';
+import type { BoxProps, TypographyProps } from '@mui/material';
 import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/json-config';
 import type { I18n as I18nType, Icon as IconType } from '@iobroker/adapter-react-v5';
 import { getDeviceAliveState, getDeviceMsState, getDeviceName } from './utils';

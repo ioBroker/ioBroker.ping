@@ -3,19 +3,6 @@
     "name": "ping",
     "version": "2.2.1",
     "news": {
-      "2.2.1": {
-        "en": "Added support for device manager\nAdded devices widgets",
-        "de": "Unterstützung für Gerätemanager hinzugefügt\nHinzugefügt Geräte Widgets",
-        "ru": "Добавлена поддержка диспетчера устройств\nДобавлены виджеты устройств",
-        "pt": "Adicionado suporte para o gerenciador de dispositivos\nElementos de dispositivos adicionados",
-        "nl": "Ondersteuning toegevoegd voor apparaatbeheer\nEigenschappen toegevoegd",
-        "fr": "Ajout du support pour le gestionnaire de périphériques\nAjout de widgets périphériques",
-        "it": "Aggiunto supporto per il gestore del dispositivo\nWidget di dispositivi aggiunti",
-        "es": "Soporte añadido para el administrador del dispositivo\nDispositivos adicionales widgets",
-        "pl": "Dodano wsparcie dla menedżera urządzeń\nDodano widżety urządzeń",
-        "uk": "Додано підтримку диспетчера пристроїв\nДодано віджети пристроїв",
-        "zh-cn": "添加设备管理器支持\n添加的设备部件"
-      },
       "2.1.0": {
         "en": "Implemented wake-on-lan functionality\nImplemented pings with hping3 for sleeping devices (e.g. iPhones)",
         "de": "Ergänzte Wake-on-lan Funktionalität\nImplementierte Pings mit hping3 für Schlafgeräte (z.B. iPhones)",
