@@ -312,6 +312,8 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 - (@GermanBluefox) support of server (actually no authentication)
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 The MIT License (MIT)
