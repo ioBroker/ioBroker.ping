@@ -143,7 +143,7 @@
         },
         {
           "name": "PingStatusOverviewComponent",
-          "label": "Ping Overviw",
+          "label": "Ping Overview",
           "description": {
             "en": "Shows the overview of all devices",
             "de": "Zeigt die Übersicht aller Geräte an",

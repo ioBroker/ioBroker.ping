@@ -31,6 +31,7 @@ function copyAllDevicesFiles() {
         ['src-devices/build/**/*', '!src-devices/build/index.html', '!src-devices/build/mf-manifest.json'],
         'admin/dm-widgets/',
     );
+    copyFiles(['src-devices/img/**/*'], 'admin/dm-widgets');
     copyFiles(['src-devices/src/i18n/*.json'], 'admin/dm-widgets/i18n');
 }
 
