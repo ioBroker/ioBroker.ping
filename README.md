@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.2.3 (2026-05-16)
 - (@GermanBluefox) Fixing devices widgets
 
 ### 2.2.2 (2026-04-30)
