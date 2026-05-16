@@ -10,8 +10,8 @@
     "devDependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
-        "@iobroker/adapter-react-v5": "8.2.2",
-        "@iobroker/json-config": "8.3.9",
+        "@iobroker/adapter-react-v5": "8.2.4",
+        "@iobroker/json-config": "8.3.12",
         "@module-federation/runtime": "^2.3.3",
         "@module-federation/vite": "^1.14.5",
         "@mui/icons-material": "^6.5.0",
