@@ -28,8 +28,13 @@ import WidgetGeneric, {
     type CustomWidgetPlugin,
 } from '@iobroker/dm-widgets';
 import type { BoxProps, TypographyProps } from '@mui/material';
-import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/json-config';
-import type { I18n as I18nType, Icon as IconType } from '@iobroker/adapter-react-v5';
+// `WidgetGeneric.getConfigSchema()` declares its return via dm-utils' copy of these types, so the
+// override signature has to use the same source. json-config (which actually renders the schema)
+// has since grown fields dm-utils doesn't know about yet — hence the second, richer import used to
+// author the literal, plus one cast at the return.
+import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/dm-utils';
+import type { ConfigItemPanel as JsonConfigItemPanel } from '@iobroker/json-config';
+import type { I18n as I18nType, Icon as IconType } from '@iobroker/gui-components';
 import { getDeviceAliveState, getDeviceMsState, getDeviceName } from './utils';
 
 // The same MUI bridge resolution as the other widgets — pull components from the host-shared
@@ -108,67 +113,66 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
     }
 
     static override getConfigSchema(): { name: string; schema: ConfigItemPanel | ConfigItemTabs } {
-        return {
-            name: 'PingIpAddress',
-            schema: {
-                type: 'panel',
-                items: {
-                    instance: {
-                        type: 'instance',
-                        adapter: 'ping',
-                        label: 'pingip_instance',
-                        default: 'ping.0',
-                        sm: 12,
-                    },
-                    deviceId: {
-                        // selectSendTo asks the chosen ping instance for its device list
-                        // (see ping:getDevices in src/main.ts). The result is shaped as
-                        // [{ value, label }], and the user picks one.
-                        type: 'selectSendTo',
-                        label: 'pingip_device',
-                        command: 'ping:getDevices',
-                        // Re-query the list whenever the instance changes, so the dropdown
-                        // matches the freshly selected adapter.
-                        alsoDependsOn: ['instance'],
-                        // Bind to the chosen instance — selectSendTo defaults to the first
-                        // instance of the adapter, but we want to honour the user's choice.
-                        instance: '${data.instance}', // re-query the device list when the instance changes
-                        sm: 12,
-                    },
-                    showName: {
-                        type: 'checkbox',
-                        label: 'pingip_showName',
-                        default: true,
-                        sm: 6,
-                    },
-                    showResponseTime: {
-                        type: 'checkbox',
-                        label: 'pingip_showResponseTime',
-                        default: true,
-                        sm: 6,
-                    },
-                    hideIp: {
-                        type: 'checkbox',
-                        label: 'pingip_hideIP',
-                        default: false,
-                        hidden: '!data.showName',
-                        sm: 6,
-                    },
-                    icon: {
-                        type: 'component',
-                        subType: 'iconSelect',
-                        label: 'pingip_icon',
-                        sm: 6,
-                    },
-                    name: {
-                        type: 'text',
-                        label: 'pingip_name',
-                        hidden: '!data.showName',
-                        sm: 12,
-                    },
+        const schema: JsonConfigItemPanel = {
+            type: 'panel',
+            items: {
+                instance: {
+                    type: 'instance',
+                    adapter: 'ping',
+                    label: 'pingip_instance',
+                    default: 'ping.0',
+                    sm: 12,
+                },
+                deviceId: {
+                    // selectSendTo asks the chosen ping instance for its device list
+                    // (see ping:getDevices in src/main.ts). The result is shaped as
+                    // [{ value, label }], and the user picks one.
+                    type: 'selectSendTo',
+                    label: 'pingip_device',
+                    command: 'ping:getDevices',
+                    // Re-query the list whenever the instance changes, so the dropdown
+                    // matches the freshly selected adapter.
+                    alsoDependsOn: ['instance'],
+                    // Bind to the chosen instance — selectSendTo defaults to the first
+                    // instance of the adapter, but we want to honour the user's choice.
+                    instance: '${data.instance}', // re-query the device list when the instance changes
+                    sm: 12,
+                },
+                showName: {
+                    type: 'checkbox',
+                    label: 'pingip_showName',
+                    default: true,
+                    sm: 6,
+                },
+                showResponseTime: {
+                    type: 'checkbox',
+                    label: 'pingip_showResponseTime',
+                    default: true,
+                    sm: 6,
+                },
+                hideIp: {
+                    type: 'checkbox',
+                    label: 'pingip_hideIP',
+                    default: false,
+                    hidden: '!data.showName',
+                    sm: 6,
+                },
+                icon: {
+                    type: 'component',
+                    subType: 'iconSelect',
+                    label: 'pingip_icon',
+                    sm: 6,
+                },
+                name: {
+                    type: 'text',
+                    label: 'pingip_name',
+                    hidden: '!data.showName',
+                    sm: 12,
                 },
             },
         };
+
+        return { name: 'PingIpAddress', schema: schema as unknown as ConfigItemPanel };
     }
 
     async componentDidMount(): Promise<void> {

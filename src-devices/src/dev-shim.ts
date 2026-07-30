@@ -71,7 +71,7 @@ import {
     ExpandLess,
 } from '@mui/icons-material';
 import momentRuntime from 'moment';
-import * as AdapterReact from '@iobroker/adapter-react-v5';
+import * as AdapterReact from '@iobroker/gui-components';
 
 const muiMaterial = {
     Box,
@@ -131,7 +131,7 @@ const muiIcons = {
     '@mui/material': muiMaterial,
     '@mui/icons-material': muiIcons,
     moment: momentRuntime,
-    '@iobroker/adapter-react-v5': AdapterReact,
+    '@iobroker/gui-components': AdapterReact,
 };
 
 // Sanity log so a dev opening DevTools immediately sees whether the shim is wired up. The
