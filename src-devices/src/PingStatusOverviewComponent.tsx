@@ -33,8 +33,11 @@ import type {
     DialogTitleProps,
     IconButtonProps,
 } from '@mui/material';
-import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/json-config';
-import type { I18n as I18nType } from '@iobroker/adapter-react-v5';
+// Same source as `WidgetGeneric.getConfigSchema()` declares — json-config's own copy of these
+// types has drifted ahead of dm-utils', so importing from there breaks the override signature.
+import type { ConfigItemPanel, ConfigItemTabs } from '@iobroker/dm-utils';
+import type { I18n as I18nType } from '@iobroker/gui-components';
+
 import type { PingAdapterConfig } from '../../src/types';
 import { getDeviceAliveState, getDeviceName } from './utils';
 const I18n = AdapterReact.I18n as typeof I18nType;
@@ -258,7 +261,7 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
                         // few seconds for stable devices.
                         lastChange: state.lc || state.ts || Date.now(),
                     });
-                    return { devices: map } as PingStatusOverviewState;
+                    return { devices: map };
                 });
             };
             ctx.getState(aliveId, handler);

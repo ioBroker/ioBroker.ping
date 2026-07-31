@@ -36,3 +36,5 @@ src-admin/node_modules
 /src-devices/build/mf-manifest.json
 /src-devices/build/mf-stats.json
 /src-devices/.__mf__temp/
+/src-devices/.__mf__temp/
+/src-admin/.__mf__temp/
