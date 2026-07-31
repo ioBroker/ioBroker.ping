@@ -5,7 +5,7 @@
 // NOT part of the production bundle. Only loaded by src/index.tsx (Vite dev server).
 
 import React, { useEffect, useState } from 'react';
-import { Connection } from '@iobroker/adapter-react-v5';
+import { Connection, type ThemeType } from '@iobroker/gui-components';
 import type { IStateContext, StateChangeListener, ObjectChangeListener } from '@iobroker/dm-widgets';
 import PingIpAddressComponent from './PingIpAddressComponent';
 import PingStatusOverviewComponent from './PingStatusOverviewComponent';
@@ -43,9 +43,26 @@ class DevStateContext implements IStateContext {
     isFloatComma = true;
     dateFormat = 'DD.MM.YYYY';
     imagePrefix = '../../files/';
+    themeType: ThemeType = 'dark';
 
     constructor(socket: Connection) {
         this.socket = socket;
+    }
+
+    setCoordinates(latitude: number | null, longitude: number | null): void {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    getImagePath(fileName: string | null | undefined): string | null {
+        if (!fileName) {
+            return null;
+        }
+        // Absolute URLs and data-URIs are already usable as-is.
+        if (/^(https?:)?\/\//.test(fileName) || fileName.startsWith('data:')) {
+            return fileName;
+        }
+        return `${this.imagePrefix}${fileName.startsWith('/') ? fileName.slice(1) : fileName}`;
     }
 
     getState(id: string, handler: StateChangeListener): void {
@@ -321,7 +338,7 @@ export default function App(): React.JSX.Element {
                             // runs cleanly without needing extra plumbing in componentDidUpdate.
                             key={deviceId}
                             widget={widget as any}
-                            stateContext={ctx as any}
+                            stateContext={ctx}
                             settings={settings as any}
                             onHide={() => {}}
                         />
@@ -334,7 +351,7 @@ export default function App(): React.JSX.Element {
                     <DevPingStatus
                         key="overview"
                         widget={widget as any}
-                        stateContext={ctx as any}
+                        stateContext={ctx}
                         settings={overviewSettings as any}
                         onHide={() => {}}
                     />

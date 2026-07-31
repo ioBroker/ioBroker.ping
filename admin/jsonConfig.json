@@ -183,7 +183,7 @@
                     "i18n": true,
                     "url": "custom/customComponents.js",
                     "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
-                    "bundlerType": "module",
+                    "guiApi": 2,
                     "type": "custom"
                 }
             }
