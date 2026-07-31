@@ -1,6 +1,5 @@
 import react from '@vitejs/plugin-react';
 import commonjs from 'vite-plugin-commonjs';
-import vitetsConfigPaths from 'vite-tsconfig-paths';
 import { federation } from '@module-federation/vite';
 import { moduleFederationShared } from '@iobroker/dm-widgets/modulefederation.devices.config';
 import path from 'node:path';
@@ -28,7 +27,6 @@ const config = {
             dts: false,
         }),
         react(),
-        vitetsConfigPaths(),
         commonjs(),
     ],
     resolve: isDevServe
@@ -42,8 +40,11 @@ const config = {
                       replacement: path.resolve(__dirname, 'src/dev-dm-widgets.ts'),
                   },
               ],
+              tsconfigPaths: true,
           }
-        : undefined,
+        : {
+              tsconfigPaths: true,
+          },
     server: {
         port: 3000,
         proxy: {

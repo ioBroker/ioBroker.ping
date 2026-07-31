@@ -192,8 +192,10 @@ class PingAdapter extends adapter_core_1.Adapter {
                 await this.setStateAsync('browse.interface', iface.ip, true);
             }
         }
-        iface.rangeStart = iface.rangeStart || '';
-        iface.rangeLength = parseInt(String(iface.rangeLength), 10) || 0;
+        // `rangeStart`/`rangeLength` come from ioBroker states, so they are typed as StateValue.
+        // Normalise them once into the concrete types the scan below needs.
+        const scanStart = iface.rangeStart ? String(iface.rangeStart) : '';
+        const scanLength = parseInt(String(iface.rangeLength), 10) || 0;
         this.detectedIPs = this.detectedIPs.filter(item => item.ignore);
         try {
             if (!this.arpToMac) {
@@ -208,8 +210,8 @@ class PingAdapter extends adapter_core_1.Adapter {
         catch {
             this.log.warn('Cannot use module "arp-lookup"');
         }
-        const result = iface.rangeStart && iface.rangeLength
-            ? { firstAddress: iface.rangeStart, length: iface.rangeLength }
+        const result = scanStart && scanLength
+            ? { firstAddress: scanStart, length: scanLength }
             : ip.subnet(iface.ip, iface.netmask);
         if (result.length > 1024) {
             this.log.warn(`Too many IPs to ping: ${result.length}. Maximum is 1024`);
@@ -935,7 +937,7 @@ class PingAdapter extends adapter_core_1.Adapter {
         for (const task of preparedObjects.pingTaskList) {
             this.stateToTask.set(task.stateAlive, task);
         }
-        const objects = (await this.getAdapterObjectsAsync());
+        const objects = await this.getAdapterObjectsAsync();
         Object.keys(objects).forEach(id => {
             if (id.startsWith(`${this.namespace}.browse`)) {
                 delete objects[id];

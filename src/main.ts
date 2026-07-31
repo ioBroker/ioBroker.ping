@@ -213,8 +213,10 @@ class PingAdapter extends Adapter {
                 await this.setStateAsync('browse.interface', iface.ip, true);
             }
         }
-        iface.rangeStart = (iface.rangeStart as string) || '';
-        iface.rangeLength = parseInt(String(iface.rangeLength), 10) || 0;
+        // `rangeStart`/`rangeLength` come from ioBroker states, so they are typed as StateValue.
+        // Normalise them once into the concrete types the scan below needs.
+        const scanStart: string = iface.rangeStart ? String(iface.rangeStart) : '';
+        const scanLength: number = parseInt(String(iface.rangeLength), 10) || 0;
 
         this.detectedIPs = this.detectedIPs.filter(item => item.ignore);
 
@@ -232,8 +234,8 @@ class PingAdapter extends Adapter {
         }
 
         const result =
-            iface.rangeStart && iface.rangeLength
-                ? { firstAddress: iface.rangeStart, length: iface.rangeLength }
+            scanStart && scanLength
+                ? { firstAddress: scanStart, length: scanLength }
                 : ip.subnet(iface.ip, iface.netmask);
 
         if (result.length > 1024) {
@@ -760,7 +762,7 @@ class PingAdapter extends Adapter {
                         common: preparedObjects.device.common,
                         type: 'device',
                         native: {},
-                    } as ioBroker.SettableObject);
+                    });
                 } catch (err) {
                     this.log.error(`Cannot create device: ${fullID} Error: ${err}`);
                 }
@@ -778,7 +780,7 @@ class PingAdapter extends Adapter {
                     await this.extendObjectAsync(fullID, {
                         common: channel.common,
                         native: channel.native,
-                    } as any);
+                    });
                 }
                 oldObjects[fullID] = undefined;
             } else {
@@ -789,7 +791,7 @@ class PingAdapter extends Adapter {
                         type: 'channel',
                         common: channel.common,
                         native: channel.native,
-                    } as ioBroker.SettableObject);
+                    });
                 } catch (err) {
                     this.log.error(`Cannot create channel: ${fullID} Error: ${err}`);
                 }
@@ -808,7 +810,7 @@ class PingAdapter extends Adapter {
                     await this.extendObjectAsync(fullID, {
                         common: state.common,
                         native: state.native,
-                    } as any);
+                    });
                 }
                 oldObjects[fullID] = undefined;
             } else {
@@ -819,7 +821,7 @@ class PingAdapter extends Adapter {
                         type: 'state',
                         common: state.common,
                         native: state.native,
-                    } as ioBroker.SettableObject);
+                    });
                 } catch (err) {
                     this.log.error(`Cannot create state: ${fullID} Error: ${err}`);
                 }
@@ -1061,10 +1063,7 @@ class PingAdapter extends Adapter {
             this.stateToTask.set(task.stateAlive, task);
         }
 
-        const objects: Record<string, ioBroker.Object | undefined> = (await this.getAdapterObjectsAsync()) as Record<
-            string,
-            ioBroker.Object | undefined
-        >;
+        const objects: Record<string, ioBroker.Object | undefined> = await this.getAdapterObjectsAsync();
         Object.keys(objects).forEach(id => {
             if (id.startsWith(`${this.namespace}.browse`)) {
                 delete objects[id];

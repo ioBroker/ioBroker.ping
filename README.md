@@ -122,6 +122,10 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+- (@GermanBluefox) Migrated for Admin 8
+
 ### 2.2.4 (2026-05-16)
 - (@GermanBluefox) Fixing devices widgets
 
@@ -314,6 +318,8 @@ setState('ping.0.myHost.192_168_1_1', true);
 ### 0.0.1 (2014-11-02)
 
 - (@GermanBluefox) support of server (actually no authentication)
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 
