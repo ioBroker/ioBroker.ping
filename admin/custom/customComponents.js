@@ -1,1 +1,1 @@
-import{n as e,t}from"./assets/virtual_mf-REMOTE_ENTRY_ID___mfe_internal__ConfigCustomPingSet__customComponents_js-C7sBKo1s.js";export{t as get,e as init};
+import{n as e,t}from"./assets/virtual_mf-REMOTE_ENTRY_ID___mfe_internal__ConfigCustomPingSet__customComponents_js-K7ayBOq5.js";export{t as get,e as init};
