@@ -18,19 +18,15 @@ function cleanDevices() {
     deleteFoldersRecursive(`${__dirname}/src-devices/build`);
 }
 
+// `mf-manifest.json` is copied on purpose: admin 8 fetches it next to the remote entry to decide
+// from the shared modules which GUI API generation this component was built against.
 function copyAllAdminFiles() {
-    copyFiles(
-        ['src-admin/build/**/*', '!src-admin/build/index.html', '!src-admin/build/mf-manifest.json'],
-        'admin/custom/',
-    );
+    copyFiles(['src-admin/build/**/*', '!src-admin/build/index.html'], 'admin/custom/');
     copyFiles(['src-admin/src/i18n/*.json'], 'admin/custom/i18n');
 }
 
 function copyAllDevicesFiles() {
-    copyFiles(
-        ['src-devices/build/**/*', '!src-devices/build/index.html', '!src-devices/build/mf-manifest.json'],
-        'admin/dm-widgets/',
-    );
+    copyFiles(['src-devices/build/**/*', '!src-devices/build/index.html'], 'admin/dm-widgets/');
     copyFiles(['src-devices/img/**/*'], 'admin/dm-widgets');
     copyFiles(['src-devices/src/i18n/*.json'], 'admin/dm-widgets/i18n');
 }

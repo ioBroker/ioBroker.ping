@@ -184,6 +184,7 @@
                     "url": "custom/customComponents.js",
                     "name": "ConfigCustomPingSet/Components/PingBrowseComponent",
                     "guiApi": 2,
+                    "bundlerType": "module",
                     "type": "custom"
                 }
             }
