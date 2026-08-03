@@ -5,7 +5,7 @@ const assert = require('node:assert');
 
 // Exact version required: @iobroker/legacy-testing compares it with the installed package.json
 // version to decide whether it must be (re-)installed. No ranges like "^8.0.1" are supported.
-const ADMIN_VERSION = process.env.ADMIN_VERSION || '8.0.1';
+process.env.ADMIN_VERSION = '8.0.1';
 
 let objects = null;
 let states  = null;
@@ -79,10 +79,7 @@ describe('Test PING', function () {
     before('Test PING: Start js-controller', function (_done) {
         this.timeout(600000); // because of the first installation from npm
 
-        // The admin adapter must be >= 8.x (React 19). "iobroker add admin" would install the
-        // stable repo version (7.x, React 18) and the federated ping components would crash with
-        // "Objects are not valid as a React child" because of two different React copies.
-        setup.setupController([`iobroker.admin@${ADMIN_VERSION}`], async systemConfig => {
+        setup.setupController(['admin'], async systemConfig => {
             // disable statistics and set license accepted
             systemConfig.common.licenseConfirmed = true;
             systemConfig.common.diag = 'none';
