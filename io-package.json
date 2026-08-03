@@ -3,19 +3,6 @@
     "name": "ping",
     "version": "3.0.0",
     "news": {
-      "3.0.0": {
-        "en": "Breaking: Adapter requires node.js >= 22 now\nMigrated for Admin 8",
-        "de": "Wichtiger Hinweis: Der Adapter benötigt jetzt Node.js >= 22.\nMigriert für Admin 8",
-        "ru": "Критическая ошибка: адаптер теперь требует Node.js >= 22.\nПеренесено для Admin 8",
-        "pt": "Atenção: o adaptador agora requer Node.js versão 22 ou superior.\nMigrado para Admin 8",
-        "nl": "Breaking: Adapter vereist nu node.js >= 22\nGemigreerd voor beheerder 8",
-        "fr": "Information importante : l’adaptateur requiert désormais Node.js >= 22.\nMigration vers Admin 8",
-        "it": "Aggiornamento: l'adattatore ora richiede Node.js >= 22\nMigrato per Admin 8",
-        "es": "Última hora: El adaptador ahora requiere node.js >= 22.\nMigrado para Admin 8",
-        "pl": "Uwaga: Adapter wymaga teraz node.js >= 22\nPrzeniesiono do wersji Admin 8",
-        "uk": "Проблема: Адаптер тепер вимагає node.js >= 22\nПеренесено для адміністратора 8",
-        "zh-cn": "重要提示：适配器现在需要 node.js 版本 >= 22。\n已迁移至管理员 8"
-      },
       "2.2.4": {
         "en": "Fixing devices widgets",
         "de": "Festlegen von Geräten Widgets",

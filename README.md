@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### 3.0.0 (2026-08-03)
+### **WORK IN PROGRESS**
 - (copilot) Breaking: Adapter requires node.js >= 22 now
 - (@GermanBluefox) Migrated for Admin 8
 
