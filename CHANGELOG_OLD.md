@@ -1,4 +1,9 @@
 # Older changes
+## 2.0.0 (2026-02-26)
+- (@GermanBluefox) Migrated to TypeScript
+- (@GermanBluefox) Updated dependencies
+- (@GermanBluefox) A Minimal Node.js version is now 20
+
 ## 1.8.0 (2025-10-05)
 
 - (@GermanBluefox) Removed admin 4,5 support
