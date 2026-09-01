@@ -1,0 +1,1 @@
+import{t as e}from"./virtual_mf-exposes___mfe_internal__ConfigCustomPingSet__customComponents_js-y-3rN7yV.js";export{e as default};
