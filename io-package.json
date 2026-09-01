@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "news": {
+      "3.1.1": {
+        "en": "Ping says now when this host may not send ICMP at all instead of reporting every device as offline\nAdded an optional TCP check that keeps the devices monitored on such a host (LXC container)",
+        "de": "Ping meldet nun, dass dieser Host möglicherweise gar keine ICMP-Nachrichten mehr sendet, anstatt jedes Gerät als offline zu melden.\nEs wurde eine optionale TCP-Prüfung hinzugefügt, die sicherstellt, dass die Geräte auf einem solchen Host (LXC-Container) überwacht werden.",
+        "ru": "Теперь Ping сообщает, что хост может вообще не отправлять ICMP-запросы, вместо того, чтобы сообщать обо всех устройствах как об отключенных.\nДобавлена необязательная проверка TCP, которая обеспечивает мониторинг устройств на таком хосте (контейнере LXC).",
+        "pt": "O comando ping agora indica quando este host pode não enviar ICMP, em vez de reportar todos os dispositivos como offline.\nAdicionada uma verificação TCP opcional que mantém os dispositivos monitorados em tal host (container LXC).",
+        "nl": "Ping geeft nu aan wanneer deze host mogelijk helemaal geen ICMP-berichten verzendt, in plaats van elk apparaat als offline te rapporteren.\nEr is een optionele TCP-controle toegevoegd die ervoor zorgt dat de apparaten op een dergelijke host (LXC-container) worden bewaakt.",
+        "fr": "Ping indique maintenant que cet hôte peut ne pas envoyer de requêtes ICMP du tout, au lieu de signaler chaque périphérique comme hors ligne.\nAjout d'une vérification TCP optionnelle permettant de surveiller les périphériques sur un tel hôte (conteneur LXC).",
+        "it": "Ping ora dice che quando questo host potrebbe non inviare affatto ICMP invece di segnalare ogni dispositivo come offline\nÈ stato aggiunto un controllo TCP opzionale che mantiene i dispositivi monitorati su tale host (container LXC).",
+        "es": "Ping ahora indica cuándo este host podría no enviar ICMP en absoluto, en lugar de informar que todos los dispositivos están desconectados.\nSe agregó una comprobación TCP opcional que mantiene los dispositivos monitoreados en dicho host (contenedor LXC).",
+        "pl": "Ping teraz mówi, że ten host może w ogóle nie wysyłać protokołu ICMP zamiast zgłaszać każde urządzenie jako offline\nDodano opcjonalne sprawdzenie TCP, które utrzymuje urządzenia monitorowane na takim hoście (kontener LXC)",
+        "uk": "Ping тепер повідомляє, що цей хост взагалі не може надсилати ICMP, замість того, щоб повідомляти про кожен пристрій як офлайн\nДодано додаткову перевірку TCP, яка контролює пристрої на такому хості (контейнер LXC)",
+        "zh-cn": "Ping 现在会指出，即使主机根本不发送 ICMP 邮件，而不是将所有设备都报告为离线。\n添加了可选的 TCP 检查，用于监控此类主机（LXC 容器）上的设备。"
+      },
       "3.0.1": {
         "en": "Breaking: Adapter requires node.js >= 22 now\nMigrated for Admin 8",
         "de": "Wichtiger Hinweis: Der Adapter benötigt jetzt Node.js >= 22.\nMigriert für Admin 8",

@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.1 (2026-09-01)
 - (@GermanBluefox) Ping says now when this host may not send ICMP at all instead of reporting every device as offline
 - (@GermanBluefox) Added an optional TCP check that keeps the devices monitored on such a host (LXC container)
 
