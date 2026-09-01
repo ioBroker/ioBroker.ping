@@ -15,4 +15,8 @@ export interface PingAdapterConfig {
     autoDetect: number;
     setcap: boolean;
     installHping3: boolean;
+    /** Check the devices over TCP when this host may not send ICMP - see lib/pingFallback.ts */
+    tcpFallback: boolean;
+    /** Ports the TCP fallback tries, comma separated */
+    tcpFallbackPorts: string;
 }

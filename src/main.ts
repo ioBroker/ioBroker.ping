@@ -11,6 +11,7 @@ import { Adapter, type AdapterOptions, I18n } from '@iobroker/adapter-core';
 import * as ip from 'ip';
 
 import * as ping from './lib/ping';
+import { deniedHint, parsePorts, probeTcp } from './lib/pingFallback';
 import allowPing from './lib/setcup';
 import { installHping3, isHping3Available, isLinux } from './lib/hping3';
 import wakeOnLan, { isMACValid } from './lib/wakeOnLan';
@@ -18,6 +19,9 @@ import PingDeviceManagement from './lib/DeviceManagement';
 import type { DeviceConfig, PingAdapterConfig } from './types';
 
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
+
+/** Time a connect of the TCP fallback may take - the same two seconds a ping is given */
+const TCP_FALLBACK_TIMEOUT = 2000;
 
 interface DetectedIP {
     ip: string;
@@ -84,6 +88,10 @@ class PingAdapter extends Adapter {
     private stateToTask: Map<string, PingTask> = new Map();
     private pingTaskList: PingTask[] = [];
     private deviceManagement: PingDeviceManagement | null = null;
+    /** Set as soon as a ping came back "may not send ICMP", so that it is said only once */
+    private icmpDenied = false;
+    /** Ports the TCP fallback tries; empty when the fallback is switched off */
+    private tcpFallbackPorts: number[] = [];
 
     public constructor(options: Partial<AdapterOptions> = {}) {
         super({
@@ -169,7 +177,7 @@ class PingAdapter extends Adapter {
                 // read the last selected interface
                 const iState = await this.getStateAsync('browse.interface');
                 // if nothing selected, nothing to do
-                if (!iState || !iState.val) {
+                if (!iState?.val) {
                     this.log.warn('No interface selected');
                     this.runningBrowse = false;
                     return;
@@ -209,7 +217,7 @@ class PingAdapter extends Adapter {
         } else {
             iface = ifaceParam;
             const iState = await this.getStateAsync('browse.interface');
-            if (!iState || iState.val !== iface.ip) {
+            if (iState?.val !== iface.ip) {
                 await this.setStateAsync('browse.interface', iface.ip, true);
             }
         }
@@ -258,40 +266,36 @@ class PingAdapter extends Adapter {
 
             // do not ping the already configured and ignored devices
             if (!this.config.devices.find(dev => dev.ip === addr) && !this.detectedIPs.find(item => item.ip === addr)) {
-                await new Promise<void>(resolve =>
-                    ping.probe(addr, { log: this.log.debug }, async (_err, status) => {
-                        if (status?.alive) {
-                            console.log(`Found ${status.host}`);
-                            let mac: string | undefined;
-                            let vendorName: string | undefined;
-                            if (this.arpToMac) {
-                                mac = (await this.arpToMac(status.host)) || undefined;
-                                if (mac && this.toVendor) {
-                                    vendorName = this.toVendor(mac);
-                                }
-                            }
-                            const item = this.detectedIPs.find(d => d.ip === status.host);
-                            let changed = false;
-                            if (item) {
-                                if (item.mac !== mac || item.vendor !== vendorName) {
-                                    changed = true;
-                                    item.mac = mac || item.mac;
-                                    item.vendor = vendorName || item.vendor;
-                                }
-                            } else {
-                                this.detectedIPs.push({ ip: status.host, mac, vendor: vendorName, ignore: false });
-                                this.detectedIPs.sort((a, b) => (a.ip > b.ip ? 1 : a.ip < b.ip ? -1 : 0));
-                                changed = true;
-                            }
-                            if (changed) {
-                                await this.setStateAsync('browse.result', JSON.stringify(this.detectedIPs), true);
-                            }
-                        } else {
-                            console.log(`Progress ${progress} / 255`);
+                const { result: status } = await this.probeWithFallback(addr);
+                if (status?.alive) {
+                    console.log(`Found ${status.host}`);
+                    let mac: string | undefined;
+                    let vendorName: string | undefined;
+                    if (this.arpToMac) {
+                        mac = (await this.arpToMac(status.host)) || undefined;
+                        if (mac && this.toVendor) {
+                            vendorName = this.toVendor(mac);
                         }
-                        resolve();
-                    }),
-                );
+                    }
+                    const item = this.detectedIPs.find(d => d.ip === status.host);
+                    let changed = false;
+                    if (item) {
+                        if (item.mac !== mac || item.vendor !== vendorName) {
+                            changed = true;
+                            item.mac = mac || item.mac;
+                            item.vendor = vendorName || item.vendor;
+                        }
+                    } else {
+                        this.detectedIPs.push({ ip: status.host, mac, vendor: vendorName, ignore: false });
+                        this.detectedIPs.sort((a, b) => (a.ip > b.ip ? 1 : a.ip < b.ip ? -1 : 0));
+                        changed = true;
+                    }
+                    if (changed) {
+                        await this.setStateAsync('browse.result', JSON.stringify(this.detectedIPs), true);
+                    }
+                } else {
+                    console.log(`Progress ${progress} / 255`);
+                }
             }
 
             if (this.stopBrowsing) {
@@ -427,9 +431,8 @@ class PingAdapter extends Adapter {
             case 'ping': {
                 // Try to ping one IP or name
                 if (obj.callback && obj.message) {
-                    ping.probe(obj.message as string, { log: this.log.debug }, (err, result) =>
-                        this.sendTo(obj.from, obj.command, { result, error: err }, obj.callback),
-                    );
+                    const { err, result } = await this.probeWithFallback(obj.message as string);
+                    this.sendTo(obj.from, obj.command, { result, error: err }, obj.callback);
                 }
                 break;
             }
@@ -585,34 +588,81 @@ class PingAdapter extends Adapter {
         }
     }
 
-    pingSingleDevice(task: PingTask, retryCounter: number): Promise<boolean> {
+    /** Say once that this host may not send ICMP at all - see lib/pingFallback.ts */
+    noteDeniedPing(stderr?: string): void {
+        if (this.icmpDenied) {
+            return;
+        }
+        this.icmpDenied = true;
+        deniedHint(stderr, this.tcpFallbackPorts.length ? this.tcpFallbackPorts : undefined).forEach(line =>
+            this.log.warn(line),
+        );
+    }
+
+    /**
+     * One probe of a host, over TCP when ICMP turned out to be forbidden here.
+     *
+     * An unprivileged LXC container may not open an ICMP socket, and every device would then
+     * be reported as offline without a word about why. A connect is not the same question as
+     * an echo request - a device that answers on none of the ports stays "offline" - so the
+     * fallback has to be switched on in the settings.
+     */
+    probeWithFallback(
+        host: string,
+        useHping3?: boolean,
+    ): Promise<{ err?: Error | string | null; result?: ping.PingResult }> {
         return new Promise(resolve =>
-            ping.probe(task.host, { log: this.log.debug, useHping3: task.useHping3 }, async (err, result) => {
-                err && this.log.error(`Error by pinging: ${err}`);
-
-                if (result) {
-                    this.log.debug(
-                        `Ping result for ${result.host}: ${result.alive} in ${
-                            result.ms === null ? '-' : result.ms
-                        }ms (Tried ${retryCounter}/${this.config.numberOfRetries} times)`,
-                    );
-
-                    if (!result.alive && retryCounter < this.config.numberOfRetries) {
-                        /* When the ping failed, it also could be a device problem.
-                           Some Android phones sometimes don't answer to a ping,
-                           but do in fact answer for the following ping.
-                           So we are giving the device some more attempts until it finally fails.
-                         */
-                        resolve(false);
-                        return;
-                    }
-                    await this.setDeviceStates(task, result);
-                } else if (!err) {
-                    this.log.warn(`No result by pinging of ${task.host}`);
+            ping.probe(host, { log: this.log.debug, useHping3 }, (err, result) => {
+                if (!result?.denied) {
+                    resolve({ err, result });
+                    return;
                 }
-                resolve(true);
+
+                this.noteDeniedPing(result.error);
+
+                if (!this.tcpFallbackPorts.length) {
+                    resolve({ err, result });
+                    return;
+                }
+
+                probeTcp(host, this.tcpFallbackPorts, TCP_FALLBACK_TIMEOUT, tcp => {
+                    this.log.debug(
+                        `${host} asked over TCP: ${tcp.alive ? `answered on port ${tcp.port}` : 'no answer'}`,
+                    );
+                    resolve({
+                        err,
+                        result: { host, alive: tcp.alive, ms: tcp.ms, error: result.error, denied: true },
+                    });
+                });
             }),
         );
+    }
+
+    async pingSingleDevice(task: PingTask, retryCounter: number): Promise<boolean> {
+        const { err, result } = await this.probeWithFallback(task.host, task.useHping3);
+
+        err && this.log.error(`Error by pinging: ${err}`);
+
+        if (result) {
+            this.log.debug(
+                `Ping result for ${result.host}: ${result.alive} in ${
+                    result.ms === null ? '-' : result.ms
+                }ms (Tried ${retryCounter}/${this.config.numberOfRetries} times)`,
+            );
+
+            if (!result.alive && retryCounter < this.config.numberOfRetries) {
+                /* When the ping failed, it also could be a device problem.
+                   Some Android phones sometimes don't answer to a ping,
+                   but do in fact answer for the following ping.
+                   So we are giving the device some more attempts until it finally fails.
+                 */
+                return false;
+            }
+            await this.setDeviceStates(task, result);
+        } else if (!err) {
+            this.log.warn(`No result by pinging of ${task.host}`);
+        }
+        return true;
     }
 
     async setDeviceStates(task: PingTask, result: ping.PingResult): Promise<void> {
@@ -803,7 +853,7 @@ class PingAdapter extends Adapter {
             const fullID = state._id;
             const oldObj = oldObjects[fullID];
 
-            if (oldObj && oldObj.type === 'state') {
+            if (oldObj?.type === 'state') {
                 if (!this.isStatesEqual(oldObj, state)) {
                     this.log.debug(`Update state id=${fullID}`);
 
@@ -1125,6 +1175,8 @@ class PingAdapter extends Adapter {
             this.config.numberOfRetries = 1;
         }
 
+        this.tcpFallbackPorts = this.config.tcpFallback ? parsePorts(this.config.tcpFallbackPorts) : [];
+
         if (this.config.setcap) {
             try {
                 await allowPing();
@@ -1150,7 +1202,7 @@ class PingAdapter extends Adapter {
         if (this.config.autoDetect) {
             this.pingOnTime().catch(e => this.log.error(`Cannot start auto detect: ${e}`));
         }
-        if (!this.config.devices || !this.config.devices.length) {
+        if (!this.config.devices?.length) {
             this.log.warn('No one host configured for ping');
             return;
         }

@@ -260,7 +260,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
 
         if (stateTime && showResponseTime) {
             const timeHandler = (_id: string, state: ioBroker.State | null | undefined): void => {
-                if (state && state.val != null) {
+                if (state?.val != null) {
                     this.setState({ responseTimeS: Number(state.val) });
                 }
             };

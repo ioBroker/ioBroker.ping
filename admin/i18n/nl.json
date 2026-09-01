@@ -28,5 +28,9 @@
     "every 6 hours": "elke 6 uur",
     "every 12 hours": "elke 12 uur",
     "every day": "eenmaal per dag",
-    "Select interface for browsing to enable auto detect": "Selecteer de interface voor browsen om automatische detectie in te schakelen"
+    "Select interface for browsing to enable auto detect": "Selecteer de interface voor browsen om automatische detectie in te schakelen",
+    "Check over TCP when ping is not permitted": "Via TCP controleren als ping niet is toegestaan",
+    "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "Een LXC-container zonder rechten mag geen ICMP-pakketten sturen en elk apparaat zou als offline worden gemeld",
+    "Ports of the TCP check": "Poorten van de TCP-controle",
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Een apparaat dat de verbinding weigert wordt ook herkend, maar een apparaat dat op geen van deze poorten antwoordt blijft offline"
 }

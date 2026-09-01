@@ -28,5 +28,9 @@
     "every 6 hours": "每 6 小时",
     "every 12 hours": "每 12 小时",
     "every day": "每天一次",
-    "Select interface for browsing to enable auto detect": "选择浏览界面以启用自动检测"
+    "Select interface for browsing to enable auto detect": "选择浏览界面以启用自动检测",
+    "Check over TCP when ping is not permitted": "禁止 ping 时通过 TCP 检查",
+    "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "非特权 LXC 容器不能发送 ICMP 数据包，所有设备都会被报告为离线",
+    "Ports of the TCP check": "TCP 检查的端口",
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "拒绝连接的设备同样会被识别，但在这些端口上都不响应的设备仍为离线"
 }

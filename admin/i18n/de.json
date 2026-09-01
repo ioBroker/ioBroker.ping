@@ -28,5 +28,9 @@
     "every 6 hours": "alle 6 Stunden",
     "every 12 hours": "alle 12 Stunden",
     "every day": "einmal täglich",
-    "Select interface for browsing to enable auto detect": "Wählen Sie eine Schnittstelle zum Durchsuchen aus, um die automatische Erkennung zu aktivieren"
+    "Select interface for browsing to enable auto detect": "Wählen Sie eine Schnittstelle zum Durchsuchen aus, um die automatische Erkennung zu aktivieren",
+    "Check over TCP when ping is not permitted": "Über TCP prüfen, wenn Ping nicht erlaubt ist",
+    "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "Ein unprivilegierter LXC-Container darf keine ICMP-Pakete senden, und jedes Gerät würde als offline gemeldet",
+    "Ports of the TCP check": "Ports der TCP-Prüfung",
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Ein Gerät, das die Verbindung ablehnt, wird ebenfalls erkannt; eines, das auf keinem dieser Ports antwortet, bleibt offline"
 }

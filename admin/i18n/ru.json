@@ -28,5 +28,9 @@
     "every 6 hours": "каждые 6 часов",
     "every 12 hours": "каждые 12 часов",
     "every day": "один раз в день",
-    "Select interface for browsing to enable auto detect": "Выберите интерфейс для просмотра, чтобы включить автоматическое обнаружение"
+    "Select interface for browsing to enable auto detect": "Выберите интерфейс для просмотра, чтобы включить автоматическое обнаружение",
+    "Check over TCP when ping is not permitted": "Проверять через TCP, если ping запрещён",
+    "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "Непривилегированный контейнер LXC не может отправлять ICMP-пакеты, и все устройства были бы отмечены как офлайн",
+    "Ports of the TCP check": "Порты TCP-проверки",
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Устройство, которое отклоняет соединение, тоже распознаётся, но то, которое не отвечает ни на одном из этих портов, останется офлайн"
 }

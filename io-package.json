@@ -214,7 +214,9 @@
     "numberOfRetries": 1,
     "noHostname": false,
     "autoDetect": "0",
-    "installHping3": false
+    "installHping3": false,
+    "tcpFallback": false,
+    "tcpFallbackPorts": "80,443,22,8080,8443,1883"
   },
   "notifications": [
     {

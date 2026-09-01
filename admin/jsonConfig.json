@@ -51,6 +51,25 @@
                     "sm": 12,
                     "help": "This allows to run ping without root rights"
                 },
+                "tcpFallback": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Check over TCP when ping is not permitted",
+                    "xs": 12,
+                    "sm": 12,
+                    "help": "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline"
+                },
+                "tcpFallbackPorts": {
+                    "newLine": true,
+                    "type": "text",
+                    "label": "Ports of the TCP check",
+                    "disabled": "!data.tcpFallback",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "help": "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline"
+                },
                 "installHping3": {
                     "newLine": true,
                     "type": "checkbox",

@@ -28,5 +28,9 @@
     "every 6 hours": "every 6 hours",
     "every 12 hours": "every 12 hours",
     "every day": "once a day",
-    "Select interface for browsing to enable auto detect": "Select interface for browsing to enable auto detect"
+    "Select interface for browsing to enable auto detect": "Select interface for browsing to enable auto detect",
+    "Check over TCP when ping is not permitted": "Check over TCP when ping is not permitted",
+    "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline",
+    "Ports of the TCP check": "Ports of the TCP check",
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline"
 }

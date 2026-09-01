@@ -7,8 +7,25 @@ exports.parseAddress = parseAddress;
 exports.probe = probe;
 const node_child_process_1 = __importDefault(require("node:child_process"));
 const node_net_1 = __importDefault(require("node:net"));
+const node_fs_1 = __importDefault(require("node:fs"));
 const node_os_1 = require("node:os");
+const pingFallback_1 = require("./pingFallback");
 const p = (0, node_os_1.platform)().toLowerCase();
+/**
+ * The ping binary of this host.
+ *
+ * Not every system keeps it in `/bin`: macOS and FreeBSD have `/sbin/ping`, and a container
+ * built without the usr-merge may only carry `/usr/bin/ping`. The bare `ping` as the last
+ * resort lets PATH decide instead of failing with ENOENT.
+ */
+function findPingBinary() {
+    for (const candidate of ['/bin/ping', '/usr/bin/ping', '/sbin/ping', '/usr/sbin/ping']) {
+        if (node_fs_1.default.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+    return 'ping';
+}
 function parseAddress(addr) {
     const match = addr.match(/^(.+):(\d+)$/);
     if (match) {
@@ -87,6 +104,7 @@ function probe(addr, config, callback) {
     let ls = null;
     const log = config.log || console.log;
     let outString = '';
+    let errString = '';
     const resolvedConfig = {
         numeric: config.numeric === undefined ? true : config.numeric,
         timeout: parseInt(String(config.timeout === undefined ? 2 : config.timeout), 10),
@@ -113,8 +131,9 @@ function probe(addr, config, callback) {
                 args = args.concat(resolvedConfig.extra);
             }
             args.push(addr);
-            log(`System command: /bin/ping ${args.join(' ')}`);
-            ls = node_child_process_1.default.spawn('/bin/ping', args);
+            const binary = findPingBinary();
+            log(`System command: ${binary} ${args.join(' ')}`);
+            ls = node_child_process_1.default.spawn(binary, args);
         }
         else if (p.match(/^win/)) {
             //windows
@@ -158,8 +177,9 @@ function probe(addr, config, callback) {
                 args = args.concat(resolvedConfig.extra);
             }
             args.push(addr);
-            log(`System command: /sbin/ping ${args.join(' ')}`);
-            ls = node_child_process_1.default.spawn('/sbin/ping', args);
+            const binary = findPingBinary();
+            log(`System command: ${binary} ${args.join(' ')}`);
+            ls = node_child_process_1.default.spawn(binary, args);
         }
         else {
             callback?.(`Your platform "${p}" is not supported`);
@@ -177,7 +197,12 @@ function probe(addr, config, callback) {
         cb = null;
     });
     if (ls.stderr) {
-        ls.stderr.on('data', (data) => log(`STDERR: ${data.toString()}`));
+        ls.stderr.on('data', (data) => {
+            // Kept, and remembered: without it a host that may not open an ICMP socket looks
+            // exactly like a network full of offline devices, and nothing says why.
+            errString += String(data);
+            log(`STDERR: ${data.toString()}`);
+        });
         ls.stderr.on('error', (e) => {
             cb?.(new Error(`ping.probe: there was an error while executing the ping program. check the path or permissions...: ${e}`));
             cb = null;
@@ -207,10 +232,13 @@ function probe(addr, config, callback) {
         else {
             alive = !code;
         }
+        const error = errString.trim();
         cb?.(null, {
             host: addr,
             alive,
             ms,
+            error: error || undefined,
+            denied: (0, pingFallback_1.isPermissionError)(error),
         });
         cb = null;
     });

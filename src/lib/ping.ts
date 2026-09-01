@@ -1,6 +1,9 @@
 import cp from 'node:child_process';
 import net from 'node:net';
+import fs from 'node:fs';
 import { platform } from 'node:os';
+
+import { isPermissionError } from './pingFallback';
 
 const p = platform().toLowerCase();
 
@@ -8,6 +11,26 @@ export interface PingResult {
     host: string;
     alive: boolean;
     ms: number | null;
+    /** What the ping process wrote to stderr, when it wrote anything */
+    error?: string;
+    /** The process was not allowed to send ICMP at all - see `lib/pingFallback.ts` */
+    denied?: boolean;
+}
+
+/**
+ * The ping binary of this host.
+ *
+ * Not every system keeps it in `/bin`: macOS and FreeBSD have `/sbin/ping`, and a container
+ * built without the usr-merge may only carry `/usr/bin/ping`. The bare `ping` as the last
+ * resort lets PATH decide instead of failing with ENOENT.
+ */
+function findPingBinary(): string {
+    for (const candidate of ['/bin/ping', '/usr/bin/ping', '/sbin/ping', '/usr/sbin/ping']) {
+        if (fs.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+    return 'ping';
 }
 
 export interface PingConfig {
@@ -117,6 +140,7 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
     let ls: cp.ChildProcess | null = null;
     const log = config.log || console.log;
     let outString = '';
+    let errString = '';
 
     const resolvedConfig: {
         numeric: boolean;
@@ -155,8 +179,9 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
             }
 
             args.push(addr);
-            log(`System command: /bin/ping ${args.join(' ')}`);
-            ls = cp.spawn('/bin/ping', args);
+            const binary = findPingBinary();
+            log(`System command: ${binary} ${args.join(' ')}`);
+            ls = cp.spawn(binary, args);
         } else if (p.match(/^win/)) {
             //windows
             args = [];
@@ -207,8 +232,9 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
             }
 
             args.push(addr);
-            log(`System command: /sbin/ping ${args.join(' ')}`);
-            ls = cp.spawn('/sbin/ping', args);
+            const binary = findPingBinary();
+            log(`System command: ${binary} ${args.join(' ')}`);
+            ls = cp.spawn(binary, args);
         } else {
             callback?.(`Your platform "${p}" is not supported`);
             return;
@@ -235,7 +261,12 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
     });
 
     if (ls.stderr) {
-        ls.stderr.on('data', (data: Buffer) => log(`STDERR: ${data.toString()}`));
+        ls.stderr.on('data', (data: Buffer) => {
+            // Kept, and remembered: without it a host that may not open an ICMP socket looks
+            // exactly like a network full of offline devices, and nothing says why.
+            errString += String(data);
+            log(`STDERR: ${data.toString()}`);
+        });
         ls.stderr.on('error', (e: Error) => {
             cb?.(
                 new Error(
@@ -277,10 +308,14 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
             alive = !code;
         }
 
+        const error = errString.trim();
+
         cb?.(null, {
             host: addr,
             alive,
             ms,
+            error: error || undefined,
+            denied: isPermissionError(error),
         });
 
         cb = null;
