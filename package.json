@@ -28,7 +28,7 @@
   "dependencies": {
     "@iobroker/adapter-core": "^3.4.3",
     "@iobroker/dm-utils": "^3.2.0",
-    "@network-utils/vendor-lookup": "^1.0.12",
+    "@network-utils/vendor-lookup": "^1.0.13",
     "ip": "^2.0.1"
   },
   "devDependencies": {
