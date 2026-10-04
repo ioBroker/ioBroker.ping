@@ -40,7 +40,7 @@
     "@iobroker/build-tools": "^3.0.1",
     "@iobroker/eslint-config": "^2.3.4",
     "@iobroker/legacy-testing": "^3.0.1",
-    "@iobroker/testing": "^5.3.0",
+    "@iobroker/testing": "^6.2.2",
     "@tsconfig/node22": "^22.0.6",
     "@types/node": "^22.20.4",
     "colorette": "^2.0.20",
