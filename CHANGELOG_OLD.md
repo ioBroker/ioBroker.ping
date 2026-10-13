@@ -1,4 +1,7 @@
 # Older changes
+## 2.2.4 (2026-05-16)
+- (@GermanBluefox) Fixing devices widgets
+
 ## 2.2.2 (2026-04-30)
 - (@GermanBluefox) Added support for device manager
 - (@GermanBluefox) Added devices widgets

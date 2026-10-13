@@ -110,11 +110,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)
 
-## Changelog
 ### 3.1.3 (2026-10-13)
 - (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
 
@@ -128,9 +126,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 ### 3.0.1 (2026-08-03)
 - (copilot) Breaking: Adapter requires node.js >= 22 now
 - (@GermanBluefox) Migrated for Admin 8
-
-### 2.2.4 (2026-05-16)
-- (@GermanBluefox) Fixing devices widgets
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
