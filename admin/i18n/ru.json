@@ -32,5 +32,8 @@
     "Check over TCP when ping is not permitted": "Проверять через TCP, если ping запрещён",
     "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "Непривилегированный контейнер LXC не может отправлять ICMP-пакеты, и все устройства были бы отмечены как офлайн",
     "Ports of the TCP check": "Порты TCP-проверки",
-    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Устройство, которое отклоняет соединение, тоже распознаётся, но то, которое не отвечает ни на одном из этих портов, останется офлайн"
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Устройство, которое отклоняет соединение, тоже распознаётся, но то, которое не отвечает ни на одном из этих портов, останется офлайн",
+    "Wake device before ping (e.g. for iPhones in deep sleep)": "Разбудить устройство перед пингом (например, iPhone в глубоком сне)",
+    "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging": "hping3 используется для пробуждения спящих устройств (например, iPhone) перед пингом",
+    "Install hping3 if not available (Linux only)": "Установить hping3, если отсутствует (только Linux)"
 }

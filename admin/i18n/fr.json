@@ -32,5 +32,8 @@
     "Check over TCP when ping is not permitted": "Vérifier en TCP quand le ping n'est pas autorisé",
     "An unprivileged LXC container may not send ICMP packets and every device would be reported as offline": "Un conteneur LXC non privilégié ne peut pas envoyer de paquets ICMP et chaque appareil serait signalé hors ligne",
     "Ports of the TCP check": "Ports de la vérification TCP",
-    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Un appareil qui refuse la connexion est également reconnu, mais celui qui ne répond sur aucun de ces ports reste hors ligne"
+    "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Un appareil qui refuse la connexion est également reconnu, mais celui qui ne répond sur aucun de ces ports reste hors ligne",
+    "Wake device before ping (e.g. for iPhones in deep sleep)": "Réveiller l’appareil avant le ping (par ex. pour les iPhone en veille profonde)",
+    "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging": "hping3 est utilisé pour réveiller les appareils en veille (par ex. les iPhone) avant le ping",
+    "Install hping3 if not available (Linux only)": "Installer hping3 s’il n’est pas disponible (Linux uniquement)"
 }

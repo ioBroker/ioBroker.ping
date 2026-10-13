@@ -261,7 +261,7 @@ describe('Test PING', function () {
     }).timeout(60_000);
 
     after('Test PING: Stop js-controller', function (done) {
-        this.timeout(6000);
+        this.timeout(30_000);
         setup.stopCustomAdapter('admin', 0)
             .then(async () => {
                 await guiHelper.stopBrowser();
