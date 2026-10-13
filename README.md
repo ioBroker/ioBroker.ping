@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.2 (2026-10-13)
 - (@GermanBluefox) Updated packages and added missing translations
 
 ### 3.1.1 (2026-09-01)
@@ -139,10 +139,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 ### 2.2.2 (2026-04-30)
 - (@GermanBluefox) Added support for device manager
 - (@GermanBluefox) Added devices widgets
-
-### 2.1.0 (2026-03-04)
-- (@GermanBluefox) Implemented wake-on-lan functionality
-- (@GermanBluefox) Implemented pings with hping3 for sleeping devices (e.g. iPhones)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
