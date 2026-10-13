@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.1.2",
+    "version": "3.1.3",
     "news": {
+      "3.1.3": {
+        "en": "Fixed lint error after GUI package update (3.1.2 was not published to npm)",
+        "de": "Lint-Fehler nach GUI-Paket-Update behoben (3.1.2 nicht auf npm)",
+        "ru": "Исправлена ошибка lint после обновления пакета графического интерфейса (версия 3.1.2 не была опубликована в npm)",
+        "pt": "Erro de lint corrigido após atualizar o GUI (3.1.2 não foi publicado no npm)",
+        "nl": "Lintfout opgelost na update van het GUI-pakket (3.1.2 is niet gepubliceerd op npm)",
+        "fr": "Correction d'une erreur Lint après la mise à jour de l'interface (3.1.2 non publié sur npm)",
+        "it": "Risolto errore dopo l'aggiornamento della GUI (3.1.2 non pubblicato su npm)",
+        "es": "Se corrigió un error de lint tras actualizar el paquete GUI (3.1.2 no se publicó en npm)",
+        "pl": "Naprawiono błąd lint po aktualizacji pakietu GUI (3.1.2 nie został opublikowany do npm)",
+        "uk": "Виправлена помилка lint після оновлення пакета графічного інтерфейсу (3.1.2 не було опубліковано в npm)",
+        "zh-cn": "修复了 GUI 包更新后的 lint 错误（3.1.2 未发布到 npm）"
+      },
       "3.1.2": {
         "en": "Updated packages and added missing translations",
         "de": "Pakete und fehlende Übersetzungen ergänzt",
@@ -80,19 +93,6 @@
         "pl": "Wdrożenie funkcji wake- on- lan\nWbudowane pingi z hping3 do urządzeń nasennych (np. iPhone)",
         "uk": "Реалізовано функціональність\nРеалізовані пінги з hping3 для сплячих пристроїв (наприклад, iPhone)",
         "zh-cn": "已执行的全天候功能\n用于睡眠装置(如iPhones)的hping3已执行"
-      },
-      "2.0.0": {
-        "en": "Migrated to TypeScript\nUpdated dependencies\nA Minimal Node.js version is now 20",
-        "de": "Zu TypeScript migriert\nAktualisierte Abhängigkeiten\nEine Minimal Node.js-Version ist jetzt 20",
-        "ru": "Иммиграция в TypeScript\nОбновленные зависимости\nМинимальная версия Node.js теперь 20",
-        "pt": "Migrado para TipoScript\nDependências atualizadas\nUma versão Minimal Node.js é agora 20",
-        "nl": "Naar typeScript migreren\nBijgewerkte afhankelijkheden\nEen minimale Node.js versie is nu 20",
-        "fr": "Migré vers TypeScript\nDépendances actualisées\nUne version Minimal Node.js est maintenant 20",
-        "it": "Migrato a TypeScript\nDipendenze aggiornate\nUna versione Minimal Node.js è ora 20",
-        "es": "Migrado a TipoScript\nDependencias actualizadas\nUna versión Minimal Node.js es ahora 20",
-        "pl": "Migrated to TypeScript\nAktualizacja zależności\nMinimal Node.js wersja jest teraz 20",
-        "uk": "Migrated до TypeScript\nОновлені залежності\nВерсія Minimal Node.js тепер 20",
-        "zh-cn": "移动到类型脚本\n更新的依赖关系\n最小节点Js版本现在是20"
       }
     },
     "titleLang": {

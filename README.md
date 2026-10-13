@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.3 (2026-10-13)
 - (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
 
 ### 3.1.2 (2026-10-13)
@@ -138,10 +138,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### 2.2.4 (2026-05-16)
 - (@GermanBluefox) Fixing devices widgets
-
-### 2.2.2 (2026-04-30)
-- (@GermanBluefox) Added support for device manager
-- (@GermanBluefox) Added devices widgets
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

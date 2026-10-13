@@ -1,4 +1,8 @@
 # Older changes
+## 2.2.2 (2026-04-30)
+- (@GermanBluefox) Added support for device manager
+- (@GermanBluefox) Added devices widgets
+
 ## 2.1.0 (2026-03-04)
 - (@GermanBluefox) Implemented wake-on-lan functionality
 - (@GermanBluefox) Implemented pings with hping3 for sleeping devices (e.g. iPhones)
