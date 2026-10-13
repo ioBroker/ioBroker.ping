@@ -172,7 +172,7 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
             },
         };
 
-        return { name: 'PingIpAddress', schema: schema as unknown as ConfigItemPanel };
+        return { name: 'PingIpAddress', schema: schema };
     }
 
     async componentDidMount(): Promise<void> {
