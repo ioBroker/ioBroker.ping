@@ -10,6 +10,7 @@ const node_net_1 = __importDefault(require("node:net"));
 const node_fs_1 = __importDefault(require("node:fs"));
 const node_os_1 = require("node:os");
 const pingFallback_1 = require("./pingFallback");
+const udpWake_1 = require("./udpWake");
 const p = (0, node_os_1.platform)().toLowerCase();
 /**
  * The ping binary of this host.
@@ -72,21 +73,15 @@ function probeTcpPort(host, port, config, callback) {
     });
     socket.connect(port, host);
 }
-function wakeWithHping3(addr, log, callback) {
-    const args = ['-2', '-c', '10', '-p', '5353', '-i', 'u1', '-q', addr];
-    log(`hping3 wake: hping3 ${args.join(' ')}`);
-    try {
-        const ls = node_child_process_1.default.spawn('hping3', args);
-        ls.on('error', (e) => {
-            log(`hping3 error (falling back to regular ping): ${e.message}`);
-            callback();
-        });
-        ls.on('exit', () => callback());
-    }
-    catch (e) {
-        log(`Cannot start hping3 (falling back to regular ping): ${e}`);
-        callback();
-    }
+function wakeWithUdpBurst(addr, log, callback) {
+    log(`UDP wake: burst to ${addr}`);
+    const pingLater = () => {
+        setTimeout(callback, udpWake_1.UDP_WAKE_SETTLE);
+    };
+    (0, udpWake_1.sendUdpBurst)(addr).then(pingLater, (e) => {
+        log(`UDP wake error (pinging anyway): ${e.message}`);
+        pingLater();
+    });
 }
 function probe(addr, config, callback) {
     config ||= {};
@@ -96,9 +91,9 @@ function probe(addr, config, callback) {
         // Use TCP port check
         return probeTcpPort(parsed.host, parsed.port, config, callback);
     }
-    if (config.useHping3 && p.startsWith('linux')) {
+    if (config.udpWake) {
         const log = config.log || console.log;
-        wakeWithHping3(addr, log, () => probe(addr, { ...config, useHping3: false }, callback));
+        wakeWithUdpBurst(addr, log, () => probe(addr, { ...config, udpWake: false }, callback));
         return;
     }
     let ls = null;

@@ -50,7 +50,6 @@ const ip = __importStar(require("ip"));
 const ping = __importStar(require("./lib/ping"));
 const pingFallback_1 = require("./lib/pingFallback");
 const setcup_1 = __importDefault(require("./lib/setcup"));
-const hping3_1 = require("./lib/hping3");
 const wakeOnLan_1 = __importStar(require("./lib/wakeOnLan"));
 const DeviceManagement_1 = __importDefault(require("./lib/DeviceManagement"));
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
@@ -536,8 +535,8 @@ class PingAdapter extends adapter_core_1.Adapter {
      * an echo request - a device that answers on none of the ports stays "offline" - so the
      * fallback has to be switched on in the settings.
      */
-    probeWithFallback(host, useHping3) {
-        return new Promise(resolve => ping.probe(host, { log: this.log.debug, useHping3 }, (err, result) => {
+    probeWithFallback(host, udpWake) {
+        return new Promise(resolve => ping.probe(host, { log: this.log.debug, udpWake }, (err, result) => {
             if (!result?.denied) {
                 resolve({ err, result });
                 return;
@@ -557,7 +556,7 @@ class PingAdapter extends adapter_core_1.Adapter {
         }));
     }
     async pingSingleDevice(task, retryCounter) {
-        const { err, result } = await this.probeWithFallback(task.host, task.useHping3);
+        const { err, result } = await this.probeWithFallback(task.host, task.udpWake);
         err && this.log.error(`Error by pinging: ${err}`);
         if (result) {
             this.log.debug(`Ping result for ${result.host}: ${result.alive} in ${result.ms === null ? '-' : result.ms}ms (Tried ${retryCounter}/${this.config.numberOfRetries} times)`);
@@ -789,7 +788,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                 ping_task: {
                     host,
                     extendedInfo: true,
-                    useHping3: !!config.use_hping3,
+                    udpWake: !!config.use_hping3,
                     stateAlive: this.buildId(stateAliveID),
                     stateTime: this.buildId(stateTimeID),
                     stateRps: this.buildId(stateRpsID),
@@ -866,7 +865,7 @@ class PingAdapter extends adapter_core_1.Adapter {
             ping_task: {
                 host: config.ip.trim(),
                 extendedInfo: false,
-                useHping3: !!config.use_hping3,
+                udpWake: !!config.use_hping3,
                 stateAlive: this.buildId(stateID),
             },
             states: [
@@ -1035,21 +1034,6 @@ class PingAdapter extends adapter_core_1.Adapter {
             }
             catch (e) {
                 this.log.warn(`Cannot allow setcap for ping: ${e}`);
-            }
-        }
-        if (this.config.installHping3) {
-            if (!(0, hping3_1.isLinux)()) {
-                this.log.warn('hping3 is only available on Linux, ignoring installHping3 option');
-            }
-            else if (!(await (0, hping3_1.isHping3Available)())) {
-                this.log.info('Installing hping3...');
-                try {
-                    await (0, hping3_1.installHping3)();
-                    this.log.info('hping3 installed successfully');
-                }
-                catch (e) {
-                    this.log.warn(`Cannot install hping3: ${e}`);
-                }
             }
         }
         if (this.config.autoDetect) {

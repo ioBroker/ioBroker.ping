@@ -34,6 +34,5 @@
     "Ports of the TCP check": "TCP 检查的端口",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "拒绝连接的设备同样会被识别，但在这些端口上都不响应的设备仍为离线",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "ping 前唤醒设备（例如处于深度睡眠的 iPhone）",
-    "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging": "hping3 用于在 ping 之前唤醒休眠设备（例如 iPhone）",
-    "Install hping3 if not available (Linux only)": "如果不可用则安装 hping3（仅限 Linux）"
+    "Wake before ping": "ping 前唤醒"
 }

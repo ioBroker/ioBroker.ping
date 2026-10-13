@@ -69,14 +69,6 @@
                     "md": 6,
                     "lg": 4,
                     "help": "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline"
-                },
-                "installHping3": {
-                    "newLine": true,
-                    "type": "checkbox",
-                    "label": "Install hping3 if not available (Linux only)",
-                    "xs": 12,
-                    "sm": 12,
-                    "help": "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging"
                 }
             }
         },
@@ -125,7 +117,7 @@
                         {
                             "type": "checkbox",
                             "attr": "use_hping3",
-                            "title": "Use hping3",
+                            "title": "Wake before ping",
                             "width": 80,
                             "tooltip": "Wake device before ping (e.g. for iPhones in deep sleep)"
                         }

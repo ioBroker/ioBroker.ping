@@ -34,6 +34,5 @@
     "Ports of the TCP check": "Porty sprawdzania TCP",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Urządzenie, które odrzuca połączenie, też jest rozpoznawane, ale takie, które nie odpowiada na żadnym z tych portów, pozostaje offline",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "Wybudź urządzenie przed pingiem (np. iPhone’y w głębokim uśpieniu)",
-    "hping3 is used to wake sleeping devices (e.g. iPhones) before pinging": "hping3 służy do wybudzania uśpionych urządzeń (np. iPhone’ów) przed pingiem",
-    "Install hping3 if not available (Linux only)": "Zainstaluj hping3, jeśli nie jest dostępny (tylko Linux)"
+    "Wake before ping": "Wybudź przed pingiem"
 }
