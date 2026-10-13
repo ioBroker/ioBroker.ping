@@ -29,19 +29,6 @@
         "uk": "Виправлена помилка lint після оновлення пакета графічного інтерфейсу (3.1.2 не було опубліковано в npm)",
         "zh-cn": "修复了 GUI 包更新后的 lint 错误（3.1.2 未发布到 npm）"
       },
-      "3.1.2": {
-        "en": "Updated packages and added missing translations",
-        "de": "Pakete und fehlende Übersetzungen ergänzt",
-        "ru": "Обновлены пакеты и добавлены недостающие переводы",
-        "pt": "Pacotes atualizados e traduções ausentes",
-        "nl": "Pakketten bijgewerkt en ontbrekende vertalingen toegevoegd",
-        "fr": "Packages mis à jour et traductions manquantes",
-        "it": "Pacchetti aggiornati e traduzioni mancanti",
-        "es": "Actualizó paquetes y añadió las traducciones que faltaban",
-        "pl": "Zaktualizowano pakiety i dodano brakujące tłumaczenia",
-        "uk": "Оновлені пакети та додані відсутні переклади",
-        "zh-cn": "更新了软件包并添加了缺失的翻译"
-      },
       "3.1.1": {
         "en": "Ping says now when this host may not send ICMP at all instead of reporting every device as offline\nAdded an optional TCP check that keeps the devices monitored on such a host (LXC container)",
         "de": "Ping meldet nun, dass dieser Host möglicherweise gar keine ICMP-Nachrichten mehr sendet, anstatt jedes Gerät als offline zu melden.\nEs wurde eine optionale TCP-Prüfung hinzugefügt, die sicherstellt, dass die Geräte auf einem solchen Host (LXC-Container) überwacht werden.",
