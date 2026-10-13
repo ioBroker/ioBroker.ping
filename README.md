@@ -122,6 +122,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
+
 ### 3.1.2 (2026-10-13)
 - (@GermanBluefox) Updated packages and added missing translations
 
