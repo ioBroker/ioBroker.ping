@@ -112,7 +112,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.1.5 (2026-10-30)
 - (@ipod86) Fixed crash "Invalid IP" when a device is configured with a host name (#445)
 
 ### 3.1.4 (2026-10-13)
@@ -127,10 +127,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 ### 3.1.1 (2026-09-01)
 - (@GermanBluefox) Ping says now when this host may not send ICMP at all instead of reporting every device as offline
 - (@GermanBluefox) Added an optional TCP check that keeps the devices monitored on such a host (LXC container)
-
-### 3.0.1 (2026-08-03)
-- (copilot) Breaking: Adapter requires node.js >= 22 now
-- (@GermanBluefox) Migrated for Admin 8
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

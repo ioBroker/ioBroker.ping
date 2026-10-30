@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.1.4",
+    "version": "3.1.5",
     "news": {
+      "3.1.5": {
+        "en": "Fixed crash \"Invalid IP\" when a device is configured with a host name (#445)",
+        "de": "Absturz „Ungültige IP“ mit Hostnamen behoben (#445)",
+        "ru": "Исправлен сбой «Неверный IP-адрес» при настройке устройства с именем хоста (#445)",
+        "pt": "Corrigido o erro “IP inválido” ao configurar um host (#445)",
+        "nl": "Crash „Ongeldig IP-adres” opgelost wanneer een apparaat werd geconfigureerd met een hostnaam (#445)",
+        "fr": "Correction d'un crash « IP non valide » sur un appareil avec un nom d'hôte (#445)",
+        "it": "Risolto il crash «IP non valido» configurato con un nome host (#445)",
+        "es": "Se corrigió el fallo «IP no válida» al configurar un dispositivo con un nombre de host (#445)",
+        "pl": "Naprawiono awarię „Nieprawidłowy adres IP”, gdy urządzenie jest skonfigurowane z nazwą hosta (#445)",
+        "uk": "Виправлена помилка «Недійсний IP», коли пристрій налаштовано з ім'ям хоста (#445)",
+        "zh-cn": "修复了使用主机名配置设备时会崩溃 “IP 无效” 的问题 (#445)"
+      },
       "3.1.4": {
         "en": "Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)",
         "de": "Hping3 wurde mit nativem UDP-Burst ersetzt, es muss nichts mehr installiert werden und läuft auf allen Plattformen (#400)",
