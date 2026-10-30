@@ -46,6 +46,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *
  */
 const adapter_core_1 = require("@iobroker/adapter-core");
+const node_net_1 = require("node:net");
 const ip = __importStar(require("ip"));
 const ping = __importStar(require("./lib/ping"));
 const pingFallback_1 = require("./lib/pingFallback");
@@ -243,7 +244,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                     let mac;
                     let vendorName;
                     if (this.arpToMac) {
-                        mac = (await this.arpToMac(status.host)) || undefined;
+                        mac = (await this.lookupMac(status.host)) || undefined;
                         if (mac && this.toVendor) {
                             vendorName = this.toVendor(mac);
                         }
@@ -575,10 +576,28 @@ class PingAdapter extends adapter_core_1.Adapter {
         }
         return true;
     }
+    /**
+     * MAC address of a host from the ARP table.
+     *
+     * The lookup only understands IP addresses and throws "Invalid IP" for a host name like
+     * "google.de" - unhandled, that took the whole adapter down after the first successful ping.
+     */
+    async lookupMac(host) {
+        if (!this.arpToMac || !(0, node_net_1.isIP)(host)) {
+            return null;
+        }
+        try {
+            return await this.arpToMac(host);
+        }
+        catch (e) {
+            this.log.debug(`Cannot get MAC address of ${host}: ${e}`);
+            return null;
+        }
+    }
     async setDeviceStates(task, result) {
         task.online = result.alive;
         if (result.alive && !task.mac && this.arpToMac) {
-            const mac = await this.arpToMac(task.host);
+            const mac = await this.lookupMac(task.host);
             if (mac) {
                 task.mac = mac;
             }
@@ -619,7 +638,7 @@ class PingAdapter extends adapter_core_1.Adapter {
                 }
             }
             if (this.arpToMac) {
-                const resolved = await this.arpToMac(task.host);
+                const resolved = await this.lookupMac(task.host);
                 if (resolved) {
                     mac = resolved;
                     task.mac = mac;
