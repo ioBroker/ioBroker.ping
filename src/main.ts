@@ -8,6 +8,7 @@
  *
  */
 import { Adapter, type AdapterOptions, I18n } from '@iobroker/adapter-core';
+import { isIP } from 'node:net';
 import * as ip from 'ip';
 
 import * as ping from './lib/ping';
@@ -271,7 +272,7 @@ class PingAdapter extends Adapter {
                     let mac: string | undefined;
                     let vendorName: string | undefined;
                     if (this.arpToMac) {
-                        mac = (await this.arpToMac(status.host)) || undefined;
+                        mac = (await this.lookupMac(status.host)) || undefined;
                         if (mac && this.toVendor) {
                             vendorName = this.toVendor(mac);
                         }
@@ -664,10 +665,28 @@ class PingAdapter extends Adapter {
         return true;
     }
 
+    /**
+     * MAC address of a host from the ARP table.
+     *
+     * The lookup only understands IP addresses and throws "Invalid IP" for a host name like
+     * "google.de" - unhandled, that took the whole adapter down after the first successful ping.
+     */
+    async lookupMac(host: string): Promise<string | null> {
+        if (!this.arpToMac || !isIP(host)) {
+            return null;
+        }
+        try {
+            return await this.arpToMac(host);
+        } catch (e) {
+            this.log.debug(`Cannot get MAC address of ${host}: ${e}`);
+            return null;
+        }
+    }
+
     async setDeviceStates(task: PingTask, result: ping.PingResult): Promise<void> {
         task.online = result.alive;
         if (result.alive && !task.mac && this.arpToMac) {
-            const mac = await this.arpToMac(task.host);
+            const mac = await this.lookupMac(task.host);
             if (mac) {
                 task.mac = mac;
             }
@@ -710,7 +729,7 @@ class PingAdapter extends Adapter {
                 }
             }
             if (this.arpToMac) {
-                const resolved = await this.arpToMac(task.host);
+                const resolved = await this.lookupMac(task.host);
                 if (resolved) {
                     mac = resolved;
                     task.mac = mac;

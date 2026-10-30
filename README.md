@@ -112,6 +112,8 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@ipod86) Fixed crash "Invalid IP" when a device is configured with a host name (#445)
 
 ### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)
