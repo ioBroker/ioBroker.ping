@@ -225,18 +225,29 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
         this.unsubscribeAll();
         const round = ++this.discoveryRound;
         const ctx = this.props.stateContext;
-        const instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
-            `system.adapter.${this.props.settings.instance || 'ping.0'}`,
-        );
+        let instanceObj: ioBroker.InstanceObject | null | undefined;
+        try {
+            instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
+                `system.adapter.${this.props.settings.instance || 'ping.0'}`,
+            );
+        } catch {
+            // not readable (no permission, connection lost): no devices, the tile shows its "no devices" hint
+            instanceObj = null;
+        }
         // the instance changed again or the widget is gone while the object was read
-        if (round !== this.discoveryRound || !instanceObj) {
+        if (round !== this.discoveryRound) {
+            return;
+        }
+        // An instance without a device list (deleted, never configured, an older configuration) has no devices
+        const config = instanceObj?.native as Partial<PingAdapterConfig> | undefined;
+        const devices = Array.isArray(config?.devices) ? config.devices : [];
+        if (!instanceObj || !devices.length) {
+            this.setState({ devices: new Map() });
             return;
         }
 
-        const config = instanceObj.native as PingAdapterConfig;
-
         const newDevices = new Map<string, DeviceEntry>();
-        for (const device of config.devices) {
+        for (const device of devices) {
             const aliveId = getDeviceAliveState(instanceObj, device.ip);
             if (!aliveId) {
                 continue;

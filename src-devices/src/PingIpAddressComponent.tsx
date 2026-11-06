@@ -84,6 +84,25 @@ interface PingIpAddressState extends WidgetGenericState {
     lastUpdate: number | null;
 }
 
+/**
+ * The settings that decide which states the widget subscribes. A change of any of them starts a new round - see
+ * `resubscribe()`. A setting that `loadDeviceMetadata()` or `subscribeStates()` start to depend on belongs here.
+ */
+interface SubscriptionSettings {
+    instance: string;
+    deviceId: string | null;
+    /** `.time` is only subscribed while the response time is shown */
+    showResponseTime: boolean;
+}
+
+function getSubscriptionSettings(settings: PingIpAddressSettings): SubscriptionSettings {
+    return {
+        instance: settings.instance || 'ping.0',
+        deviceId: settings.deviceId || null,
+        showResponseTime: settings.showResponseTime !== false,
+    };
+}
+
 const COLORS = {
     aliveBg: '#1f6f3a',
     aliveText: '#ffffff',
@@ -104,6 +123,8 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
      * round - or one that arrives after the unmount - is dropped.
      */
     private subscriptionRound = 0;
+    /** The settings the latest round subscribed for - compared with the current ones on every update */
+    private subscribedFor: SubscriptionSettings | null = null;
 
     constructor(props: WidgetGenericProps<PingIpAddressSettings>) {
         super(props);
@@ -188,10 +209,16 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
 
     componentDidUpdate(prevProps: Readonly<WidgetGenericProps<PingIpAddressSettings>>): void {
         super.componentDidUpdate?.(prevProps, this.state);
-        if (
-            prevProps.settings.instance !== this.props.settings.instance ||
-            prevProps.settings.deviceId !== this.props.settings.deviceId
-        ) {
+        // Compared with what the latest round subscribed for, not with prevProps: that also catches settings the
+        // host changed in place.
+        const wanted = getSubscriptionSettings(this.props.settings);
+        const current = this.subscribedFor;
+        const otherDevice = !current || wanted.instance !== current.instance || wanted.deviceId !== current.deviceId;
+        if (!otherDevice && wanted.showResponseTime === current.showResponseTime) {
+            return;
+        }
+        if (otherDevice) {
+            // nothing of the previous device is valid anymore
             this.setState({
                 stateIp: null,
                 stateTime: null,
@@ -200,8 +227,11 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                 responseTimeS: null,
                 lastUpdate: null,
             });
-            void this.resubscribe();
+        } else {
+            // the same device, only `.time` comes or goes
+            this.setState({ responseTimeS: null });
         }
+        void this.resubscribe();
     }
 
     componentWillUnmount(): void {
@@ -212,36 +242,39 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
     }
 
     /**
-     * Drop the subscriptions of the previous device, find the states of the configured one and subscribe them.
-     * Instance and device can change again while the instance object is read - only the latest round goes on.
+     * Drop the subscriptions of the previous round, find the states of the configured device and subscribe them -
+     * on mount and whenever one of the {@link SubscriptionSettings} changes. The settings can change again while
+     * the instance object is read - only the latest round goes on.
      */
     private async resubscribe(): Promise<void> {
         this.unsubscribeStates();
         const round = ++this.subscriptionRound;
-        const metadata = await this.loadDeviceMetadata();
+        const settings = getSubscriptionSettings(this.props.settings);
+        this.subscribedFor = settings;
+        const metadata = await this.loadDeviceMetadata(settings);
         if (round !== this.subscriptionRound) {
             return;
         }
         this.setState(metadata);
-        this.subscribeStates(metadata, round);
+        this.subscribeStates(metadata, settings.showResponseTime, round);
     }
 
     /**
      * Find the state IDs and the name of the configured device in the configuration of the instance
      * (`system.adapter.ping.<n>`), built the same way as the adapter does - see `utils.ts`.
      */
-    private async loadDeviceMetadata(): Promise<{
+    private async loadDeviceMetadata(settings: SubscriptionSettings): Promise<{
         stateIp: string | null;
         stateTime: string | null;
         name: string | null;
     }> {
-        const deviceId = this.props.settings.deviceId;
+        const deviceId = settings.deviceId;
         if (!deviceId) {
             return { stateIp: null, stateTime: null, name: null };
         }
         try {
             const instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
-                `system.adapter.${this.props.settings.instance || 'ping.0'}`,
+                `system.adapter.${settings.instance}`,
             );
             if (instanceObj) {
                 return {
@@ -256,7 +289,11 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         return { stateIp: null, stateTime: null, name: null };
     }
 
-    private subscribeStates(ids: { stateIp: string | null; stateTime: string | null }, round: number): void {
+    private subscribeStates(
+        ids: { stateIp: string | null; stateTime: string | null },
+        showResponseTime: boolean,
+        round: number,
+    ): void {
         const { stateIp, stateTime } = ids;
         if (!stateIp) {
             return;
@@ -271,7 +308,6 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         };
         ctx.getState(stateIp, aliveHandler);
         this.subscribedIds.push({ id: stateIp, handler: aliveHandler });
-        const showResponseTime = this.props.settings.showResponseTime !== false;
 
         if (stateTime && showResponseTime) {
             const timeHandler = (_id: string, state: ioBroker.State | null | undefined): void => {
