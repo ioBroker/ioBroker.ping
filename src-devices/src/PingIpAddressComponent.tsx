@@ -98,6 +98,12 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         id: string;
         handler: (id: string, state: ioBroker.State | null | undefined) => void;
     }> = [];
+    /**
+     * Counts the subscription rounds (mount, every change of instance or device) and is advanced on unmount, too.
+     * A round only subscribes and only takes values while it is the latest one, so the late answer of an older
+     * round - or one that arrives after the unmount - is dropped.
+     */
+    private subscriptionRound = 0;
 
     constructor(props: WidgetGenericProps<PingIpAddressSettings>) {
         super(props);
@@ -175,10 +181,9 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
         return { name: 'PingIpAddress', schema: schema };
     }
 
-    async componentDidMount(): Promise<void> {
+    componentDidMount(): void {
         super.componentDidMount?.();
-        const result = await this.loadDeviceMetadata();
-        this.subscribeStates(result);
+        void this.resubscribe();
     }
 
     componentDidUpdate(prevProps: Readonly<WidgetGenericProps<PingIpAddressSettings>>): void {
@@ -187,7 +192,6 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
             prevProps.settings.instance !== this.props.settings.instance ||
             prevProps.settings.deviceId !== this.props.settings.deviceId
         ) {
-            this.unsubscribeStates();
             this.setState({
                 stateIp: null,
                 stateTime: null,
@@ -196,71 +200,82 @@ export class PingIpAddressComponent extends WidgetGeneric<PingIpAddressState, Pi
                 responseTimeS: null,
                 lastUpdate: null,
             });
-            void this.loadDeviceMetadata();
-            this.subscribeStates();
+            void this.resubscribe();
         }
     }
 
     componentWillUnmount(): void {
         super.componentWillUnmount?.();
+        // a metadata load still running must not subscribe anymore
+        this.subscriptionRound++;
         this.unsubscribeStates();
     }
 
     /**
-     * Read the device's metadata once on mount. The ping adapter writes the original
-     * (un-sanitised) IP into `native.host` of the alive state itself, and the friendly
-     * name lives in `common.name`. We use those rather than trying to reverse the
-     * sanitised id, because the id replaces dots with underscores AND would also rewrite
-     * a ":port" suffix to "_port" — making the round-trip ambiguous for TCP-port checks.
+     * Drop the subscriptions of the previous device, find the states of the configured one and subscribe them.
+     * Instance and device can change again while the instance object is read - only the latest round goes on.
      */
-    private async loadDeviceMetadata(): Promise<{ stateIp: string | null; stateTime: string | null }> {
+    private async resubscribe(): Promise<void> {
+        this.unsubscribeStates();
+        const round = ++this.subscriptionRound;
+        const metadata = await this.loadDeviceMetadata();
+        if (round !== this.subscriptionRound) {
+            return;
+        }
+        this.setState(metadata);
+        this.subscribeStates(metadata, round);
+    }
+
+    /**
+     * Find the state IDs and the name of the configured device in the configuration of the instance
+     * (`system.adapter.ping.<n>`), built the same way as the adapter does - see `utils.ts`.
+     */
+    private async loadDeviceMetadata(): Promise<{
+        stateIp: string | null;
+        stateTime: string | null;
+        name: string | null;
+    }> {
         const deviceId = this.props.settings.deviceId;
         if (!deviceId) {
-            return { stateIp: null, stateTime: null };
+            return { stateIp: null, stateTime: null, name: null };
         }
         try {
             const instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
                 `system.adapter.${this.props.settings.instance || 'ping.0'}`,
             );
-            if (!instanceObj) {
-                return { stateIp: null, stateTime: null };
+            if (instanceObj) {
+                return {
+                    stateIp: getDeviceAliveState(instanceObj, deviceId),
+                    stateTime: getDeviceMsState(instanceObj, deviceId),
+                    name: getDeviceName(instanceObj, deviceId),
+                };
             }
-            const stateIp = getDeviceAliveState(instanceObj, deviceId);
-            const stateTime = getDeviceMsState(instanceObj, deviceId);
-            // — that's a state-naming convention, not a display label we want to show as-is.
-            this.setState({
-                stateIp,
-                stateTime,
-                name: getDeviceName(instanceObj, deviceId),
-            });
-            return { stateIp, stateTime };
         } catch {
-            // Ignore — the IP/name will simply stay at their defaults. Subscriptions still
-            // run, so alive/time can still update.
+            // Ignore — the widget simply shows the device as unknown.
         }
-        return { stateIp: null, stateTime: null };
+        return { stateIp: null, stateTime: null, name: null };
     }
 
-    private subscribeStates(result?: { stateIp: string | null; stateTime: string | null }): void {
-        const stateIp = result?.stateIp || this.state.stateIp;
+    private subscribeStates(ids: { stateIp: string | null; stateTime: string | null }, round: number): void {
+        const { stateIp, stateTime } = ids;
         if (!stateIp) {
             return;
         }
         const ctx = this.props.stateContext;
 
+        // The host may still deliver a value it fetched before the unsubscribe - not for this device anymore.
         const aliveHandler = (_id: string, state: ioBroker.State | null | undefined): void => {
-            if (state) {
+            if (state && round === this.subscriptionRound) {
                 this.setState({ alive: !!state.val, lastUpdate: state.ts || Date.now() });
             }
         };
         ctx.getState(stateIp, aliveHandler);
         this.subscribedIds.push({ id: stateIp, handler: aliveHandler });
-        const stateTime = result?.stateTime || this.state.stateTime;
         const showResponseTime = this.props.settings.showResponseTime !== false;
 
         if (stateTime && showResponseTime) {
             const timeHandler = (_id: string, state: ioBroker.State | null | undefined): void => {
-                if (state?.val != null) {
+                if (state?.val != null && round === this.subscriptionRound) {
                     this.setState({ responseTimeS: Number(state.val) });
                 }
             };
