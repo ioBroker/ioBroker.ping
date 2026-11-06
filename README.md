@@ -64,6 +64,8 @@ From version 1.8.0 you can also check TCP ports by specifying the port number af
 
 The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
+For an IPv6 address, put the address in brackets (e.g., `[fd00::1]:80`). An IPv6 address without brackets (e.g., `fd00::1`) is always pinged.
+
 ## Wake-on-LAN from javascript adapter
 
 You can wake up any device by sending a Wake-on-LAN magic packet using its MAC address:
@@ -113,6 +115,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Added the web components `iob-ping-device` and `iob-ping-overview` - the devices widgets "Ping Device" and "Ping Overview" for Aura and other hosts (`common.webComponents`)
 - (@GermanBluefox) Devices widgets "Ping Device" and "Ping Overview": fixed the state IDs for host names with dots, devices shown by name and disabled devices
+- (@GermanBluefox) IPv6 addresses ending in digits (e.g. `fd00::1`) are pinged now instead of being checked as a TCP port. Write the TCP port of an IPv6 address in brackets: `[fd00::1]:80`
 
 ### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)

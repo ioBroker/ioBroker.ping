@@ -27,18 +27,36 @@ function findPingBinary() {
     }
     return 'ping';
 }
+/**
+ * Split a configured address into the host and the port of a TCP check.
+ *
+ * - `192.168.1.1:80`, `google.com:443` - TCP check: a host name or an IPv4 address, one colon, the port
+ * - `[fd00::1]:80` - TCP check of an IPv6 address, which has to be written in brackets
+ * - anything else is pinged, among others every IPv6 address without brackets: `fd00::1`, `::1`,
+ *   `::ffff:192.168.1.1`, `fe80::1%eth0`. Its last group is not a port - `fd00::1` is not `fd00:` with port 1.
+ */
 function parseAddress(addr) {
-    const match = addr.match(/^(.+):(\d+)$/);
+    const bracketed = addr.match(/^\[([^\]]+)\]:(\d+)$/);
+    if (bracketed) {
+        return { host: bracketed[1], port: parseInt(bracketed[2], 10) };
+    }
+    // more than one colon is an IPv6 address
+    const match = addr.match(/^([^:]+):(\d+)$/);
     if (match) {
         return { host: match[1], port: parseInt(match[2], 10) };
     }
     return { host: addr, port: null };
 }
+/** `host:port` as the user writes it, so an IPv6 host gets its brackets back */
+function formatAddress(host, port) {
+    return host.includes(':') ? `[${host}]:${port}` : `${host}:${port}`;
+}
 function probeTcpPort(host, port, config, callback) {
     const log = config.log || console.log;
     const timeout = (config.timeout || 2) * 1000;
     const startTime = Date.now();
-    log(`Checking TCP port ${host}:${port}`);
+    const address = formatAddress(host, port);
+    log(`Checking TCP port ${address}`);
     const socket = new node_net_1.default.Socket();
     let timeoutHandle = null;
     let callbackCalled = false;
@@ -54,7 +72,7 @@ function probeTcpPort(host, port, config, callback) {
             callbackCalled = true;
             cleanup();
             callback?.(null, {
-                host: `${host}:${port}`,
+                host: address,
                 alive,
                 ms,
             });
