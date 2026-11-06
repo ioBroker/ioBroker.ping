@@ -1,5 +1,6 @@
 const assert = require('node:assert');
 const http = require('node:http');
+const net = require('node:net');
 
 const ping = require('../build/lib/ping');
 
@@ -79,6 +80,58 @@ describe('Test TCP Port Monitoring', function () {
             assert(result.ms === null, 'Time should be null for closed port');
             done();
         });
+    });
+
+    it('Test TCP port check - a port outside 1-65535 is an error result, not a throw', async function () {
+        for (const addr of ['127.0.0.1:0', '127.0.0.1:99999', 'localhost:65536', '[::1]:70000']) {
+            let returned = false;
+            const results = [];
+            await new Promise((resolve, reject) => {
+                try {
+                    ping.probe(addr, { log: () => {}, timeout: 1 }, (err, result) => {
+                        results.push({ err, result, async: returned });
+                        resolve();
+                    });
+                    returned = true;
+                } catch (e) {
+                    reject(new Error(`probe('${addr}') threw ${e.code || e}`));
+                }
+            });
+            assert.strictEqual(results.length, 1);
+            const { err, result, async } = results[0];
+            assert.ok(async, `the callback of '${addr}' is asynchronous`);
+            assert.ok(!err, `Unexpected error: ${err}`);
+            assert.strictEqual(result.alive, false);
+            assert.strictEqual(result.ms, null);
+            assert.strictEqual(result.host, addr, 'the result keeps the address as configured');
+            assert.match(result.error || '', /between 1 and 65535/);
+        }
+    });
+
+    it('Test TCP port check - a synchronous throw of socket.connect() is a result, not a throw', async function () {
+        this.timeout(5000);
+        const original = net.Socket.prototype.connect;
+        net.Socket.prototype.connect = function () {
+            const error = new RangeError('Port should be >= 0 and < 65536');
+            error.code = 'ERR_SOCKET_BAD_PORT';
+            throw error;
+        };
+        const results = [];
+        try {
+            ping.probe(`127.0.0.1:${serverPort}`, { log: () => {}, timeout: 1 }, (err, result) =>
+                results.push({ err, result }),
+            );
+        } finally {
+            net.Socket.prototype.connect = original;
+        }
+        // longer than the timeout of the check: its timer must not report a second time
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        assert.strictEqual(results.length, 1, 'the callback is called exactly once');
+        const { err, result } = results[0];
+        assert.ok(!err, `Unexpected error: ${err}`);
+        assert.strictEqual(result.alive, false);
+        assert.strictEqual(result.ms, null);
+        assert.match(result.error || '', /Port should be/);
     });
 
     it('Test regular ping still works', function (done) {

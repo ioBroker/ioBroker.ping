@@ -64,7 +64,9 @@ From version 1.8.0 you can also check TCP ports by specifying the port number af
 
 The adapter will check if the TCP port is reachable instead of using ICMP ping.
 
-For an IPv6 address, put the address in brackets (e.g., `[fd00::1]:80`). An IPv6 address without brackets (e.g., `fd00::1`) is always pinged.
+For an IPv6 address, put the address in brackets (e.g., `[fd00::1]:80`). An IPv6 address without brackets (e.g., `fd00::1`) is always pinged, and so is one in brackets without a port (`[fd00::1]` is pinged as `fd00::1`). On macOS and FreeBSD, IPv6 addresses are pinged with `ping6`.
+
+The port has to be between 1 and 65535. An address with another port (e.g., `192.168.1.1:0` or `192.168.1.1:99999`) is not checked at all: the adapter logs a warning at start and reports the device as offline.
 
 ## Wake-on-LAN from javascript adapter
 
@@ -117,6 +119,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 - (@GermanBluefox) Devices widgets "Ping Device" and "Ping Overview": fixed the state IDs for host names with dots, devices shown by name and disabled devices
 - (@GermanBluefox) Devices widget "Ping Device" shows the status of a newly selected device or instance at once instead of only after reloading; "Ping Overview" no longer mixes in devices of the previously selected instance
 - (@GermanBluefox) IPv6 addresses ending in digits (e.g. `fd00::1`) are pinged now instead of being checked as a TCP port. Write the TCP port of an IPv6 address in brackets: `[fd00::1]:80`
+- (@GermanBluefox) An IPv6 address in brackets without a port (e.g. `[fd00::1]`) is pinged now
+- (@GermanBluefox) A TCP port outside 1-65535 (e.g. `192.168.1.1:99999`) no longer stops the adapter: the device is reported as offline and a warning is logged
+- (@GermanBluefox) IPv6 addresses are pinged with `ping6` on macOS and FreeBSD, and on Windows a device that answers over IPv6 is no longer reported as offline
 
 ### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)

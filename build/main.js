@@ -546,7 +546,8 @@ class PingAdapter extends adapter_core_1.Adapter {
                 resolve({ err, result });
                 return;
             }
-            (0, pingFallback_1.probeTcp)(host, this.tcpFallbackPorts, TCP_FALLBACK_TIMEOUT, tcp => {
+            // the address that was pinged: `[fd00::1]` without its brackets
+            (0, pingFallback_1.probeTcp)(ping.parseAddress(host).host, this.tcpFallbackPorts, TCP_FALLBACK_TIMEOUT, tcp => {
                 this.log.debug(`${host} asked over TCP: ${tcp.alive ? `answered on port ${tcp.port}` : 'no answer'}`);
                 resolve({
                     err,
@@ -938,6 +939,11 @@ class PingAdapter extends adapter_core_1.Adapter {
                     usedIDs[fullID] = device;
                 }
             });
+            // Said once here and not on every ping: probe() reports such an address as offline without checking it
+            const { error } = ping.parseAddress(config.ping_task.host);
+            if (error) {
+                this.log.warn(`${error}. The device is not checked and is reported as offline.`);
+            }
             states = states.concat(config.states);
             pingTaskList.push(config.ping_task);
         });
