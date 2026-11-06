@@ -57,6 +57,13 @@ React + Vite app using ioBroker's Module Federation pattern. Builds to `src-admi
 - **`src-admin/src/Components.tsx`** — Module Federation entry point, exports `{ PingBrowseComponent }`.
 - Has its own `package.json` and `node_modules`; must be built separately.
 
+### Web components (`src-webcomponents/`)
+The devices widgets "Ping Device" and "Ping Overview" as `@iobroker/web-components` for Aura, vis-2, admin and other hosts: `<iob-ping-device>` and `<iob-ping-overview>`, listed in `common.webComponents`. Own `package.json`, plain React + CSS in a shadow root, React taken from the host (`lib/esm/react-19.js`). One `vite build --mode <name>` per component, so each is one module file; the build writes and checks the manifests. Output `admin/webcomponents/<name>.js` + `<name>.json` is committed.
+
+- **`src/pingDevices.ts`** — derives the state IDs of the configured devices from `system.adapter.ping.<n>` the same way `main.ts prepareObjectsForHost()` does; keep both in sync.
+- **`src/manifest.ts`** — the manifests; `name` must stay equal to the `label` of the devices widget in `common.deviceWidgets`, so devices shows its own widget instead.
+- `npm run build:wc` (`node tasks --wc`), `npm run lint:wc`, `npm run check:wc`.
+
 ### Build orchestration (`tasks.js`)
 Uses `@iobroker/build-tools` to coordinate admin installation, compilation, and file copying. Run via `npm run build` which chains `build:tsc` then `node tasks`.
 

@@ -1,0 +1,65 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ioBroker/web-components/main/schemas/manifest.json",
+    "manifestVersion": 1,
+    "tag": "iob-ping-overview",
+    "name": "Ping Overview",
+    "description": {
+        "en": "Shows how many devices answer; all devices in a dialog",
+        "de": "Zeigt, wie viele Geräte antworten; alle Geräte in einem Dialog",
+        "ru": "Показывает, сколько устройств отвечает; все устройства в диалоге",
+        "pt": "Mostra quantos dispositivos respondem; todos os dispositivos numa caixa de diálogo",
+        "nl": "Toont hoeveel apparaten antwoorden; alle apparaten in een dialoog",
+        "fr": "Indique combien d'appareils répondent ; tous les appareils dans une boîte de dialogue",
+        "it": "Mostra quanti dispositivi rispondono; tutti i dispositivi in una finestra di dialogo",
+        "es": "Muestra cuántos dispositivos responden; todos los dispositivos en un diálogo",
+        "pl": "Pokazuje, ile urządzeń odpowiada; wszystkie urządzenia w oknie dialogowym",
+        "uk": "Показує, скільки пристроїв відповідає; усі пристрої в діалозі",
+        "zh-cn": "显示有多少设备响应；在对话框中显示所有设备"
+    },
+    "icon": "../dm-widgets/overview.png",
+    "module": "ping-overview.js",
+    "size": {
+        "width": 160,
+        "height": 160
+    },
+    "settings": {
+        "type": "panel",
+        "items": {
+            "instance": {
+                "type": "instance",
+                "adapter": "ping",
+                "default": "ping.0",
+                "label": {
+                    "en": "Ping adapter instance",
+                    "de": "Ping-Adapter-Instanz",
+                    "ru": "Экземпляр адаптера Ping",
+                    "pt": "Instância do adaptador Ping",
+                    "nl": "Ping-adapterinstantie",
+                    "fr": "Instance de l'adaptateur Ping",
+                    "it": "Istanza adattatore Ping",
+                    "es": "Instancia del adaptador Ping",
+                    "pl": "Instancja adaptera Ping",
+                    "uk": "Екземпляр адаптера Ping",
+                    "zh-cn": "Ping 适配器实例"
+                }
+            },
+            "hideDisabled": {
+                "type": "checkbox",
+                "default": false,
+                "label": {
+                    "en": "Hide disabled devices",
+                    "de": "Deaktivierte Geräte ausblenden",
+                    "ru": "Скрыть отключенные устройства",
+                    "pt": "Ocultar dispositivos desativados",
+                    "nl": "Uitgeschakelde apparaten verbergen",
+                    "fr": "Masquer les appareils désactivés",
+                    "it": "Nascondi dispositivi disattivati",
+                    "es": "Ocultar dispositivos deshabilitados",
+                    "pl": "Ukryj wyłączone urządzenia",
+                    "uk": "Сховати вимкнені пристрої",
+                    "zh-cn": "隐藏已禁用的设备"
+                }
+            }
+        }
+    }
+}

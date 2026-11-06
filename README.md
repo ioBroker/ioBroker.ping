@@ -110,6 +110,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added the web components `iob-ping-device` and `iob-ping-overview` - the devices widgets "Ping Device" and "Ping Overview" for Aura and other hosts (`common.webComponents`)
+
 ### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore and it works on all platforms (#400)
 

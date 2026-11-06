@@ -38,3 +38,5 @@ src-admin/node_modules
 /src-devices/.__mf__temp/
 /src-devices/.__mf__temp/
 /src-admin/.__mf__temp/
+# web components: the sources are built with vite and the result in admin/webcomponents/ is committed
+/src-webcomponents/build/

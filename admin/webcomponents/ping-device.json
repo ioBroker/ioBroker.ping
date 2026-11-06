@@ -1,0 +1,156 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ioBroker/web-components/main/schemas/manifest.json",
+    "manifestVersion": 1,
+    "tag": "iob-ping-device",
+    "name": "Ping Device",
+    "description": {
+        "en": "Shows whether one device answers, with its IP address and response time",
+        "de": "Zeigt, ob ein Gerät antwortet, mit seiner IP-Adresse und Antwortzeit",
+        "ru": "Показывает, отвечает ли устройство, с его IP-адресом и временем отклика",
+        "pt": "Mostra se um dispositivo responde, com o seu endereço IP e tempo de resposta",
+        "nl": "Toont of een apparaat antwoordt, met zijn IP-adres en reactietijd",
+        "fr": "Indique si un appareil répond, avec son adresse IP et son temps de réponse",
+        "it": "Mostra se un dispositivo risponde, con il suo indirizzo IP e il tempo di risposta",
+        "es": "Muestra si un dispositivo responde, con su dirección IP y tiempo de respuesta",
+        "pl": "Pokazuje, czy urządzenie odpowiada, wraz z adresem IP i czasem odpowiedzi",
+        "uk": "Показує, чи відповідає пристрій, з його IP-адресою та часом відгуку",
+        "zh-cn": "显示一个设备是否响应，以及其 IP 地址和响应时间"
+    },
+    "icon": "../dm-widgets/device.png",
+    "module": "ping-device.js",
+    "size": {
+        "width": 160,
+        "height": 160
+    },
+    "settings": {
+        "type": "panel",
+        "items": {
+            "device": {
+                "type": "objectId",
+                "types": "state",
+                "root": "ping",
+                "label": {
+                    "en": "Device",
+                    "de": "Gerät",
+                    "ru": "Устройство",
+                    "pt": "Dispositivo",
+                    "nl": "Apparaat",
+                    "fr": "Appareil",
+                    "it": "Dispositivo",
+                    "es": "Dispositivo",
+                    "pl": "Urządzenie",
+                    "uk": "Пристрій",
+                    "zh-cn": "设备"
+                },
+                "help": {
+                    "en": "A state of the device: ping.0.<host>.<IP>, or its .alive with \"Extended Info\"",
+                    "de": "Ein Datenpunkt des Geräts: ping.0.<Host>.<IP>, oder sein .alive bei \"Erweiterte Informationen\"",
+                    "ru": "Состояние устройства: ping.0.<хост>.<IP> или его .alive при \"Расширенная информация\"",
+                    "pt": "Um estado do dispositivo: ping.0.<host>.<IP>, ou o seu .alive com \"Extended Info\"",
+                    "nl": "Een status van het apparaat: ping.0.<host>.<IP>, of zijn .alive bij \"Extended Info\"",
+                    "fr": "Un état de l'appareil : ping.0.<hôte>.<IP>, ou son .alive avec « Extended Info »",
+                    "it": "Uno stato del dispositivo: ping.0.<host>.<IP>, o il suo .alive con \"Extended Info\"",
+                    "es": "Un estado del dispositivo: ping.0.<host>.<IP>, o su .alive con \"Extended Info\"",
+                    "pl": "Stan urządzenia: ping.0.<host>.<IP> lub jego .alive przy \"Extended Info\"",
+                    "uk": "Стан пристрою: ping.0.<хост>.<IP> або його .alive з \"Розширена інформація\"",
+                    "zh-cn": "设备的状态：ping.0.<主机>.<IP>，或启用\"扩展信息\"时的 .alive"
+                }
+            },
+            "showName": {
+                "type": "checkbox",
+                "default": true,
+                "label": {
+                    "en": "Show device name",
+                    "de": "Gerätenamen anzeigen",
+                    "ru": "Показывать имя устройства",
+                    "pt": "Mostrar nome do dispositivo",
+                    "nl": "Apparaatnaam weergeven",
+                    "fr": "Afficher le nom de l'appareil",
+                    "it": "Mostra nome dispositivo",
+                    "es": "Mostrar nombre del dispositivo",
+                    "pl": "Pokaż nazwę urządzenia",
+                    "uk": "Показувати ім'я пристрою",
+                    "zh-cn": "显示设备名称"
+                }
+            },
+            "name": {
+                "type": "text",
+                "hidden": "!data.showName",
+                "label": {
+                    "en": "Name",
+                    "de": "Name",
+                    "ru": "Имя",
+                    "pt": "Nome",
+                    "nl": "Naam",
+                    "fr": "Nom",
+                    "it": "Nome",
+                    "es": "Nombre",
+                    "pl": "Nazwa",
+                    "uk": "Ім'я",
+                    "zh-cn": "名称"
+                },
+                "help": {
+                    "en": "Instead of the name in the configuration of the adapter",
+                    "de": "Statt des Namens in der Konfiguration des Adapters",
+                    "ru": "Вместо имени в конфигурации адаптера",
+                    "pt": "Em vez do nome na configuração do adaptador",
+                    "nl": "In plaats van de naam in de configuratie van de adapter",
+                    "fr": "À la place du nom dans la configuration de l'adaptateur",
+                    "it": "Al posto del nome nella configurazione dell'adattatore",
+                    "es": "En lugar del nombre en la configuración del adaptador",
+                    "pl": "Zamiast nazwy w konfiguracji adaptera",
+                    "uk": "Замість імені в конфігурації адаптера",
+                    "zh-cn": "代替适配器配置中的名称"
+                }
+            },
+            "hideIp": {
+                "type": "checkbox",
+                "default": false,
+                "hidden": "!data.showName",
+                "label": {
+                    "en": "Hide IP address",
+                    "de": "IP-Adresse ausblenden",
+                    "ru": "Скрыть IP-адрес",
+                    "pt": "Ocultar endereço IP",
+                    "nl": "IP-adres verbergen",
+                    "fr": "Masquer l'adresse IP",
+                    "it": "Nascondi indirizzo IP",
+                    "es": "Ocultar dirección IP",
+                    "pl": "Ukryj adres IP",
+                    "uk": "Сховати IP-адресу",
+                    "zh-cn": "隐藏 IP 地址"
+                }
+            },
+            "showResponseTime": {
+                "type": "checkbox",
+                "default": true,
+                "label": {
+                    "en": "Show response time",
+                    "de": "Antwortzeit anzeigen",
+                    "ru": "Показывать время отклика",
+                    "pt": "Mostrar tempo de resposta",
+                    "nl": "Reactietijd weergeven",
+                    "fr": "Afficher le temps de réponse",
+                    "it": "Mostra tempo di risposta",
+                    "es": "Mostrar tiempo de respuesta",
+                    "pl": "Pokaż czas odpowiedzi",
+                    "uk": "Показувати час відгуку",
+                    "zh-cn": "显示响应时间"
+                },
+                "help": {
+                    "en": "Only for devices with \"Extended Info\"",
+                    "de": "Nur bei Geräten mit \"Erweiterte Informationen\"",
+                    "ru": "Только для устройств с \"Расширенная информация\"",
+                    "pt": "Apenas para dispositivos com \"Extended Info\"",
+                    "nl": "Alleen voor apparaten met \"Extended Info\"",
+                    "fr": "Uniquement pour les appareils avec « Extended Info »",
+                    "it": "Solo per dispositivi con \"Extended Info\"",
+                    "es": "Solo para dispositivos con \"Extended Info\"",
+                    "pl": "Tylko dla urządzeń z \"Extended Info\"",
+                    "uk": "Лише для пристроїв із \"Розширена інформація\"",
+                    "zh-cn": "仅适用于启用\"扩展信息\"的设备"
+                }
+            }
+        }
+    }
+}

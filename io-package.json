@@ -161,6 +161,10 @@
         }
       ]
     },
+    "webComponents": [
+      "webcomponents/ping-device.json",
+      "webcomponents/ping-overview.json"
+    ],
     "keywords": [
       "poll",
       "ping",
