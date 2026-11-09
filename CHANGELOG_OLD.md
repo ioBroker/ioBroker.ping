@@ -1,4 +1,8 @@
 # Older changes
+## 3.0.1 (2026-08-03)
+- (copilot) Breaking: Adapter requires node.js >= 22 now
+- (@GermanBluefox) Migrated for Admin 8
+
 ## 2.2.4 (2026-05-16)
 - (@GermanBluefox) Fixing devices widgets
 
