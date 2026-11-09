@@ -29,6 +29,8 @@ export default [
             'src-devices/build/**/*',
             'src-devices/node_modules/**/*',
             'src-devices/.__mf__temp/**/*',
+            // own eslint config: `npm run lint:wc`
+            'src-webcomponents/**/*',
             'admin/**/*',
             'test/**/*',
             'tmp/**/*',

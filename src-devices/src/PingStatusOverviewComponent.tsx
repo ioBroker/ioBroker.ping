@@ -113,6 +113,12 @@ function formatRelative(ts: number, withoutSuffix: boolean): string {
 
 export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOverviewState, PingStatusOverviewSettings> {
     private subscribed = new Map<string, (id: string, state: ioBroker.State | null | undefined) => void>();
+    /**
+     * Counts the discovery rounds (mount, every change of the instance) and is advanced on unmount, too. A round
+     * only subscribes and only takes values while it is the latest one, so the late answer of an older round - or
+     * one that arrives after the unmount - is dropped.
+     */
+    private discoveryRound = 0;
     /** rAF-coalesced timer for the "since" relative-time refresh while the dialog is open. */
     private nowTickInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -162,7 +168,6 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
     ): void {
         super.componentDidUpdate?.(prevProps, this.state);
         if (prevProps.settings.instance !== this.props.settings.instance) {
-            this.unsubscribeAll();
             this.setState({ devices: new Map() });
             void this.discoverAndSubscribe();
         }
@@ -180,6 +185,8 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
 
     componentWillUnmount(): void {
         super.componentWillUnmount?.();
+        // a discovery still running must not subscribe anymore
+        this.discoveryRound++;
         this.unsubscribeAll();
         this.stopNowTicker();
     }
@@ -214,18 +221,33 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
      * cannot be read.
      */
     private async discoverAndSubscribe(): Promise<void> {
+        // drop the subscriptions of the previous instance
+        this.unsubscribeAll();
+        const round = ++this.discoveryRound;
         const ctx = this.props.stateContext;
-        const instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
-            `system.adapter.${this.props.settings.instance || 'ping.0'}`,
-        );
-        if (!instanceObj) {
+        let instanceObj: ioBroker.InstanceObject | null | undefined;
+        try {
+            instanceObj = await this.props.stateContext.getObject<ioBroker.InstanceObject>(
+                `system.adapter.${this.props.settings.instance || 'ping.0'}`,
+            );
+        } catch {
+            // not readable (no permission, connection lost): no devices, the tile shows its "no devices" hint
+            instanceObj = null;
+        }
+        // the instance changed again or the widget is gone while the object was read
+        if (round !== this.discoveryRound) {
+            return;
+        }
+        // An instance without a device list (deleted, never configured, an older configuration) has no devices
+        const config = instanceObj?.native as Partial<PingAdapterConfig> | undefined;
+        const devices = Array.isArray(config?.devices) ? config.devices : [];
+        if (!instanceObj || !devices.length) {
+            this.setState({ devices: new Map() });
             return;
         }
 
-        const config = instanceObj.native as PingAdapterConfig;
-
-        const newDevices = new Map<string, DeviceEntry>(this.state.devices);
-        for (const device of config.devices) {
+        const newDevices = new Map<string, DeviceEntry>();
+        for (const device of devices) {
             const aliveId = getDeviceAliveState(instanceObj, device.ip);
             if (!aliveId) {
                 continue;
@@ -239,11 +261,14 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
                 alive: null,
                 lastChange: null,
             });
-            if (this.subscribed.has(aliveId)) {
-                continue;
-            }
+        }
+        // before the subscriptions, so that a value the host delivers at once finds its device
+        this.setState({ devices: newDevices });
+
+        for (const aliveId of newDevices.keys()) {
+            // The host may still deliver a value it fetched before the unsubscribe - not for this instance anymore.
             const handler = (sid: string, state: ioBroker.State | null | undefined): void => {
-                if (!state) {
+                if (!state || round !== this.discoveryRound) {
                     return;
                 }
                 this.setState(prev => {
@@ -267,8 +292,6 @@ export class PingStatusOverviewComponent extends WidgetGeneric<PingStatusOvervie
             ctx.getState(aliveId, handler);
             this.subscribed.set(aliveId, handler);
         }
-
-        this.setState({ devices: newDevices });
     }
 
     private unsubscribeAll(): void {
