@@ -116,7 +116,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.2.0 (2026-11-09)
 - (@GermanBluefox) Added the web components `iob-ping-device` and `iob-ping-overview` - the devices widgets "Ping Device" and "Ping Overview" for Aura and other hosts (`common.webComponents`)
 - (@GermanBluefox) Devices widgets "Ping Device" and "Ping Overview": fixed the state IDs for host names with dots, devices shown by name and disabled devices
 - (@GermanBluefox) Devices widget "Ping Device" shows the status of a newly selected device or instance at once instead of only after reloading; "Ping Overview" no longer mixes in devices of the previously selected instance
@@ -137,10 +137,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### 3.1.2 (2026-10-13)
 - (@GermanBluefox) Updated packages and added missing translations
-
-### 3.1.1 (2026-09-01)
-- (@GermanBluefox) Ping says now when this host may not send ICMP at all instead of reporting every device as offline
-- (@GermanBluefox) Added an optional TCP check that keeps the devices monitored on such a host (LXC container)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
