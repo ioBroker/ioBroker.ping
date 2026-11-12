@@ -175,8 +175,26 @@
       ]
     },
     "webComponents": [
-      "webcomponents/ping-device.json",
-      "webcomponents/ping-overview.json"
+      {
+        "manifest": "webcomponents/ping-device.json",
+        "tag": "iob-ping-device",
+        "name": "Ping Device",
+        "icon": "../dm-widgets/device.png",
+        "size": {
+          "width": 160,
+          "height": 160
+        }
+      },
+      {
+        "manifest": "webcomponents/ping-overview.json",
+        "tag": "iob-ping-overview",
+        "name": "Ping Overview",
+        "icon": "../dm-widgets/overview.png",
+        "size": {
+          "width": 160,
+          "height": 160
+        }
+      }
     ],
     "keywords": [
       "poll",
