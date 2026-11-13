@@ -41,6 +41,29 @@ export function getInstanceOfId(id: string | undefined | null): string | null {
 }
 
 /**
+ * Whether an ID is one of an alias
+ *
+ * @param id e.g. `alias.0.server.alive`
+ */
+export function isAliasId(id: string | undefined | null): id is string {
+    return !!id?.startsWith('alias.');
+}
+
+/**
+ * The state an alias points to: `common.alias.id`, or its `read` if the alias reads and writes different states
+ *
+ * @param aliasObj the object of the alias
+ * @returns the ID of the target, or null if the alias has none
+ */
+export function getAliasTarget(aliasObj: ioBroker.Object | null | undefined): string | null {
+    const id = (aliasObj?.common as Partial<ioBroker.StateCommon> | undefined)?.alias?.id;
+    if (typeof id === 'string') {
+        return id || null;
+    }
+    return id?.read || null;
+}
+
+/**
  * The ID of the object of an instance
  *
  * @param instance e.g. `ping.0`, or already `system.adapter.ping.0`

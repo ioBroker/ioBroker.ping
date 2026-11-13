@@ -119,6 +119,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`
+- (@GermanBluefox) Added: alias IDs are accepted in the web component Ping Device (#456)
 
 ### 3.2.0 (2026-11-09)
 - (@GermanBluefox) Added the web components `iob-ping-device` and `iob-ping-overview` - the devices widgets "Ping Device" and "Ping Overview" for Aura and other hosts (`common.webComponents`)
