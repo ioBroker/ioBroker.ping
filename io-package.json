@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.2.0",
+    "version": "3.2.1",
     "news": {
+      "3.2.1": {
+        "en": "Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`\nAdded: alias IDs are accepted in the web component Ping Device (#456)",
+        "de": "Die Kurzform der Webkomponenten-Manifeste (Tag, Name, Symbol, Größe) wurde zu `common.WebComponents` hinzugefügt, sodass Hosts wie Aura die Komponenten vor der Adapterinstallation auflisten können; der Build schreibt es mit `iob-web-components sync-io-package`\nHinzugefügt: Die Webkomponente Ping Device akzeptiert Alias (#456)",
+        "ru": "Добавлена краткая форма манифестов веб-компонентов (тег, имя, значок, размер) в `Common.webcomponents`, чтобы такие хосты, как Aura, могли перечислять компоненты до установки адаптера; сборка записывает его с помощью `iob-web-components sync-io-package`\nДобавлено: идентификаторы псевдонимов принимаются в веб-компоненте Ping Device (#456)",
+        "pt": "A forma abreviada dos manifestos de componentes web (tag, nome, ícone, tamanho) foi adicionada a `common.webComponents` para que hosts como o Aura possam listar os componentes antes da instalação do adaptador; a compilação grava com `iob-web-components sync-io-package`\nAdicionado: alias são aceitos no componente web Ping Device (#456)",
+        "nl": "De korte vorm van de manifesten van de webcomponenten (tag, naam, pictogram, grootte) toegevoegd aan `Common.WebComponents`, zodat hosts zoals Aura de componenten kunnen opsommen voordat de adapter wordt geïnstalleerd; de build schrijft het met `iob-web-components sync-io-package`\nToegevoegd: alias-ID's worden geaccepteerd in het Ping-apparaat van de webcomponent (#456)",
+        "fr": "Ajout de la forme abrégée des manifestes des composants Web (tag, nom, icône, taille) à « common.WebComponents », afin que des hôtes comme Aura puissent lister les composants avant d'installer l'adaptateur ; la version l'écrit avec « iob-web-components sync-io-package »\nAjouté : les alias sont acceptés dans le composant Web Ping Device (#456)",
+        "it": "Aggiunto l'abbreviazione dei manifest dei componenti web (tag, nome, icona, dimensione) a Common.WebComponents, in modo che host come Aura possano elencare i componenti prima di installare l'adattatore\nAggiunto: gli alias ID sono accettati nel web Ping Device (#456)",
+        "es": "Ha añadido la forma abreviada de los manifiestos de componentes web (etiqueta, nombre, icono, tamaño) a `Common.WebComponents` para que hosts como Aura puedan enumerar los componentes antes de instalar el adaptador; la versión lo escribe con `iob-web-components sync-io-package`\nAñadido: se aceptan alias en el componente web Ping Device (#456)",
+        "pl": "Dodano krótką formę manifestów komponentów internetowych (tag, nazwa, ikona, rozmiar) do `common.webcomponents`, aby hosty takie jak Aura mogli wymienić komponenty przed zainstalowaniem adaptera; kompilacja zapisuje go za pomocą `iob-web-components sync-io-package`\nDodano: identyfikatory aliasów są akceptowane w komponencie WWW Ping Device (#456)",
+        "uk": "Додано коротку форму маніфестів веб-компонента (тег, ім'я, піктограма, розмір) до `Common.WebComponents`, щоб такі хости, як Aura, могли перелічити компоненти до встановлення адаптера; збірка записує його за допомогою `iob-web-components sync-io-package`\nДодано: ідентифікатори псевдонімів приймаються у веб-компоненті Ping Device (#456)",
+        "zh-cn": "将 Web 组件清单（标签、名称、图标、大小）的简写形式添加到 `common.webComponents` 中，这样像 Aura 这样的主机就可以在安装适配器之前列出组件；该版本使用 `iob-web-components sync-io-package` 写入组件\n新增：Web 组件 Ping 设备接受别名 ID (#456)"
+      },
       "3.2.0": {
         "en": "Added the web components `iob-ping-device` and `iob-ping-overview` - the devices widgets \"Ping Device\" and \"Ping Overview\" for Aura and other hosts (`common.webComponents`)\nDevices widgets \"Ping Device\" and \"Ping Overview\": fixed the state IDs for host names with dots, devices shown by name and disabled devices\nDevices widget \"Ping Device\" shows the status of a newly selected device or instance at once instead of only after reloading; \"Ping Overview\" no longer mixes in devices of the previously selected instance\nIPv6 addresses ending in digits (e.g. `fd00::1`) are pinged now instead of being checked as a TCP port. Write the TCP port of an IPv6 address in brackets: `[fd00::1]:80`\nAn IPv6 address in brackets without a port (e.g. `[fd00::1]`) is pinged now\nA TCP port outside 1-65535 (e.g. `192.168.1.1:99999`) no longer stops the adapter: the device is reported as offline and a warning is logged\nIPv6 addresses are pinged with `ping6` on macOS and FreeBSD, and on Windows a device that answers over IPv6 is no longer reported as offline\nDevices widget \"Ping Device\" shows the response time as soon as it is switched on in the settings; \"Ping Overview\" no longer fails when the instance cannot be read or has no device list",
         "de": "Webkomponenten `iob-ping-device` und `iob-ping-overview` hinzugefügt — die Geräte-Widgets „Ping Device“ und „Ping Overview“ für Aura und andere Hosts (`common.webComponents`)\nGeräte-Widgets „Ping Device“ und „Ping Overview“: Punktierte Status-IDs für Hostnamen, Geräte mit Namen und deaktivierte\nDas Geräte-Widget „Ping Device“ zeigt den Status eines neu ausgewählten Geräts oder einer Instanz sofort an und nicht erst nach dem erneuten Laden; „Ping Overview“ mischt Geräte der zuvor ausgewählten Instanz nicht mehr\nIPv6-Adressen, die mit Ziffern enden (z. B. `fd00: :1`), werden jetzt gepingt und nicht als TCP-Port. Schreiben Sie den IPv6-Port in Klammern: `[fd00: :1] :80`\nEine IPv6-Adresse in Klammern ohne Port (z. B. `[fd00: :1]`) wird gepingt\nEin TCP-Port außerhalb von 1-65535 (z. B. 192.168.1. 1:99999 `) stoppt den Adapter nicht mehr: Das Gerät ist offline und es wird eine Warnung gemeldet\nIPv6-Adressen werden unter macOS und FreeBSD mit `Ping6` angepingt, und unter Windows gilt ein IPv6-Gerät nicht mehr als offline\nDas Geräte-Widget „Ping Device“ zeigt die Reaktionszeit, sobald es in den Einstellungen aktiviert ist; „Ping Overview“ schlägt nicht mehr fehl, wenn die Instanz nicht gelesen werden kann",
@@ -80,19 +93,6 @@
         "pl": "Uwaga: Adapter wymaga teraz node.js >= 22\nPrzeniesiono do wersji Admin 8",
         "uk": "Проблема: Адаптер тепер вимагає node.js >= 22\nПеренесено для адміністратора 8",
         "zh-cn": "重要提示：适配器现在需要 node.js 版本 >= 22。\n已迁移至管理员 8"
-      },
-      "2.2.4": {
-        "en": "Fixing devices widgets",
-        "de": "Festlegen von Geräten Widgets",
-        "ru": "Фиксация виджетов устройств",
-        "pt": "Elementos de fixação de dispositivos",
-        "nl": "Bepalen van widgets",
-        "fr": "Correction des widgets périphériques",
-        "it": "Correggere widget di dispositivi",
-        "es": "Fijación de dispositivos widgets",
-        "pl": "Widżety urządzeń mocujących",
-        "uk": "Виправлення віджетів пристроїв",
-        "zh-cn": "修复设备部件"
       }
     },
     "titleLang": {

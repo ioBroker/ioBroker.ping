@@ -1,4 +1,7 @@
 # Older changes
+## 3.1.2 (2026-10-13)
+- (@GermanBluefox) Updated packages and added missing translations
+
 ## 3.1.1 (2026-09-01)
 - (@GermanBluefox) Ping says now when this host may not send ICMP at all instead of reporting every device as offline
 - (@GermanBluefox) Added an optional TCP check that keeps the devices monitored on such a host (LXC container)

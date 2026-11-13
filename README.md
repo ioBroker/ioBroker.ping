@@ -116,8 +116,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 3.2.1 (2026-11-13)
 - (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`
 - (@GermanBluefox) Added: alias IDs are accepted in the web component Ping Device (#456)
 
@@ -139,9 +138,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### 3.1.3 (2026-10-13)
 - (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
-
-### 3.1.2 (2026-10-13)
-- (@GermanBluefox) Updated packages and added missing translations
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
