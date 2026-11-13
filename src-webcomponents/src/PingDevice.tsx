@@ -6,8 +6,8 @@
  * its own (`ping-device.json`, written by the build from `manifest.ts`), so a host loads this module only when it
  * shows the element. The host sets `socket` and `settings`, and if it has them `theme` and `editMode`.
  *
- * The setting `device` is a state of the device. The element subscribes to its `alive` state and, with extended
- * information, to `time`; the name and the address come from the configuration of the instance
+ * The setting `device` is a state of the device, or an alias of it. The element subscribes to its `alive` state
+ * and, with extended information, to `time`; the name and the address come from the configuration of the instance
  * (`system.adapter.ping.<n>`), kept up to date. A click copies the address, as in the devices widget.
  *
  * React is not in the module: it comes from `lib/esm/react-19.js` beside `adapter/`, see `vite.config.ts`.
@@ -25,7 +25,9 @@ import {
     getInstanceObjectId,
     getInstanceOfId,
     getPingDevices,
+    getAliasTarget,
     guessAliveId,
+    isAliasId,
     type PingDevice,
 } from './pingDevices';
 import { DEVICE_STYLES } from './styles';
@@ -37,6 +39,8 @@ const COPIED_MS = 1500;
 interface Target {
     aliveId: string;
     timeId: string | null;
+    /** The state the value of `alive` is read from: the alias if the setting is one of `aliveId`, else `aliveId` */
+    valueId: string;
     /** From the configuration of the instance; null while it is not read or does not have the device */
     device: PingDevice | null;
 }
@@ -132,10 +136,19 @@ class PingDeviceElement extends IobWebComponent<DeviceSettings> {
         this.#copied = false;
     }
 
-    /** The configuration of the instance of the device: its name and its address */
+    /**
+     * The configuration of the instance of the device: its name and its address. For an alias first the alias, to
+     * learn its target - the base class asks again once it is read
+     */
     protected override getObjectIds(settings: DeviceSettings): string[] {
-        const instance = getInstanceOfId(settings.device);
-        return instance ? [getInstanceObjectId(instance)] : [];
+        const id = settings.device?.trim();
+        const ids = isAliasId(id) ? [id] : [];
+        const target = this.#getTarget(settings);
+        const instance = target ? getInstanceOfId(target.aliveId) : null;
+        if (instance) {
+            ids.push(getInstanceObjectId(instance));
+        }
+        return ids;
     }
 
     protected override getStateIds(settings: DeviceSettings): string[] {
@@ -144,28 +157,39 @@ class PingDeviceElement extends IobWebComponent<DeviceSettings> {
             return [];
         }
         return target.timeId && settings.showResponseTime !== false
-            ? [target.aliveId, target.timeId]
-            : [target.aliveId];
+            ? [target.valueId, target.timeId]
+            : [target.valueId];
     }
 
     /**
      * The states of the device: from the configuration of the instance once it is read, guessed from the ID
-     * before - `.time` and `.rps` of an extended device lead to its `.alive`
+     * before - `.time` and `.rps` of an extended device lead to its `.alive`. An alias stands for its target.
+     *
+     * @returns undefined while the alias is read, null if the setting names no state of the ping adapter
      */
-    #getTarget(settings: DeviceSettings): Target | null {
-        const id = settings.device?.trim();
+    #getTarget(settings: DeviceSettings): Target | null | undefined {
+        const picked = settings.device?.trim();
+        const alias = isAliasId(picked) ? picked : null;
+        const aliasObj = alias ? this.objects[alias] : null;
+        if (aliasObj === undefined) {
+            return undefined;
+        }
+        const id = alias ? getAliasTarget(aliasObj) : picked;
         const instance = getInstanceOfId(id);
         if (!id || !instance) {
             return null;
         }
         const device = findPingDevice(getPingDevices(this.objects[getInstanceObjectId(instance)]), id);
+        const aliveId = device ? device.aliveId : guessAliveId(id);
+        // the value through the alias, so that its conversion applies; `time` has no alias of its own
+        const valueId = alias && id === aliveId ? alias : aliveId;
         if (device) {
-            return { aliveId: device.aliveId, timeId: device.timeId, device };
+            return { aliveId, timeId: device.timeId, valueId, device };
         }
-        const aliveId = guessAliveId(id);
         return {
             aliveId,
             timeId: aliveId.endsWith('.alive') ? aliveId.replace(/\.alive$/, '.time') : null,
+            valueId,
             device: null,
         };
     }
@@ -208,6 +232,12 @@ class PingDeviceElement extends IobWebComponent<DeviceSettings> {
         }
 
         const target = this.#getTarget(settings);
+        if (target === undefined) {
+            // the alias is read: no hint for a moment
+            this.#root.render(null);
+            return;
+        }
+        // the object of the ping state, not of an alias of it
         const aliveObj = target ? this.objects[target.aliveId] : null;
         // `undefined` while it is read: no hint for a moment. The alive state carries the address in `native.host`
         const isDevice =
@@ -225,7 +255,7 @@ class PingDeviceElement extends IobWebComponent<DeviceSettings> {
             return;
         }
 
-        const aliveState = this.states[target.aliveId];
+        const aliveState = this.states[target.valueId];
         const timeState = target.timeId ? this.states[target.timeId] : null;
         const ip = target.device?.ip || String(aliveObj?.native?.host || '');
         const name = settings.name?.trim() || target.device?.name || '';

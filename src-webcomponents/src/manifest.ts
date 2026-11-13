@@ -44,8 +44,7 @@ const deviceManifest: WebComponentManifest = {
             device: {
                 type: 'objectId',
                 types: 'state',
-                // every instance of the adapter; the element takes the instance from the ID
-                root: 'ping',
+                // no root: an alias of a ping state is allowed too; the element takes the instance from the ID
                 label: {
                     en: 'Device',
                     de: 'Gerät',
@@ -60,17 +59,17 @@ const deviceManifest: WebComponentManifest = {
                     'zh-cn': '设备',
                 },
                 help: {
-                    en: 'A state of the device: ping.0.<host>.<IP>, or its .alive with "Extended Info"',
-                    de: 'Ein Datenpunkt des Geräts: ping.0.<Host>.<IP>, oder sein .alive bei "Erweiterte Informationen"',
-                    ru: 'Состояние устройства: ping.0.<хост>.<IP> или его .alive при "Расширенная информация"',
-                    pt: 'Um estado do dispositivo: ping.0.<host>.<IP>, ou o seu .alive com "Extended Info"',
-                    nl: 'Een status van het apparaat: ping.0.<host>.<IP>, of zijn .alive bij "Extended Info"',
-                    fr: "Un état de l'appareil : ping.0.<hôte>.<IP>, ou son .alive avec « Extended Info »",
-                    it: 'Uno stato del dispositivo: ping.0.<host>.<IP>, o il suo .alive con "Extended Info"',
-                    es: 'Un estado del dispositivo: ping.0.<host>.<IP>, o su .alive con "Extended Info"',
-                    pl: 'Stan urządzenia: ping.0.<host>.<IP> lub jego .alive przy "Extended Info"',
-                    uk: 'Стан пристрою: ping.0.<хост>.<IP> або його .alive з "Розширена інформація"',
-                    'zh-cn': '设备的状态：ping.0.<主机>.<IP>，或启用"扩展信息"时的 .alive',
+                    en: 'A state of the device: ping.0.<host>.<IP>, or its .alive with "Extended Info", or an alias of it',
+                    de: 'Ein Datenpunkt des Geräts: ping.0.<Host>.<IP>, oder sein .alive bei "Erweiterte Informationen", oder ein Alias darauf',
+                    ru: 'Состояние устройства: ping.0.<хост>.<IP> или его .alive при "Расширенная информация", или алиас на него',
+                    pt: 'Um estado do dispositivo: ping.0.<host>.<IP>, ou o seu .alive com "Extended Info", ou um alias dele',
+                    nl: 'Een status van het apparaat: ping.0.<host>.<IP>, of zijn .alive bij "Extended Info", of een alias ervan',
+                    fr: "Un état de l'appareil : ping.0.<hôte>.<IP>, ou son .alive avec « Extended Info », ou un alias de celui-ci",
+                    it: 'Uno stato del dispositivo: ping.0.<host>.<IP>, o il suo .alive con "Extended Info", o un alias di esso',
+                    es: 'Un estado del dispositivo: ping.0.<host>.<IP>, o su .alive con "Extended Info", o un alias de él',
+                    pl: 'Stan urządzenia: ping.0.<host>.<IP> lub jego .alive przy "Extended Info", lub jego alias',
+                    uk: 'Стан пристрою: ping.0.<хост>.<IP> або його .alive з "Розширена інформація", або аліас на нього',
+                    'zh-cn': '设备的状态：ping.0.<主机>.<IP>，或启用"扩展信息"时的 .alive，或其别名',
                 },
             },
             showName: {
