@@ -34,5 +34,7 @@
     "Ports of the TCP check": "TCP 检查的端口",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "拒绝连接的设备同样会被识别，但在这些端口上都不响应的设备仍为离线",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "ping 前唤醒设备（例如处于深度睡眠的 iPhone）",
-    "Wake before ping": "ping 前唤醒"
+    "Wake before ping": "ping 前唤醒",
+    "Packet size": "数据包大小",
+    "Bytes of data in the echo request. Empty for the default of ping (56 on Linux, 32 on Windows). Some devices only answer a certain size, e.g. 32": "回显请求中的数据字节数。留空则使用 ping 的默认值（Linux 为 56，Windows 为 32）。某些设备只响应特定大小，例如 32"
 }

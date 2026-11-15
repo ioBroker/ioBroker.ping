@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MAX_PACKET_SIZE = exports.MIN_PACKET_SIZE = void 0;
 exports.parseAddress = parseAddress;
+exports.parsePacketSize = parsePacketSize;
 exports.buildPingCommand = buildPingCommand;
 exports.parsePingTime = parsePingTime;
 exports.probe = probe;
@@ -73,6 +75,43 @@ function parseAddress(addr) {
     }
     return { host: addr, port: null };
 }
+/** The smallest and the largest number of data bytes in an echo request that every ping binary accepts */
+exports.MIN_PACKET_SIZE = 0;
+/** ping.exe of Windows takes at most 65500, iputils 65507 */
+exports.MAX_PACKET_SIZE = 65500;
+/**
+ * The packet size configured for a device (`packetSize` in the devices table).
+ *
+ * Empty (`''`, `null`, `undefined`) means the default of the ping binary: 56 bytes on Linux, macOS and FreeBSD,
+ * 32 bytes on Windows. Some devices only answer one of them - the KNX IP interface 730 of Weinzierl answers 32 bytes
+ * but not 56 (#387). A value that is no whole number between {@link MIN_PACKET_SIZE} and {@link MAX_PACKET_SIZE}
+ * gives `error`, and the default is used.
+ */
+function parsePacketSize(value) {
+    if (value === undefined || value === null || (typeof value === 'string' && !value.trim())) {
+        return { size: null };
+    }
+    let text;
+    let size = NaN;
+    if (typeof value === 'number') {
+        text = String(value);
+        size = value;
+    }
+    else if (typeof value === 'string') {
+        text = value.trim();
+        size = /^\d+$/.test(text) ? parseInt(text, 10) : NaN;
+    }
+    else {
+        text = JSON.stringify(value);
+    }
+    if (!Number.isInteger(size) || size < exports.MIN_PACKET_SIZE || size > exports.MAX_PACKET_SIZE) {
+        return {
+            size: null,
+            error: `Invalid packet size "${text}": it has to be a whole number between ${exports.MIN_PACKET_SIZE} and ${exports.MAX_PACKET_SIZE}`,
+        };
+    }
+    return { size };
+}
 /** `host:port` as the user writes it, so an IPv6 host gets its brackets back */
 function formatAddress(host, port) {
     return host.includes(':') ? `[${host}]:${port}` : `${host}:${port}`;
@@ -136,6 +175,9 @@ function wakeWithUdpBurst(host, log, callback) {
         pingLater();
     });
 }
+function hasPacketSize(options) {
+    return typeof options.packetSize === 'number' && Number.isInteger(options.packetSize);
+}
 /**
  * Which program pings `host` on `platform` (`os.platform()`), with which arguments.
  *
@@ -146,6 +188,9 @@ function wakeWithUdpBurst(host, log, callback) {
  * - darwin, freebsd, IPv4: `ping -n -t <timeout> -c <count> <host>`
  * - darwin, freebsd, IPv6: `ping6 -n -c <count> <host>`, stopped after the timeout with {@link PingCommand.killAfter},
  *   as ping6 has no option for it. FreeBSD 13+ has `ping6` as a link to `ping -6`, which needs nothing else.
+ *
+ * A {@link PingOptions.packetSize} is passed as `-s <bytes>` (Linux, macOS, FreeBSD, also ping6) and as
+ * `-l <bytes>` to ping.exe.
  *
  * `host` is the address to ping as {@link parseAddress} returns it - an IPv6 address without brackets. Returns
  * `null` for a platform that is not supported. Pure: it starts nothing and looks at no file.
@@ -163,6 +208,9 @@ function buildPingCommand(platform, host, options) {
         if (options.minReply !== false) {
             args.push('-c', String(options.minReply));
         }
+        if (hasPacketSize(options)) {
+            args.push('-s', String(options.packetSize));
+        }
         return { binary: 'ping', args: [...args, ...extra, host], killAfter: null };
     }
     if (platform.startsWith('win')) {
@@ -172,6 +220,9 @@ function buildPingCommand(platform, host, options) {
         }
         if (options.timeout !== false) {
             args.push('-w', String(options.timeout * 1000));
+        }
+        if (hasPacketSize(options)) {
+            args.push('-l', String(options.packetSize));
         }
         return { binary: 'ping.exe', args: [...args, ...extra, host], killAfter: null };
     }
@@ -187,6 +238,9 @@ function buildPingCommand(platform, host, options) {
         }
         if (options.minReply !== false) {
             args.push('-c', String(options.minReply));
+        }
+        if (hasPacketSize(options)) {
+            args.push('-s', String(options.packetSize));
         }
         return {
             binary: ipv6 ? 'ping6' : 'ping',
@@ -256,6 +310,7 @@ function probe(addr, config, callback) {
         timeout: parseInt(String(config.timeout === undefined ? 2 : config.timeout), 10),
         minReply: parseInt(String(config.minReply === undefined ? 1 : config.minReply), 10),
         extra: config.extra || [],
+        packetSize: config.packetSize ?? null,
     });
     if (!command) {
         callback?.(`Your platform "${p}" is not supported`);

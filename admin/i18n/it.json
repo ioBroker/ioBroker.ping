@@ -34,5 +34,7 @@
     "Ports of the TCP check": "Porte della verifica TCP",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Anche un dispositivo che rifiuta la connessione viene riconosciuto, ma quello che non risponde su nessuna di queste porte resta offline",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "Riattiva il dispositivo prima del ping (ad es. per iPhone in sospensione profonda)",
-    "Wake before ping": "Riattiva prima del ping"
+    "Wake before ping": "Riattiva prima del ping",
+    "Packet size": "Dimensione pacchetto",
+    "Bytes of data in the echo request. Empty for the default of ping (56 on Linux, 32 on Windows). Some devices only answer a certain size, e.g. 32": "Byte di dati nella richiesta echo. Vuoto per il valore predefinito di ping (56 su Linux, 32 su Windows). Alcuni dispositivi rispondono solo a una determinata dimensione, ad es. 32"
 }

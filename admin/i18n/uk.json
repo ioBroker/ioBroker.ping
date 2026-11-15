@@ -34,5 +34,7 @@
     "Ports of the TCP check": "Порти перевірки TCP",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Пристрій, який відхиляє з'єднання, також розпізнається, але той, що не відповідає на жодному з цих портів, залишається офлайн",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "Розбудити пристрій перед пінгом (наприклад, iPhone у глибокому сні)",
-    "Wake before ping": "Будити перед пінгом"
+    "Wake before ping": "Будити перед пінгом",
+    "Packet size": "Розмір пакета",
+    "Bytes of data in the echo request. Empty for the default of ping (56 on Linux, 32 on Windows). Some devices only answer a certain size, e.g. 32": "Байти даних у ехо-запиті. Порожньо - значення ping за замовчуванням (56 у Linux, 32 у Windows). Деякі пристрої відповідають лише на певний розмір, наприклад 32"
 }

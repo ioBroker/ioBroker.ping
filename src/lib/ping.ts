@@ -46,6 +46,11 @@ export interface PingConfig {
     log?: (...args: any[]) => void;
     /** Wake the device with a UDP burst before the ping - see `lib/udpWake.ts` */
     udpWake?: boolean;
+    /**
+     * Bytes of data in the echo request (`-s` of Linux, macOS and FreeBSD, `-l` of Windows), `null` or missing for
+     * the default of the binary - see {@link parsePacketSize}
+     */
+    packetSize?: number | null;
 }
 
 export type PingCallback = (err: Error | string | null, result?: PingResult) => void;
@@ -106,6 +111,51 @@ export function parseAddress(addr: string): ParsedAddress {
         return withPort(addr, match[1], match[2]);
     }
     return { host: addr, port: null };
+}
+
+/** The smallest and the largest number of data bytes in an echo request that every ping binary accepts */
+export const MIN_PACKET_SIZE = 0;
+/** ping.exe of Windows takes at most 65500, iputils 65507 */
+export const MAX_PACKET_SIZE = 65500;
+
+/** The packet size of a device: the number of data bytes, or why the configured value is not one */
+export interface ParsedPacketSize {
+    /** Bytes of data in the echo request, `null` for the default of the ping binary */
+    size: number | null;
+    /** Set when the configured value is no size: `size` is then `null`, the device is pinged with the default */
+    error?: string;
+}
+
+/**
+ * The packet size configured for a device (`packetSize` in the devices table).
+ *
+ * Empty (`''`, `null`, `undefined`) means the default of the ping binary: 56 bytes on Linux, macOS and FreeBSD,
+ * 32 bytes on Windows. Some devices only answer one of them - the KNX IP interface 730 of Weinzierl answers 32 bytes
+ * but not 56 (#387). A value that is no whole number between {@link MIN_PACKET_SIZE} and {@link MAX_PACKET_SIZE}
+ * gives `error`, and the default is used.
+ */
+export function parsePacketSize(value: unknown): ParsedPacketSize {
+    if (value === undefined || value === null || (typeof value === 'string' && !value.trim())) {
+        return { size: null };
+    }
+    let text: string;
+    let size = NaN;
+    if (typeof value === 'number') {
+        text = String(value);
+        size = value;
+    } else if (typeof value === 'string') {
+        text = value.trim();
+        size = /^\d+$/.test(text) ? parseInt(text, 10) : NaN;
+    } else {
+        text = JSON.stringify(value);
+    }
+    if (!Number.isInteger(size) || size < MIN_PACKET_SIZE || size > MAX_PACKET_SIZE) {
+        return {
+            size: null,
+            error: `Invalid packet size "${text}": it has to be a whole number between ${MIN_PACKET_SIZE} and ${MAX_PACKET_SIZE}`,
+        };
+    }
+    return { size };
 }
 
 /** `host:port` as the user writes it, so an IPv6 host gets its brackets back */
@@ -191,6 +241,8 @@ export interface PingOptions {
     minReply: number | false;
     /** Further arguments, passed as they are */
     extra: string[] | false;
+    /** Bytes of data in the echo request, `null` or missing for the default of the binary */
+    packetSize?: number | null;
 }
 
 /** Which program pings and how - see {@link buildPingCommand} */
@@ -211,6 +263,10 @@ export interface PingCommand {
     killAfter: number | null;
 }
 
+function hasPacketSize(options: PingOptions): options is PingOptions & { packetSize: number } {
+    return typeof options.packetSize === 'number' && Number.isInteger(options.packetSize);
+}
+
 /**
  * Which program pings `host` on `platform` (`os.platform()`), with which arguments.
  *
@@ -221,6 +277,9 @@ export interface PingCommand {
  * - darwin, freebsd, IPv4: `ping -n -t <timeout> -c <count> <host>`
  * - darwin, freebsd, IPv6: `ping6 -n -c <count> <host>`, stopped after the timeout with {@link PingCommand.killAfter},
  *   as ping6 has no option for it. FreeBSD 13+ has `ping6` as a link to `ping -6`, which needs nothing else.
+ *
+ * A {@link PingOptions.packetSize} is passed as `-s <bytes>` (Linux, macOS, FreeBSD, also ping6) and as
+ * `-l <bytes>` to ping.exe.
  *
  * `host` is the address to ping as {@link parseAddress} returns it - an IPv6 address without brackets. Returns
  * `null` for a platform that is not supported. Pure: it starts nothing and looks at no file.
@@ -239,6 +298,9 @@ export function buildPingCommand(platform: string, host: string, options: PingOp
         if (options.minReply !== false) {
             args.push('-c', String(options.minReply));
         }
+        if (hasPacketSize(options)) {
+            args.push('-s', String(options.packetSize));
+        }
         return { binary: 'ping', args: [...args, ...extra, host], killAfter: null };
     }
 
@@ -249,6 +311,9 @@ export function buildPingCommand(platform: string, host: string, options: PingOp
         }
         if (options.timeout !== false) {
             args.push('-w', String(options.timeout * 1000));
+        }
+        if (hasPacketSize(options)) {
+            args.push('-l', String(options.packetSize));
         }
         return { binary: 'ping.exe', args: [...args, ...extra, host], killAfter: null };
     }
@@ -265,6 +330,9 @@ export function buildPingCommand(platform: string, host: string, options: PingOp
         }
         if (options.minReply !== false) {
             args.push('-c', String(options.minReply));
+        }
+        if (hasPacketSize(options)) {
+            args.push('-s', String(options.packetSize));
         }
         return {
             binary: ipv6 ? 'ping6' : 'ping',
@@ -343,6 +411,7 @@ export function probe(addr: string, config: PingConfig | undefined, callback: Pi
         timeout: parseInt(String(config.timeout === undefined ? 2 : config.timeout), 10),
         minReply: parseInt(String(config.minReply === undefined ? 1 : config.minReply), 10),
         extra: config.extra || [],
+        packetSize: config.packetSize ?? null,
     });
     if (!command) {
         callback?.(`Your platform "${p}" is not supported`);

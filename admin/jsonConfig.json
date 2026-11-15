@@ -120,6 +120,15 @@
                             "title": "Wake before ping",
                             "width": 80,
                             "tooltip": "Wake device before ping (e.g. for iPhones in deep sleep)"
+                        },
+                        {
+                            "type": "number",
+                            "attr": "packetSize",
+                            "title": "Packet size",
+                            "min": 0,
+                            "max": 65500,
+                            "width": 100,
+                            "tooltip": "Bytes of data in the echo request. Empty for the default of ping (56 on Linux, 32 on Windows). Some devices only answer a certain size, e.g. 32"
                         }
                     ]
                 }

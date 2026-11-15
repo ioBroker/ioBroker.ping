@@ -34,5 +34,7 @@
     "Ports of the TCP check": "Poorten van de TCP-controle",
     "A device that refuses the connection is recognized as well, but one that answers on none of these ports stays offline": "Een apparaat dat de verbinding weigert wordt ook herkend, maar een apparaat dat op geen van deze poorten antwoordt blijft offline",
     "Wake device before ping (e.g. for iPhones in deep sleep)": "Apparaat wekken vóór ping (bijv. voor iPhones in diepe slaap)",
-    "Wake before ping": "Wekken vóór ping"
+    "Wake before ping": "Wekken vóór ping",
+    "Packet size": "Pakketgrootte",
+    "Bytes of data in the echo request. Empty for the default of ping (56 on Linux, 32 on Windows). Some devices only answer a certain size, e.g. 32": "Databytes in het echoverzoek. Leeg voor de standaard van ping (56 op Linux, 32 op Windows). Sommige apparaten antwoorden alleen op een bepaalde grootte, bijv. 32"
 }

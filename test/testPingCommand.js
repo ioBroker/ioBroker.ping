@@ -88,6 +88,50 @@ describe('Which program pings and with which arguments', function () {
         });
     });
 
+    it('sets the packet size: -s on Linux, macOS and FreeBSD (also ping6), -l on Windows (#387)', function () {
+        const options = { ...DEFAULTS, packetSize: 32 };
+        assert.deepStrictEqual(ping.buildPingCommand('linux', '10.20.40.170', options), {
+            binary: 'ping',
+            args: ['-n', '-w', '2', '-c', '1', '-s', '32', '10.20.40.170'],
+            killAfter: null,
+        });
+        assert.deepStrictEqual(ping.buildPingCommand('win32', '10.20.40.170', options), {
+            binary: 'ping.exe',
+            args: ['-n', '1', '-w', '2000', '-l', '32', '10.20.40.170'],
+            killAfter: null,
+        });
+        assert.deepStrictEqual(ping.buildPingCommand('darwin', '10.20.40.170', options), {
+            binary: 'ping',
+            args: ['-n', '-t', '2', '-c', '1', '-s', '32', '10.20.40.170'],
+            killAfter: null,
+        });
+        assert.deepStrictEqual(ping.buildPingCommand('freebsd', 'fd00::1', options), {
+            binary: 'ping6',
+            args: ['-n', '-c', '1', '-s', '32', 'fd00::1'],
+            killAfter: 2000,
+        });
+        // 0 is a size, too: an echo request without data
+        assert.deepStrictEqual(ping.buildPingCommand('linux', '10.20.40.170', { ...DEFAULTS, packetSize: 0 }).args, [
+            '-n',
+            '-w',
+            '2',
+            '-c',
+            '1',
+            '-s',
+            '0',
+            '10.20.40.170',
+        ]);
+        // no size: the default of the binary
+        assert.deepStrictEqual(ping.buildPingCommand('linux', '10.20.40.170', { ...DEFAULTS, packetSize: null }).args, [
+            '-n',
+            '-w',
+            '2',
+            '-c',
+            '1',
+            '10.20.40.170',
+        ]);
+    });
+
     it('does not support other platforms', function () {
         assert.strictEqual(ping.buildPingCommand('aix', '192.168.1.1', DEFAULTS), null);
         assert.strictEqual(ping.buildPingCommand('android', 'fd00::1', DEFAULTS), null);
@@ -273,5 +317,29 @@ describe('ping6 of macOS and FreeBSD', function () {
                 done(e);
             }
         });
+    });
+});
+
+describe('The packet size of a device (#387)', function () {
+    it('is empty for the default of the ping binary', function () {
+        for (const value of [undefined, null, '', '  ']) {
+            assert.deepStrictEqual(ping.parsePacketSize(value), { size: null }, JSON.stringify(value));
+        }
+    });
+
+    it('takes a whole number from 0 to 65500, as number or as text', function () {
+        assert.deepStrictEqual(ping.parsePacketSize(32), { size: 32 });
+        assert.deepStrictEqual(ping.parsePacketSize('32'), { size: 32 });
+        assert.deepStrictEqual(ping.parsePacketSize(' 56 '), { size: 56 });
+        assert.deepStrictEqual(ping.parsePacketSize(0), { size: 0 });
+        assert.deepStrictEqual(ping.parsePacketSize(65500), { size: 65500 });
+    });
+
+    it('says why a value is no size and uses the default then', function () {
+        for (const value of [-1, 65501, 32.5, '32.5', 'abc', '-s 32', NaN, true]) {
+            const parsed = ping.parsePacketSize(value);
+            assert.strictEqual(parsed.size, null, String(value));
+            assert.ok(parsed.error && parsed.error.includes('between 0 and 65500'), String(value));
+        }
     });
 });

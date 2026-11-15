@@ -58,6 +58,12 @@ Enable **"Wake before ping"** for individual devices in the Devices table.
 
 The burst is sent by the adapter itself (the same as `hping3 -2 -c 10 -p 5353 -i u1 -q <IP>`), so no additional tool has to be installed, and it works on every platform.
 
+## Packet size
+
+Some devices only answer an echo request of a certain size. The KNX IP interface 730 of Weinzierl, for example, answers the 32 bytes of data that Windows sends, but not the 56 bytes of Linux.
+
+Enter the number of data bytes in the column **"Packet size"** of the Devices table (0-65500). The adapter passes it as `-s` to `ping` on Linux, macOS and FreeBSD and as `-l` to `ping.exe` on Windows. Leave it empty for the default of the system.
+
 ## TCP Port Check
 
 From version 1.8.0 you can also check TCP ports by specifying the port number after the IP address with a colon (e.g., `192.168.1.1:80`).
@@ -116,6 +122,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added the optional packet size per device (`ping -s` / `ping.exe -l`) for devices that only answer an echo request of a certain size, e.g. the KNX IP interface 730 of Weinzierl (#387)
+
 ### 3.2.1 (2026-11-13)
 - (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`
 - (@GermanBluefox) Added: alias IDs are accepted in the web component Ping Device (#456)

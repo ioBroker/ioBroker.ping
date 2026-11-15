@@ -52,6 +52,8 @@ interface PingTask {
     online?: boolean;
     mac?: string;
     udpWake?: boolean;
+    /** Bytes of data in the echo request, `null` for the default of the ping binary (#387) */
+    packetSize?: number | null;
 }
 
 interface PreparedObjects {
@@ -609,10 +611,15 @@ class PingAdapter extends Adapter {
      */
     probeWithFallback(
         host: string,
-        udpWake?: boolean,
+        options?: { udpWake?: boolean; packetSize?: number | null },
     ): Promise<{ err?: Error | string | null; result?: ping.PingResult }> {
+        const config: ping.PingConfig = {
+            log: this.log.debug,
+            udpWake: options?.udpWake,
+            packetSize: options?.packetSize,
+        };
         return new Promise(resolve =>
-            ping.probe(host, { log: this.log.debug, udpWake }, (err, result) => {
+            ping.probe(host, config, (err, result) => {
                 if (!result?.denied) {
                     resolve({ err, result });
                     return;
@@ -640,7 +647,10 @@ class PingAdapter extends Adapter {
     }
 
     async pingSingleDevice(task: PingTask, retryCounter: number): Promise<boolean> {
-        const { err, result } = await this.probeWithFallback(task.host, task.udpWake);
+        const { err, result } = await this.probeWithFallback(task.host, {
+            udpWake: task.udpWake,
+            packetSize: task.packetSize,
+        });
 
         err && this.log.error(`Error by pinging: ${err}`);
 
@@ -925,6 +935,7 @@ class PingAdapter extends Adapter {
                     host,
                     extendedInfo: true,
                     udpWake: !!config.use_hping3,
+                    packetSize: ping.parsePacketSize(config.packetSize).size,
                     stateAlive: this.buildId(stateAliveID),
                     stateTime: this.buildId(stateTimeID),
                     stateRps: this.buildId(stateRpsID),
@@ -1002,6 +1013,7 @@ class PingAdapter extends Adapter {
                 host: config.ip.trim(),
                 extendedInfo: false,
                 udpWake: !!config.use_hping3,
+                packetSize: ping.parsePacketSize(config.packetSize).size,
                 stateAlive: this.buildId(stateID),
             },
             states: [
@@ -1089,6 +1101,10 @@ class PingAdapter extends Adapter {
             const { error } = ping.parseAddress(config.ping_task.host);
             if (error) {
                 this.log.warn(`${error}. The device is not checked and is reported as offline.`);
+            }
+            const packetSize = ping.parsePacketSize(device.packetSize);
+            if (packetSize.error) {
+                this.log.warn(`${config.ping_task.host}: ${packetSize.error}. The default size of ping is used.`);
             }
 
             states = states.concat(config.states);
