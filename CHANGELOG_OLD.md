@@ -1,4 +1,7 @@
 # Older changes
+## 3.1.3 (2026-10-13)
+- (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
+
 ## 3.1.2 (2026-10-13)
 - (@GermanBluefox) Updated packages and added missing translations
 

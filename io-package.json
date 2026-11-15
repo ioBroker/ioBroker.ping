@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "news": {
+      "3.3.0": {
+        "en": "Added the optional packet size per device (`ping -s` / `ping.exe -l`) for devices that only answer an echo request of a certain size, e.g. the KNX IP interface 730 of Weinzierl (#387)\nUpdated packages",
+        "de": "Optionale Paketgröße pro Gerät hinzugefügt (`ping -s`/`ping.exe -l`) für Geräte, die nur Echos einer bestimmten Größe beantworten, z. B. KNX IP Interface 730 von Weinzierl (#387)\nNeue Pakete",
+        "ru": "Добавлен дополнительный размер пакета для каждого устройства (`ping -s`/`ping.exe -l`) для устройств, которые отвечают только на эхо-запрос определенного размера, например, IP-интерфейс KNX 730 компании Weinzierl (#387)\nОбновленные пакеты",
+        "pt": "Adicionado o tamanho de pacote opcional por dispositivo (`ping -s`/`ping.exe -l`) para dispositivos que só atendem a um certo tamanho de eco, como a interface IP KNX 730 da Weinzierl (#387)\nPacotes novos",
+        "nl": "De optionele pakketgrootte per apparaat toegevoegd (`ping -s`/`ping.exe -l`) voor apparaten die alleen een echoverzoek van een bepaalde grootte beantwoorden, bijvoorbeeld de KNX IP-interface 730 van Weinzierl (#387)\nBijgewerkte pakketten",
+        "fr": "Ajout de la taille de paquet optionnelle par appareil (`ping -s`/`ping.exe -l`) pour les appareils qui ne répondent qu'à une demande d'écho, par exemple l'interface IP KNX 730 de Weinzierl (#387)\nPackages mis à jour",
+        "it": "Aggiunta la dimensione opzionale dei pacchetti per dispositivo (ping -s`/`ping.exe -l`) per i dispositivi che rispondono solo a richieste echo, come l'interfaccia IP KNX 730 di Weinzierl (#387)\nPacchi nuovi",
+        "es": "Se ha añadido el tamaño de paquete opcional por dispositivo (`ping -s`/`ping.exe -l`) para los que solo responden a una solicitud de eco de un tamaño determinado, por ejemplo, la interfaz IP KNX 730 de Weinzierl (#387)\nPaquetes nuevos",
+        "pl": "Dodano opcjonalny rozmiar pakietu na urządzenie (`ping -s`/`ping.exe -l`) dla urządzeń, które odpowiadają tylko na żądanie echa określonego rozmiaru, np. interfejs KNX IP 730 firmy Weinzierl (#387)\nZaktualizowane pakiety",
+        "uk": "Додано додатковий розмір пакета на пристрій (`ping -s`/`ping.exe -l`) для пристроїв, які відповідають лише на запит відлуння певного розміру, наприклад, інтерфейс KNX IP 730 Weinzierl (#387)\nОновлені пакети",
+        "zh-cn": "为仅响应一定大小的回应请求的设备（例如 Weinzierl 的 KNX IP 接口 730）增加了每台设备的可选数据包大小（`ping-s`/`ping.exe-l`）（#387）\n更新的软件包"
+      },
       "3.2.1": {
         "en": "Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`\nAdded: alias IDs are accepted in the web component Ping Device (#456)",
         "de": "Die Kurzform der Webkomponenten-Manifeste (Tag, Name, Symbol, Größe) wurde zu `common.WebComponents` hinzugefügt, sodass Hosts wie Aura die Komponenten vor der Adapterinstallation auflisten können; der Build schreibt es mit `iob-web-components sync-io-package`\nHinzugefügt: Die Webkomponente Ping Device akzeptiert Alias (#456)",
@@ -80,19 +93,6 @@
         "pl": "Ping teraz mówi, że ten host może w ogóle nie wysyłać protokołu ICMP zamiast zgłaszać każde urządzenie jako offline\nDodano opcjonalne sprawdzenie TCP, które utrzymuje urządzenia monitorowane na takim hoście (kontener LXC)",
         "uk": "Ping тепер повідомляє, що цей хост взагалі не може надсилати ICMP, замість того, щоб повідомляти про кожен пристрій як офлайн\nДодано додаткову перевірку TCP, яка контролює пристрої на такому хості (контейнер LXC)",
         "zh-cn": "Ping 现在会指出，即使主机根本不发送 ICMP 邮件，而不是将所有设备都报告为离线。\n添加了可选的 TCP 检查，用于监控此类主机（LXC 容器）上的设备。"
-      },
-      "3.0.1": {
-        "en": "Breaking: Adapter requires node.js >= 22 now\nMigrated for Admin 8",
-        "de": "Wichtiger Hinweis: Der Adapter benötigt jetzt Node.js >= 22.\nMigriert für Admin 8",
-        "ru": "Критическая ошибка: адаптер теперь требует Node.js >= 22.\nПеренесено для Admin 8",
-        "pt": "Atenção: o adaptador agora requer Node.js versão 22 ou superior.\nMigrado para Admin 8",
-        "nl": "Breaking: Adapter vereist nu node.js >= 22\nGemigreerd voor beheerder 8",
-        "fr": "Information importante: l’adaptateur requiert désormais Node.js >= 22.\nMigration vers Admin 8",
-        "it": "Aggiornamento: l'adattatore ora richiede Node.js >= 22\nMigrato per Admin 8",
-        "es": "Última hora: El adaptador ahora requiere node.js >= 22.\nMigrado para Admin 8",
-        "pl": "Uwaga: Adapter wymaga teraz node.js >= 22\nPrzeniesiono do wersji Admin 8",
-        "uk": "Проблема: Адаптер тепер вимагає node.js >= 22\nПеренесено для адміністратора 8",
-        "zh-cn": "重要提示：适配器现在需要 node.js 版本 >= 22。\n已迁移至管理员 8"
       }
     },
     "titleLang": {

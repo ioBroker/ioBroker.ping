@@ -122,7 +122,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.3.0 (2026-11-15)
 - (@GermanBluefox) Added the optional packet size per device (`ping -s` / `ping.exe -l`) for devices that only answer an echo request of a certain size, e.g. the KNX IP interface 730 of Weinzierl (#387)
 - (@GermanBluefox) Updated packages
 
@@ -145,9 +145,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### 3.1.4 (2026-10-13)
 - (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore, and it works on all platforms (#400)
-
-### 3.1.3 (2026-10-13)
-- (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
