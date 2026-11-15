@@ -124,6 +124,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 -->
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Added the optional packet size per device (`ping -s` / `ping.exe -l`) for devices that only answer an echo request of a certain size, e.g. the KNX IP interface 730 of Weinzierl (#387)
+- (@GermanBluefox) Updated packages
 
 ### 3.2.1 (2026-11-13)
 - (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`
