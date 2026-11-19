@@ -1,4 +1,7 @@
 # Older changes
+## 3.1.4 (2026-10-13)
+- (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore, and it works on all platforms (#400)
+
 ## 3.1.3 (2026-10-13)
 - (@GermanBluefox) Fixed lint error after GUI package update (3.1.2 was not published to npm)
 

@@ -126,7 +126,7 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.4.0 (2026-11-19)
 - (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and common.supportedMessages.help
 
 ### 3.3.0 (2026-11-15)
@@ -149,9 +149,6 @@ setState('ping.0.myHost.192_168_1_1', true);
 
 ### 3.1.5 (2026-10-30)
 - (@ipod86) Fixed crash "Invalid IP" when a device is configured with a host name (#445)
-
-### 3.1.4 (2026-10-13)
-- (@GermanBluefox) Replaced `hping3` with a native UDP burst to wake sleeping devices, so nothing has to be installed anymore, and it works on all platforms (#400)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
