@@ -90,6 +90,10 @@ sendTo('ping.0', 'wakeOnLan', { mac: '01:23:45:67:89:AB', ip: '192.168.1.255' },
 });
 ```
 
+## Message `help` for scripts and AI agents
+
+`sendTo('ping.0', 'help', {})` answers `{ help, commands }`: a description of the messages `ping` and `wakeOnLan` and of the device states, written for AI agents (e.g. ioBroker.pi-agent) and script authors; `commands` lists every message of the adapter with `write: true` if it changes something.
+
 ## Writing to alive states
 
 Every device state is writable and reacts to unacknowledged writes:
@@ -122,6 +126,9 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and common.supportedMessages.help
+
 ### 3.3.0 (2026-11-15)
 - (@GermanBluefox) Added the optional packet size per device (`ping -s` / `ping.exe -l`) for devices that only answer an echo request of a certain size, e.g. the KNX IP interface 730 of Weinzierl (#387)
 - (@GermanBluefox) Updated packages

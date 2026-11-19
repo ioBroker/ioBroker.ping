@@ -53,6 +53,7 @@ const pingFallback_1 = require("./lib/pingFallback");
 const setcup_1 = __importDefault(require("./lib/setcup"));
 const wakeOnLan_1 = __importStar(require("./lib/wakeOnLan"));
 const DeviceManagement_1 = __importDefault(require("./lib/DeviceManagement"));
+const help_1 = require("./lib/help");
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
 /** Time a connect of the TCP fallback may take - the same two seconds a ping is given */
 const TCP_FALLBACK_TIMEOUT = 2000;
@@ -384,6 +385,13 @@ class PingAdapter extends adapter_core_1.Adapter {
             return;
         }
         switch (obj.command) {
+            case 'help': {
+                // the description of all commands for AI agents and scripts
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, { help: help_1.HELP, commands: help_1.COMMANDS }, obj.callback);
+                }
+                break;
+            }
             case 'ping': {
                 // Try to ping one IP or name
                 if (obj.callback && obj.message) {

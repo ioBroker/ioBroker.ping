@@ -16,6 +16,7 @@ import { deniedHint, parsePorts, probeTcp } from './lib/pingFallback';
 import allowPing from './lib/setcup';
 import wakeOnLan, { isMACValid } from './lib/wakeOnLan';
 import PingDeviceManagement from './lib/DeviceManagement';
+import { COMMANDS, HELP } from './lib/help';
 import type { DeviceConfig, PingAdapterConfig } from './types';
 
 const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?]/g;
@@ -430,6 +431,14 @@ class PingAdapter extends Adapter {
             return;
         }
         switch (obj.command) {
+            case 'help': {
+                // the description of all commands for AI agents and scripts
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, { help: HELP, commands: COMMANDS }, obj.callback);
+                }
+                break;
+            }
+
             case 'ping': {
                 // Try to ping one IP or name
                 if (obj.callback && obj.message) {

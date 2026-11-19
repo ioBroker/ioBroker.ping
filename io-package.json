@@ -132,7 +132,8 @@
     "icon": "ping.png",
     "messagebox": true,
     "supportedMessages": {
-      "deviceManager": true
+      "deviceManager": true,
+      "help": true
     },
     "deviceWidgets": {
       "components": [
