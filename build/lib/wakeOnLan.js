@@ -81,15 +81,16 @@ function relay(mac, ip, magicPacket, params) {
  *
  * Total packet size: 102 bytes
  *
- * @param mac - MAC address in format "XX:XX:XX:XX:XX:XX" (hexadecimal with colons)
+ * @param mac - MAC address "XX:XX:XX:XX:XX:XX", "XX-XX-XX-XX-XX-XX" or "XXXXXXXXXXXX" (hexadecimal, any case)
  * @returns Buffer containing the magic packet
  */
 function createMagicPacket(mac) {
-    // Parse MAC address from hex string to buffer
+    // Parse MAC address from hex string to buffer. The separators (as isMACValid accepts them) are dropped
     const macBuffer = Buffer.alloc(MAC_BYTES);
-    mac.split(':').forEach((value, i) => {
-        macBuffer[i] = parseInt(value, 16);
-    });
+    const hex = mac.replace(/[^a-fA-F0-9]/g, '');
+    for (let i = 0; i < MAC_BYTES; i++) {
+        macBuffer[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+    }
     const buffer = Buffer.alloc(MAC_BYTES + MAC_REPETITIONS * MAC_BYTES);
     // Start the magic packet with 6 bytes of 0xFF (synchronization stream)
     for (let i = 0; i < MAC_BYTES; i++) {
@@ -132,24 +133,23 @@ function getIP(params) {
         }
     });
 }
+/** Six pairs of hex digits, all separated by the same ":", "-" or "." or not separated at all */
+const MAC_PAIRS = /^[0-9a-f]{2}([:.-]?)[0-9a-f]{2}(?:\1[0-9a-f]{2}){4}$/i;
+/** Three groups of four hex digits separated by "." (Cisco) */
+const MAC_GROUPS = /^[0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4}$/i;
 /**
  * Validate MAC address format
  *
- * Accepts MAC addresses in the format:
- * - With separators: "XX:XX:XX:XX:XX:XX" (12 hex chars + 5 separators)
+ * Accepts MAC addresses in the format (hex digits in any case):
+ * - With separators: "XX:XX:XX:XX:XX:XX", "XX-XX-XX-XX-XX-XX" or "XX.XX.XX.XX.XX.XX" (one kind of separator)
  * - Without separators: "XXXXXXXXXXXX" (12 hex chars)
+ * - Cisco: "XXXX.XXXX.XXXX"
  *
- * @param mac - MAC address string to validate
+ * @param mac - MAC address string to validate; anything else is invalid
  * @returns true if valid, false otherwise
  */
 function isMACValid(mac) {
-    let validationMac = mac;
-    // Remove separator characters if present (e.g., colons, dashes)
-    if (validationMac.length === 2 * MAC_BYTES + (MAC_BYTES - 1)) {
-        validationMac = validationMac.replace(new RegExp(validationMac[2], 'g'), '');
-    }
-    // Check if we have exactly 12 hexadecimal characters
-    return !(validationMac.length !== 2 * MAC_BYTES || validationMac.match(/[^a-fA-F0-9]/));
+    return typeof mac === 'string' && (MAC_PAIRS.test(mac) || MAC_GROUPS.test(mac));
 }
 /**
  * Wake up a computer using Wake-on-LAN magic packet
@@ -158,7 +158,7 @@ function isMACValid(mac) {
  * a computer that supports Wake-on-LAN functionality. The computer's network
  * interface must be configured to accept WOL packets.
  *
- * @param mac - MAC address of the target computer (format: "XX:XX:XX:XX:XX:XX")
+ * @param mac - MAC address of the target computer ("XX:XX:XX:XX:XX:XX", "XX-XX-XX-XX-XX-XX" or "XXXXXXXXXXXX")
  * @param params - Configuration parameters for the wake operation
  * @param params.port - UDP port to send to (typically 7 or 9)
  * @param params.host - Optional hostname to resolve

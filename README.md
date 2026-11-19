@@ -126,6 +126,10 @@ setState('ping.0.myHost.192_168_1_1', true);
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Fixed: Wake-on-LAN sends the right packet also for a MAC address with "-" or without separators (e.g. `01-23-45-67-89-ab`, `0123456789AB`); only ":" worked before
+- (@GermanBluefox) Fixed: the message `wakeOnLan` also accepts a MAC address separated by "." (`01.23.45.67.89.ab`, `0123.4567.89ab`) and answers "Invalid MAC address" for any other input instead of failing without an answer
+
 ### 3.4.0 (2026-11-19)
 - (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and common.supportedMessages.help
 

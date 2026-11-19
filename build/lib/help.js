@@ -39,10 +39,11 @@ Commands (sendTo ping.0):
   "[IPv6]:port" for a TCP port (1-65535); an IPv6 address without brackets is pinged. Answer {result: {host, alive,
   ms (round trip in milliseconds, null if none), error? (why it was not checked, or what ping wrote), denied?
   (this ioBroker host may not send ICMP)}, error?}.
-- wakeOnLan "<mac>" or {mac, ip?}: sends a Wake-on-LAN magic packet (UDP port 9) to the MAC, written with colons
-  "01:23:45:67:89:AB"; ip = where to send it, e.g. the broadcast address of the subnet "192.168.1.255" (default
-  255.255.255.255). Answer {result: {mac, ip}} or {error: "Invalid MAC address: ..."}. Sent does not mean awake:
-  ping the device a minute later.
+- wakeOnLan "<mac>" or {mac, ip?}: sends a Wake-on-LAN magic packet (UDP port 9) to the MAC, any case, with ":",
+  "-" or "." or without separators ("01:23:45:67:89:AB", "01-23-45-67-89-ab", "0123456789AB", "0123.4567.89ab");
+  ip = where to send it, e.g. the broadcast address of the subnet "192.168.1.255" (default 255.255.255.255).
+  Answer {result: {mac, ip}} or {error: "Invalid MAC address: ..."}. Sent does not mean awake: ping the device
+  a minute later.
 - ping:settings:browse, ping:addIpAddress, ping:save, getNotificationSchema, admin:getNotificationSchema,
   ping:getDevices, and dm:instanceInfo, dm:loadDevices, dm:deviceInfo, dm:deviceStatus, dm:deviceDetails,
   dm:deviceControlState, dm:deviceLoadProgress (read) and dm:instanceAction, dm:deviceAction, dm:deviceControl,
