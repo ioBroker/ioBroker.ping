@@ -440,25 +440,60 @@ class PingAdapter extends Adapter {
             }
 
             case 'ping': {
-                // Try to ping one IP or name
-                if (obj.callback && obj.message) {
-                    const { err, result } = await this.probeWithFallback(obj.message as string);
-                    this.sendTo(obj.from, obj.command, { result, error: err }, obj.callback);
+                // Try to ping one IP or name: the address as a text, or {host} (network.ping of the shared catalog)
+                if (obj.callback) {
+                    const msg = obj.message as string | { host?: string } | undefined;
+                    const host = typeof msg === 'string' ? msg : msg?.host;
+                    if (!host || typeof host !== 'string') {
+                        this.sendTo(
+                            obj.from,
+                            obj.command,
+                            { error: 'No address given', reason: 'BAD_REQUEST' },
+                            obj.callback,
+                        );
+                        break;
+                    }
+                    const { err, result } = await this.probeWithFallback(host);
+                    // no `error: null` on success, and an Error as its text (an Error object arrives as {})
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        err ? { result, error: err instanceof Error ? err.message : String(err) } : { result },
+                        obj.callback,
+                    );
                 }
                 break;
             }
 
-            case 'wakeOnLan': {
+            case 'wakeOnLan':
+            case 'wake': {
+                // wake {mac, ip?} is network.wake of the shared catalog: the same, answered with {ok, mac, ip?}
+                const standard = obj.command === 'wake';
                 const msg = obj.message as string | { mac: string; ip?: string } | undefined;
                 const mac = typeof msg === 'string' ? msg : msg?.mac;
                 const ip = typeof msg === 'object' ? msg?.ip : undefined;
                 if (!mac || !isMACValid(mac)) {
-                    this.sendTo(obj.from, obj.command, { error: `Invalid MAC address: ${mac}` }, obj.callback);
+                    if (obj.callback) {
+                        const error = `Invalid MAC address: ${mac}`;
+                        this.sendTo(
+                            obj.from,
+                            obj.command,
+                            standard ? { error, reason: 'BAD_REQUEST' } : { error },
+                            obj.callback,
+                        );
+                    }
                     break;
                 }
                 this.log.info(`Sending Wake-on-LAN to MAC: ${mac}${ip ? ` IP: ${ip}` : ''}`);
                 wakeOnLan(mac, { port: 9, ip });
-                this.sendTo(obj.from, obj.command, { result: { mac, ip } }, obj.callback);
+                if (obj.callback) {
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        standard ? { ok: true, mac, ip } : { result: { mac, ip } },
+                        obj.callback,
+                    );
+                }
                 break;
             }
 

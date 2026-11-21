@@ -9,7 +9,8 @@ exports.HELP = exports.COMMANDS = void 0;
 /** The commands the instance answers: those of `processMessage` and the `dm:` commands of dm-utils */
 exports.COMMANDS = [
     { command: 'help', write: false },
-    { command: 'ping', write: false },
+    { command: 'ping', write: false, standard: 'network.ping' },
+    { command: 'wake', write: true, standard: 'network.wake' },
     { command: 'wakeOnLan', write: true },
     { command: 'ping:settings:browse', write: true },
     { command: 'ping:addIpAddress', write: true },
@@ -34,16 +35,19 @@ to a TCP port for an address "host:port", in an interval and writes per device w
 check any address on demand, see which configured devices answer, check one of them now and switch on a computer
 with Wake-on-LAN.
 
-Commands (sendTo ping.0):
-- ping "<address>": one check now; the message is the address as a text: an IP, a host name, "host:port" or
+Commands (sendTo ping.0); ping {host} and wake {mac} follow the shared catalog of commands (network.ping,
+network.wake), the same for every adapter of the family:
+- ping {host} or "<address>": one check now; host (or the message as a text) is an IP, a host name, "host:port" or
   "[IPv6]:port" for a TCP port (1-65535); an IPv6 address without brackets is pinged. Answer {result: {host, alive,
   ms (round trip in milliseconds, null if none), error? (why it was not checked, or what ping wrote), denied?
-  (this ioBroker host may not send ICMP)}, error?}.
-- wakeOnLan "<mac>" or {mac, ip?}: sends a Wake-on-LAN magic packet (UDP port 9) to the MAC, any case, with ":",
-  "-" or "." or without separators ("01:23:45:67:89:AB", "01-23-45-67-89-ab", "0123456789AB", "0123.4567.89ab");
-  ip = where to send it, e.g. the broadcast address of the subnet "192.168.1.255" (default 255.255.255.255).
-  Answer {result: {mac, ip}} or {error: "Invalid MAC address: ..."}. Sent does not mean awake: ping the device
-  a minute later.
+  (this ioBroker host may not send ICMP)}}, {result?, error} if ping could not run, or {error, reason:
+  "BAD_REQUEST"} without an address.
+- wake {mac, ip?}: sends a Wake-on-LAN magic packet (UDP port 9) to the MAC, any case, with ":", "-" or "." or
+  without separators ("01:23:45:67:89:AB", "01-23-45-67-89-ab", "0123456789AB", "0123.4567.89ab"); ip = where to
+  send it, e.g. the broadcast address of the subnet "192.168.1.255" (default 255.255.255.255). Answer {ok: true,
+  mac, ip?} or {error: "Invalid MAC address: ...", reason: "BAD_REQUEST"}. Sent does not mean awake: ping the
+  device a minute later.
+- wakeOnLan "<mac>" or {mac, ip?}: the same as wake, the older answer {result: {mac, ip}} or {error}.
 - ping:settings:browse, ping:addIpAddress, ping:save, getNotificationSchema, admin:getNotificationSchema,
   ping:getDevices, and dm:instanceInfo, dm:loadDevices, dm:deviceInfo, dm:deviceStatus, dm:deviceDetails,
   dm:deviceControlState, dm:deviceLoadProgress (read) and dm:instanceAction, dm:deviceAction, dm:deviceControl,
@@ -59,5 +63,6 @@ to it (MAC from the network browse or from ARP; without a known MAC nothing is s
 How to talk to the user:
 - Name devices by the name of their object, not by the ID or the IP address.
 - A device that does not answer may still be on (firewall, a phone asleep): say "does not answer", not "off".
-- Wake-on-LAN switches a computer on: only on the user's request; ask which device if that is not clear.`;
+- Wake-on-LAN (wake, wakeOnLan) switches a computer on: only on the user's explicit request; ask which device if
+  that is not clear.`;
 //# sourceMappingURL=help.js.map

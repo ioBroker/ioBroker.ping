@@ -30,6 +30,7 @@ describe('Message help', function () {
 
     it('marks the commands with an effect as writing', function () {
         const writing = [
+            'wake',
             'wakeOnLan',
             'ping:settings:browse',
             'ping:addIpAddress',
@@ -49,6 +50,14 @@ describe('Message help', function () {
             assert.ok(HELP.includes(command), command);
         }
         assert.ok(HELP.includes('sendTo ping.0'));
+    });
+
+    it('marks the commands of the shared catalog and names them in the text', function () {
+        const marked = Object.fromEntries(COMMANDS.filter(c => c.standard).map(c => [c.command, c.standard]));
+        assert.deepStrictEqual(marked, { ping: 'network.ping', wake: 'network.wake' });
+        for (const standard of Object.values(marked)) {
+            assert.ok(HELP.includes(standard), standard);
+        }
     });
 
     it('keeps the lines short', function () {
