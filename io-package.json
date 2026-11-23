@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ping",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "news": {
+      "3.5.0": {
+        "en": "Added the standard commands of the shared catalog: network.ping (`ping` also takes `{host}`), network.wake (`wake`, an alias of `wakeOnLan`)\nFixed: Wake-on-LAN sends the right packet also for a MAC address with \"-\" or without separators (e.g. `01-23-45-67-89-ab`, `0123456789AB`); only \":\" worked before\nFixed: the message `wakeOnLan` also accepts a MAC address separated by \".\" (`01.23.45.67.89.ab`, `0123.4567.89ab`) and answers \"Invalid MAC address\" for any other input instead of failing without an answer",
+        "de": "Standardbefehle des gemeinsamen Katalogs hinzugefügt: network.ping (`ping` braucht auch `{host}`), network.wake (`wake`, Alias für `WakeOnLAN`)\nBehoben: Wake-on-LAN sendet das richtige Paket auch für eine MAC-Adresse mit „-“ oder ohne Trennzeichen (z. B. 01-23-45-67-89-ab, 0123456789AB); nur „:“ funktionierte vorher\nBehoben: Die Nachricht `WakeOnLan` akzeptiert auch eine durch „.“ getrennte MAC-Adresse (`01.23.45.67.89.ab`, `0123.4567.89ab`) und antwortet bei jeder Eingabe mit „Ungültige MAC-Adresse“",
+        "ru": "Добавлены стандартные команды общего каталога: network.ping (`ping` также принимает `{host}`), network.wake (`wake`, псевдоним `WakeOnLan`)\nИсправлено: Wake-on-LAN также отправляет правильный пакет на MAC-адрес с «-» или без разделителей (например, `01-23-45-67-89-ab`, `0123456789AB`); ранее работало только «:»\nИсправлено: сообщение `WakeOnLan` также принимает MAC-адрес, разделенный символом «.» (`01.23.45.67.89.ab`, `0123.4567.89ab`) и отвечает «Неверный MAC-адрес» при любом другом вводе, а не без ответа",
+        "pt": "Adicionados os comandos padrão do catálogo compartilhado: network.ping (`ping` também usa `{host}`), network.wake (`wake`)\nCorrigido: o Wake-on-LAN envia o pacote certo também para um endereço MAC com “-” ou sem separadores (ex. `01-23-45-67-89-ab`, `0123456789AB`); antes só “:” funcionava\nCorrigido: a mensagem `WakeOnLAN` também aceita um endereço MAC separado por “.” (`01.23.45.67.89.ab`, `0123.4567.89ab`) e responde “MAC inválido” para outra entrada em vez de falhar sem resposta",
+        "nl": "De standaardopdrachten van de gedeelde catalogus toegevoegd: network.ping (voor `ping` is ook `{host}` nodig), network.wake (`wake`, een alias van `WakeOnLan`)\nOpgelost: Wake-on-LAN verstuurt ook het juiste pakket voor een MAC-adres met „-” of zonder scheidingstekens (bijv. `01-23-45-67-89-ab`, `0123456789AB`); alleen „:” werkte eerder\nOpgelost: het bericht `WakeOnLAN` accepteert ook een MAC-adres gescheiden door „.” (`01.23.45.67.89.ab`, `0123.4567.89ab`) en antwoordt „Ongeldig MAC-adres” voor elke andere invoer in plaats van te mislukken zonder een antwoord",
+        "fr": "Ajout des commandes standard du catalogue partagé : network.ping (« ping » prend aussi {host}), network.wake (« wake », alias de « WakeOnLAN »)\nCorrigé : Wake-on-LAN envoie le bon paquet même pour une adresse MAC avec « - » ou sans séparateur (par exemple 01-23-45-67-89-ab, « 0123456789AB ») ; seul « : » fonctionnait avant\nCorrigé : le message « WakeOnLAN » accepte également une adresse MAC séparée par «. » (01.23.45.67.89.ab, 0123.4567.89ab) et répond « Adresse MAC non valide » pour toute autre saisie au lieu d'échouer sans réponse",
+        "it": "Aggiunti i comandi standard del catalogo condiviso: network.ping (`ping` accetta anche {host}), network.wake (`wake`, alias `wakeOnLAN`)\nRisolto: Wake-on-LAN invia il pacchetto giusto anche per un indirizzo MAC con «-» o senza separatori (es. «01-23-45-67-89-ab», «0123456789AB»); solo «:» funzionava prima\nRisolto: il messaggio `WakeOnLAN` accetta anche un indirizzo MAC separato da «.» (`01.23.45.67.89.ab`, `0123.4567.89ab`) e risponde «Indirizzo MAC non valido» invece di fallire",
+        "es": "Se han añadido los comandos estándar del catálogo compartido: network.ping (`ping` también toma {host}), network.wake (`wake`, un alias de `WakeOnLan`)\nCorregido: Wake-on-LAN envía el paquete correcto también para una dirección MAC con «-» o sin separadores (p. ej., 01-23-45-67-89-ab, 0123456789AB); solo «:» funcionaba antes\nCorregido: el mensaje `WakeOnLAN` también acepta una dirección MAC separada por «.» (`01.23.45.67.89.ab, `0123.4567.89ab) y responde «Dirección MAC no válida» para cualquier otra entrada, en lugar de fallar sin respuesta",
+        "pl": "Dodano standardowe polecenia udostępnionego katalogu: network.ping (`ping` przyjmuje również `{host}`), network.wake (`wake`, alias `WakeOnlan`)\nNaprawiono: Wake-on-LAN wysyła odpowiedni pakiet również dla adresu MAC z „-” lub bez separatorów (np. `01-23-45-67-89-ab`, `0123456789AB`); tylko „:” działało wcześniej\nNaprawiono: komunikat `Wakeonlan` akceptuje również adres MAC oddzielony przez „.” (`01.23.45.67.89.ab`, `0123.4567.89ab`) i odpowiada „Nieprawidłowy adres MAC” dla dowolnego innego wejścia zamiast zawiodać bez odpowiedzi",
+        "uk": "Додані стандартні команди спільного каталогу: network.ping (`ping` також приймає `{host}`), network.wake (`wake`, псевдонім `WakeOnlan`)\nВиправлено: Wake-on-LAN надсилає правильний пакет також для MAC-адреси з «-» або без роздільників (наприклад, `01-23-45-67-89-ab`, `0123456789AB`); лише «:» працювало раніше\nВиправлено: повідомлення `WakeOnLAN` також приймає MAC-адресу, розділену «.» (`01.23.45.67.89.ab`, `0123.4567.89ab`) і відповідає «Недійсна MAC-адреса» для будь-якого іншого введення замість того, щоб не провалився без відповіді",
+        "zh-cn": "添加了共享目录的标准命令：network.ping（`ping` 也使用 `{host}`）、network.wake（`wake`，`WakeonLAN`的别名）\n已修复：局域网唤醒还会为带有 “-” 或不带分隔符的 MAC 地址（例如 `01-23-45-67-89-ab`、`0123456789AB`）发送正确的数据包；之前只有 “:” 有效\n已修复：消息 “WakeOnLAN” 还接受由 “.”（`01.23.45.67.89.ab`，`0123.4567.89ab`）分隔的MAC地址，并为任何其他输入回答 “MAC地址无效”，而不是在没有答案的情况下失败"
+      },
       "3.4.0": {
         "en": "Added the message \"help\": a description of all messages for AI agents (e.g. pi-agent), and common.supportedMessages.help",
         "de": "Nachricht „help“ hinzugefügt: Beschreibung aller Nachrichten für KI-Agenten (z. B. pi-agent) und common.supportedMessages.Help",
@@ -80,19 +93,6 @@
         "pl": "Zastąpiono `hping3` natywną serią UDP, aby obudzić urządzenia śpiące, więc nic nie trzeba już instalować i działa na wszystkich platformach (#400)",
         "uk": "Замінено `hping3` на рідний UDP burst для пробудження сплячих пристроїв, тому більше нічого не потрібно встановлювати, і він працює на всіх платформах (#400)",
         "zh-cn": "将 `hping3` 替换为原生 UDP burst 来唤醒睡眠设备，因此无需再安装任何东西并且可以在所有平台上运行 (#400)"
-      },
-      "3.1.3": {
-        "en": "Fixed lint error after GUI package update (3.1.2 was not published to npm)",
-        "de": "Lint-Fehler nach GUI-Paket-Update behoben (3.1.2 nicht auf npm)",
-        "ru": "Исправлена ошибка lint после обновления пакета графического интерфейса (версия 3.1.2 не была опубликована в npm)",
-        "pt": "Erro de lint corrigido após atualizar o GUI (3.1.2 não foi publicado no npm)",
-        "nl": "Lintfout opgelost na update van het GUI-pakket (3.1.2 is niet gepubliceerd op npm)",
-        "fr": "Correction d'une erreur Lint après la mise à jour de l'interface (3.1.2 non publié sur npm)",
-        "it": "Risolto errore dopo l'aggiornamento della GUI (3.1.2 non pubblicato su npm)",
-        "es": "Se corrigió un error de lint tras actualizar el paquete GUI (3.1.2 no se publicó en npm)",
-        "pl": "Naprawiono błąd lint po aktualizacji pakietu GUI (3.1.2 nie został opublikowany do npm)",
-        "uk": "Виправлена помилка lint після оновлення пакета графічного інтерфейсу (3.1.2 не було опубліковано в npm)",
-        "zh-cn": "修复了 GUI 包更新后的 lint 错误（3.1.2 未发布到 npm）"
       }
     },
     "titleLang": {
